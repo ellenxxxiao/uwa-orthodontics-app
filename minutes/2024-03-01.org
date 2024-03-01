@@ -1,0 +1,24 @@
+#+title: 2024-03-01 Fri Mini Meeting
+#+author: Minute by Zimu
+#+OPTIONS: toc:nil date:nil
+#+LATEX_CLASS: article
+#+LATEX_HEADER: \setlength{\parindent}{0pt} \usepackage{titling} \setlength{\droptitle}{-4cm} \usepackage{nopageno}
+* Summary
+This is the first meeting right after the introductory lecture on Friday Week1, consisting those who were at the lecture. The meeting's main goal is to introduce everyone and decide when our next meeting would be and what to do before then.
+* Attendence:
+Ellen, Neha, Runtian, Zimu
+* Topics
+** Next Meeting
+- face to face highly preferred
+- Monday (specific time tbd)
+** Next Meeting prep
+- Responsible: Everyone
+- Each member read project specification and be familiar with it for Monday meeting.
+- Some topics to prepare for:
+  - Who's good at what?
+  - Who's doing what?
+    Potential tasks include: programming, design, testing, documentation, project management etc.
+** First contact with client
+DEADLINE: <2024-03-01>
+- Responsible: Zimu
+- Email introducing the team, inquire client's availability for first meeting.
