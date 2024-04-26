@@ -1,0 +1,40 @@
+.card {
+  /* Ensure that the card itself can scroll if content is too much */
+  max-height: 80vh; /* Limit the height of the card */
+  overflow-y: auto; /* Enable vertical scrolling */
+  display: flex;
+  flex-direction: column; /* Ensures the form stays at the bottom */
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #c4bebe; /* Card background */
+}
+
+ul {
+  overflow-y: auto; /* Additional precaution to make list scrollable */
+  flex-grow: 1; /* Allows the list to expand to fill available space */
+  margin-bottom: 20px; /* Space between list and form */
+}
+
+li {
+  word-break: break-word; /* Ensure text wraps in the container */
+  padding: 10px; /* Padding around each message */
+  border-bottom: 1px solid #ccc; /* Separator between messages */
+}
+
+form {
+  flex-shrink: 0; /* Prevent form from shrinking */
+}
+
+input, button {
+  height: 38px; /* Standardize height for input and button */
+  line-height: 1.5; /* Standardize line height */
+}
+
+input {
+  flex-grow: 1; /* Allow input to take up remaining space */
+  margin-right: 8px; /* Space between input and button */
+}
+
+button {
+  white-space: nowrap; /* Prevent text wrapping in button */
+}

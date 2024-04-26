@@ -1,0 +1,26 @@
+/* Custom.css */
+.card {
+    height: 80vh; /* Adjust if necessary, depending on your layout */
+    overflow-y: auto; /* Make the card scrollable */
+    display: flex;
+    flex-direction: column; /* Ensures the form stays at the bottom */
+  }
+  
+  .card ul {
+    overflow-y: auto; /* Ensures the list itself is scrollable */
+    flex-grow: 1; /* Allows the list to fill the space, pushing the form down */
+    padding: 0; /* Removes default padding */
+  }
+  
+  /* Styling for list items to ensure text doesn't overflow */
+  li {
+    word-break: break-word; /* Wraps text within the confines of its container */
+    padding: 0.5rem; /* Adds padding for better readability */
+    border-bottom: 1px solid #ccc; /* Visual separation of items */
+  }
+  
+  /* Ensure the form doesn't shrink or grow */
+  form {
+    flex-shrink: 0;
+  }
+  
