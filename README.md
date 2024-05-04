@@ -16,6 +16,16 @@
    ```
 5. Open http://localhost:3000 with your browser.
 
+### Querying the database
+
+A simple database query is written in `/src/query-script.ts`. To execute this query and see the results in terminal, run:
+
+```
+npx tsx ./src/query-script.ts
+```
+
+For more information on querying the database with Prisma, checkout https://www.prisma.io/docs/orm/prisma-client/queries.
+
 ## Prisma
 
 ### Development
