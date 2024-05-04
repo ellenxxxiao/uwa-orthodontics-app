@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum ROLE {
+  ADMIN
+  CLINICIAN
+  PATIENT
+}
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  firstName String
+  lastName  String
+  role      ROLE
+
+  //   relation fields, not columns
+  connectedClinician Connection[]   @relation("Clinician")
+  connectedPatient   Connection[]   @relation("Patient")
+  reminderSetBy      Reminder[]     @relation("SetBy")
+  reminderSetFor     Reminder[]     @relation("SetFor")
+  sentMessages       Message[]      @relation("Sender")
+  receivedMessages   Message[]      @relation("Receiver")
+  invitations        Invitation[]
+  notifications      Notification[]
+  logs               Log[]
+}
+
+model Connection {
+  id          Int    @id @default(autoincrement())
+  Clinician   User   @relation("Clinician", fields: [clinicianId], references: [id])
+  clinicianId String
+  Patient     User   @relation("Patient", fields: [patientId], references: [id])
+  patientId   String
+
+  @@unique([clinicianId, patientId])
+}
+
+enum ReminderType {
+  ALIGNER
+  APPOINTMENT
+  OTHER
+}
+
+model Reminder {
+  id               Int          @id @default(autoincrement())
+  setById          String
+  setForId         String
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  scheduledAt      DateTime // next scheduled datetime. cauclated based on interval_day
+  startDate        DateTime
+  endDate          DateTime
+  isReminderActive Boolean      @default(false) // is event active
+  intervalInDays   Int // interval in days
+  SetBy            User         @relation("SetBy", fields: [setById], references: [id])
+  SetFor           User         @relation("SetFor", fields: [setForId], references: [id])
+  type             ReminderType
+  description      String?
+}
+
+enum MessageStatus {
+  PENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+model Message {
+  id         Int           @id @default(autoincrement())
+  senderId   String
+  receiverId String
+  text       String
+  sentAt     DateTime      @default(now())
+  Sender     User          @relation("Sender", fields: [senderId], references: [id])
+  Receiver   User          @relation("Receiver", fields: [receiverId], references: [id])
+  status     MessageStatus @default(PENDING)
+}
+
+enum InvitationType {
+  ADMIN_CLINICIAN
+  CLINICIAN_PATIENT
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+model Invitation {
+  id          Int              @id @default(autoincrement())
+  creatorId   String
+  email       String
+  type        InvitationType
+  link        String           @unique
+  sentAt      DateTime
+  respondedAt DateTime?
+  expiryDate  DateTime
+  Creator     User             @relation(fields: [creatorId], references: [id])
+  status      InvitationStatus @default(PENDING)
+  text        String?
+}
+
+enum NotificationType {
+  REMINDER
+  MESSAGE
+  INVITATION
+  OTHER
+}
+
+model Notification {
+  id         Int              @id @default(autoincrement())
+  receiverId String
+  type       NotificationType
+  content    String
+  sentAt     DateTime
+  Receiver   User             @relation(fields: [receiverId], references: [id])
+  status     MessageStatus    @default(PENDING)
+}
+
+enum ActionType {
+  LOGIN
+  LOGOUT
+  CREATE
+  UPDATE
+  DELETE
+}
+
+model Log {
+  id         Int        @id @default(autoincrement())
+  actorId    String
+  createdAt  DateTime   @default(now())
+  Actor      User       @relation(fields: [actorId], references: [id])
+  actionType ActionType
+}
