@@ -8,7 +8,7 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum ROLE {
+enum Role {
   ADMIN
   CLINICIAN
   PATIENT
@@ -21,7 +21,7 @@ model User {
   email     String   @unique
   firstName String
   lastName  String
-  role      ROLE
+  role      Role
 
   //   relation fields, not columns
   connectedClinician Connection[]   @relation("Clinician")
