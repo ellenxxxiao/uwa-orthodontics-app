@@ -15,17 +15,18 @@
     "prisma:reset": "prisma migrate reset --force && prisma db push"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.2.0",
+    "@prisma/client": "5.13.0",
     "@supabase/supabase-js": "^2.42.5",
     "bootstrap": "^5.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.4.3",
-    "@prisma/client": "5.13.0"
+    "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
+    "@types/node": "20.12.8",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
-    "@types/node": "20.12.8",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
@@ -33,11 +34,11 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "prisma": "5.13.0",
     "supabase": "1.165.0",
-    "ts-node": "10.9.2",
+    "tsx": "^4.9.1",
     "typescript": "5.4.5",
     "vite": "^5.2.0"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   }
 }
