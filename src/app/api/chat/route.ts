@@ -10,3 +10,16 @@ export async function GET(request: Request) {
   });
   return Response.json(messages);
 }
+
+// POST
+export async function POST(request: Request) {
+  const { senderId, receiverId, text } = await request.json();
+  const message = await prisma.message.create({
+    data: {
+      senderId,
+      receiverId,
+      text,
+    },
+  });
+  return Response.json(message);
+}
