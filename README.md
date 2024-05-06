@@ -1,5 +1,9 @@
 # UWA Orthodontics App
 
+supabaseClient.js needs to be created in src/ 
+It is removed for privacy reasons
+This branch only contains database connection directly to supabase, no prisma
+
 >[Figma UI Design](https://www.figma.com/file/EXY0lfLzYuVew2JNaDxLPs/UWA-Orthodontics-Client-Application%EF%BC%88mobile%EF%BC%89?type=design&node-id=0%3A1&mode=design&t=TVZXbkhZlsytTzkw-1)
 
 ## Getting Started
