@@ -1,11 +1,12 @@
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const res = await fetch(`https://dummyjson.com/todos/1`, {
-    headers: {
-      "Content-Type": "application/json",
+  const messages = await prisma.message.findMany({
+    where: {
+      senderId: "b4896590-a2b8-4f3a-b24f-96d22968a5f8",
+      receiverId: "b18d54a8-c032-4356-912b-ae56d28e973a",
     },
   });
-  const product = await res.json();
-
-  return Response.json({ product });
+  return Response.json(messages);
 }
