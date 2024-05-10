@@ -18,8 +18,8 @@ const Login: React.FC = () => {
                 <img src="/logo.png" alt="Logo" className="mx-auto w-15 h-15 -mt-7" />
 
                     <h1 className="mx-auto font-bold tracking-wide">OrthoChat</h1>
-
                 </div>
+                <h3 className="mx-auto text-center">Create your account now</h3>
                 <input
                     type="email"
                     value={email}
@@ -35,22 +35,23 @@ const Login: React.FC = () => {
                     className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     
                 />
-                <div className="flex items-center justify-between">
-                    <label className="flex items-center">
-                        <input type="checkbox" className="form-checkbox" />
-                        <span className="ml-2 text-sm">Remember me</span>
-                    </label>
-                    <a href="#" className="ml-14 text-sm text-blue-500 hover:underline">Forgot Password?</a>
-                </div>
+                <input
+                    type="Confirm password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Confirm Password"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    
+                />
                 <button type="submit" className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">
-                    Sign in
+                    Sign Up
                 </button>
                 <button type="button" className="flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <img src="/g-logo.svg" alt="Google" className="w-5 h-5 mr-2" />
                         Sign in with Google
                 </button>
 
-                <p className="text-sm text-center">Don’t have an account? <a href="/register" className="text-blue-500 hover:underline">Sign up</a></p>
+                <p className="text-sm text-center">Already have an account? <a href="/login" className="text-blue-500 hover:underline">Sign In</a></p>
             </form>
         </div>
     );
