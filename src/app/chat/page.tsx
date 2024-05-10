@@ -1,75 +1,107 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { User } from "@prisma/client";
+import { useState, useEffect } from "react";
+import { Message } from "@prisma/client";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import SearchIcon from '@mui/icons-material/Search';
-import ChatIcon from '@mui/icons-material/Chat';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SettingsIcon from '@mui/icons-material/Settings';
+import SendIcon from '@mui/icons-material/Send';
 import Link from 'next/link'
 
 
 export default function Home() {
-  // users is an array of User objects
-  const [users, setUsers] = useState<User[]>([]);
+  const [msgs, setMsgs] = useState<Message[]>([]);
+  const currentUserId = "currentUserId"; 
 
-  const fetchUsers = async () => {
-    const res = await fetch("/api/users");
+  const fetchMessages = async () => {
+    const res = await fetch("/api/chat");
     const chat = await res.json();
-    setUsers(chat);
+    setMsgs(chat);
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchMessages();
   }, []);
 
+  const [inputMessage, setInputMessage] = useState('');
+
+  const handleMessageSend = () => {
+    console.log(inputMessage); 
+    setInputMessage('');
+  };
+
+  // const handleMessageSend = async () => {
+  //   if (!inputMessage.trim()) return; 
+  
+  //   const messageData = {
+  //     text: inputMessage,
+  //     senderId: currentUserId,  // 假设你有当前用户的ID
+  //     // 其他可能需要的信息，比如 receiverId
+  //   };
+  
+  //   try {
+  //     const res = await fetch("/api/chat", {  // 假设 "/api/chat" 是你的后端接口
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(messageData),
+  //     });
+  
+  //     const newMessage = await res.json();
+  
+  //     if (res.ok) {
+  //       setMsgs(prevMsgs => [...prevMsgs, newMessage]);  // 添加新消息到列表
+  //       setInputMessage('');  // 清空输入框
+  //     } else {
+  //       throw new Error('Failed to send message');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error sending message:', error);
+  //   }
+  // };
+  
+
+
   return (
-    <>
-      <div className="flex flex-col h-screen">
-      <div className="bg-white fixed top-0 w-full p-4 shadow-md z-10">
-        <div className="flex justify-between items-center">
-          <IconButton className="p-2 bg-blue-500 rounded-full text-white">
-            <SearchIcon />
-          </IconButton>
-          <Button className="bg-blue-500 text-white py-2 px-4 rounded">+ Create New Chat</Button>
-        </div>
-        <div className="flex justify-center space-x-10 mt-0">
-          <Button className="text-gray-500 px-3 py-1 rounded">All</Button>
-          <Button className="text-gray-500 px-3 py-1 rounded" >Unread</Button>
-          <Button className="text-gray-500 px-3 py-1 rounded" >Read</Button>
-          <Button className="text-gray-500 px-3 py-1 rounded" >Pinned</Button>
-        </div>
+    <div className="flex flex-col h-screen">
+      {/* Header */}
+      <div className="p-4 flex items-center justify-between border-b border-gray-500 bg-gray-100 fixed top-0 w-full">
+        <Link href="/chat">
+          <Button className="text-blue-500">
+            <ArrowBackIcon />
+          </Button>
+        </Link>
+        <h1 className="text-black font-semibold">Patient 1</h1>
+        <div style={{ width: 48 }}></div>  {/* placeholder balance */}
       </div>
-      <div className="flex-1 pt-24 mt-4 pb-16 overflow-auto bg-gray-100">
-        {users.map((user) => (
-          <div key={user.id} className="flex items-center justify-between p-2 bg-white rounded-lg mb-2 shadow">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
-              <div>
-                <h1 className="font-bold text-black">{user.firstName}</h1>
-              </div>
+
+      {/* message list */}
+      <div className="flex-1 overflow-y-auto p-3 mt-6 pt-16 pb-20 bg-white">
+        {msgs.map((msg) => (
+          <div key={msg.id} className={`flex flex-col ${msg.senderId === currentUserId ? 'items-end' : 'items-start'}`}>
+            <div className={`max-w-2/3 rounded-lg p-2 mb-2 shadow ${msg.senderId === currentUserId ? 'bg-blue-100' : 'bg-gray-300'}`}>
+              <p className="text-black">{msg.text}</p>
             </div>
-            <div className="flex items-center justify-end space-x-2">
-              <p className="text-black">{user.lastMessageTime || "No message time"}</p>
-              {user.isOnline && <span className="h-3 w-3 bg-green-500 rounded-full"></span>}
-            </div>
+            <span className="text-sm text-gray-500 mb-2">{msg.sentAt}</span>
           </div>
         ))}
       </div>
-      <div className="bg-white fixed bottom-0 w-full p-4 shadow-md z-10 flex justify-between">
-        <IconButton className="p-3 rounded-full bg-blue-500 text-white">
-          <ChatIcon />
-        </IconButton>
-          <IconButton className="p-3 rounded-full bg-blue-500 text-white">
-            <NotificationsIcon />
-          </IconButton>
-        <IconButton className="p-3 rounded-full bg-blue-500 text-white">
-          <SettingsIcon />
-        </IconButton>
+
+      {/* 输入和发送按钮 */}
+      <div className="p-4 flex items-center bg-gray-100 fixed bottom-0 w-full">
+        <input
+          type="text"
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          placeholder="Type your message..."
+          className="flex-1 border rounded-full p-2 mr-4 text-black"
+        />
+        <Button onClick={handleMessageSend} className="bg-blue-500 text-white p-2 rounded-full">
+          <SendIcon />
+        </Button>
       </div>
     </div>
-    </>
+
+    
   );
 }
