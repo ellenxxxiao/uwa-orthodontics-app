@@ -30,7 +30,7 @@ export default function UserAvatar({
           variant="square"
           className="rounded-2xl"
         >
-          {firstName[0] + lastName[0]}
+          {firstName.charAt(0) + lastName.charAt(0)}
         </Avatar>
       )}
     </div>
