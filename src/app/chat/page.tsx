@@ -36,6 +36,14 @@ export default function Home() {
     fetchUsers();
   }, []);
 
+  // Polling. Not the best way to do it, but it works for now.
+  useEffect(() => {
+    fetchMessages();
+    const intervalId = setInterval(fetchMessages, 500);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <div className="h-screen flex flex-col">
       <Header
