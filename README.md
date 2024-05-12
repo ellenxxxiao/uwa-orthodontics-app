@@ -1,10 +1,6 @@
 # UWA Orthodontics App
 
-supabaseClient.js needs to be created in src/ 
-It is removed for privacy reasons
-This branch only contains database connection directly to supabase, no prisma
-
->[Figma UI Design](https://www.figma.com/file/EXY0lfLzYuVew2JNaDxLPs/UWA-Orthodontics-Client-Application%EF%BC%88mobile%EF%BC%89?type=design&node-id=0%3A1&mode=design&t=TVZXbkhZlsytTzkw-1)
+> [Figma UI Design](https://www.figma.com/file/EXY0lfLzYuVew2JNaDxLPs/UWA-Orthodontics-Client-Application%EF%BC%88mobile%EF%BC%89?type=design&node-id=0%3A1&mode=design&t=TVZXbkhZlsytTzkw-1)
 
 ## Getting Started
 
@@ -22,13 +18,7 @@ This branch only contains database connection directly to supabase, no prisma
 
 ### Querying the database
 
-A simple database query is written in `/src/query-script.ts`. To execute this query and see the results in terminal, run:
-
-```
-npx tsx ./src/query-script.ts
-```
-
-For more information on querying the database with Prisma, checkout https://www.prisma.io/docs/orm/prisma-client/queries.
+For more information on querying the database with Prisma, checkout [Prisma Docs](https://www.prisma.io/docs/orm/prisma-client/queries).
 
 ## Prisma
 
