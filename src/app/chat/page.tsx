@@ -58,6 +58,8 @@ export default function Home() {
               key={msg.id.toString()}
               text={msg.text}
               isSender={msg.senderId === currentUserId}
+              time={msg.sentAt}
+              showTime={true}
             />
           ))}
         </div>
