@@ -42,6 +42,60 @@ async function createUsers(clinicianCount: number, patientCount: number) {
   }
 }
 
+async function createConnections() {
+  const clinicians = await prisma.user.findMany({
+    where: { role: Role.CLINICIAN },
+  });
+  const patients = await prisma.user.findMany({
+    where: { role: Role.PATIENT },
+  });
+
+  for (const patient of patients) {
+    const randomClinician =
+      clinicians[Math.floor(Math.random() * clinicians.length)];
+    await prisma.connection.create({
+      data: {
+        clinicianId: randomClinician.id,
+        patientId: patient.id,
+      },
+    });
+  }
+}
+
+async function createMessages() {
+  const connections = await prisma.connection.findMany({
+    include: {
+      Clinician: true,
+      Patient: true,
+    },
+  });
+
+  for (const connection of connections) {
+    // Create a message from clinician to patient
+    await prisma.message.create({
+      data: {
+        text: faker.lorem.sentence(),
+        senderId: connection.clinicianId,
+        receiverId: connection.patientId,
+        sentAt: faker.date.past(),
+      },
+    });
+
+    // Optionally, create a response from patient to clinician
+    if (Math.random() > 0.5) {
+      // 50% chance to respond
+      await prisma.message.create({
+        data: {
+          text: faker.lorem.sentence(),
+          senderId: connection.patientId,
+          receiverId: connection.clinicianId,
+          sentAt: faker.date.past(),
+        },
+      });
+    }
+  }
+}
+
 async function main() {
   const fakerSeed = 0;
   const clinicianCount = 3;
@@ -51,6 +105,8 @@ async function main() {
   await deleteAllData();
   await createRandomUser(Role.ADMIN);
   await createUsers(clinicianCount, patientCount);
+  await createConnections();
+  await createMessages();
 }
 
 main()
