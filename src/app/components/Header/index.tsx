@@ -17,7 +17,7 @@ export default function Header({
   firstName,
   lastName,
   avatar,
-  title,
+  title
 }: Props) {
   switch (type) {
     case "secondary":

@@ -13,7 +13,7 @@ export default function UserAvatar({
   firstName,
   lastName,
   size,
-  online,
+  online
 }: Props) {
   return (
     <div style={{ position: "relative" }}>

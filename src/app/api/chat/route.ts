@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export const IDs = {
   senderId: "0d7e9ae9-dcd9-4bc9-8908-1715778cfaf9",
-  receiverId: "8a35ed21-2acd-4846-acab-3a42fb1aa733",
+  receiverId: "8a35ed21-2acd-4846-acab-3a42fb1aa733"
 };
 
 // GET
@@ -14,18 +14,18 @@ export async function GET(request: Request) {
       where: {
         OR: [
           { senderId: IDs.senderId, receiverId: IDs.receiverId },
-          { senderId: IDs.receiverId, receiverId: IDs.senderId },
-        ],
-      },
+          { senderId: IDs.receiverId, receiverId: IDs.senderId }
+        ]
+      }
     });
     return new Response(JSON.stringify(messages), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
     return new Response(JSON.stringify({ error }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" }
     });
   }
 }
@@ -38,17 +38,17 @@ export async function POST(request: Request) {
       data: {
         senderId,
         receiverId,
-        text,
-      },
+        text
+      }
     });
     return new Response(JSON.stringify(message), {
       status: 201,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
     return new Response(JSON.stringify({ error }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" }
     });
   }
 }

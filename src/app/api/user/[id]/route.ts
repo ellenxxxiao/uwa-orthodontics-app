@@ -13,23 +13,23 @@ export async function GET(
 
   try {
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!user) {
       // console.error("User not found for ID:", id);
       return new Response(JSON.stringify({ error: "User not found" }), {
-        status: HttpStatusCode.NotFound,
+        status: HttpStatusCode.NotFound
       });
     }
     // console.log("User found:", user);
     return new Response(JSON.stringify(user), {
-      status: HttpStatusCode.Ok,
+      status: HttpStatusCode.Ok
     });
   } catch (error) {
     // console.error("Error accessing database:", error);
     return new Response(JSON.stringify({ error }), {
-      status: HttpStatusCode.InternalServerError,
+      status: HttpStatusCode.InternalServerError
     });
   }
 }
