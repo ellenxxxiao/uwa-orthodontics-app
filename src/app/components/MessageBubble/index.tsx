@@ -17,7 +17,7 @@ export default function MessageBubble({
   time,
   showTime,
   text,
-  isSender,
+  isSender
 }: Props) {
   return (
     <div key={key} className={`flex ${isSender ? "justify-end" : ""}`}>
@@ -25,7 +25,7 @@ export default function MessageBubble({
         <div
           className={`${
             isSender ? "rounded-br" : "rounded-bl"
-          } text-sm md:text-base text-app-black bg-app-white p-4 rounded-2xl max-w-xs md:max-w-md`}
+          } max-w-xs rounded-2xl bg-app-white p-4 text-sm text-app-black md:max-w-md md:text-base`}
         >
           {text}
         </div>

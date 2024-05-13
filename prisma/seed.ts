@@ -27,8 +27,8 @@ async function createRandomUser(role: Role) {
       email: faker.internet.email(),
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
-      role,
-    },
+      role
+    }
   });
 }
 
@@ -44,10 +44,10 @@ async function createUsers(clinicianCount: number, patientCount: number) {
 
 async function createConnections() {
   const clinicians = await prisma.user.findMany({
-    where: { role: Role.CLINICIAN },
+    where: { role: Role.CLINICIAN }
   });
   const patients = await prisma.user.findMany({
-    where: { role: Role.PATIENT },
+    where: { role: Role.PATIENT }
   });
 
   for (const patient of patients) {
@@ -56,8 +56,8 @@ async function createConnections() {
     await prisma.connection.create({
       data: {
         clinicianId: randomClinician.id,
-        patientId: patient.id,
-      },
+        patientId: patient.id
+      }
     });
   }
 }
@@ -66,8 +66,8 @@ async function createMessages() {
   const connections = await prisma.connection.findMany({
     include: {
       Clinician: true,
-      Patient: true,
-    },
+      Patient: true
+    }
   });
 
   for (const connection of connections) {
@@ -77,8 +77,8 @@ async function createMessages() {
         text: faker.lorem.sentence(),
         senderId: connection.clinicianId,
         receiverId: connection.patientId,
-        sentAt: faker.date.past(),
-      },
+        sentAt: faker.date.past()
+      }
     });
 
     // Optionally, create a response from patient to clinician
@@ -89,8 +89,8 @@ async function createMessages() {
           text: faker.lorem.sentence(),
           senderId: connection.patientId,
           receiverId: connection.clinicianId,
-          sentAt: faker.date.past(),
-        },
+          sentAt: faker.date.past()
+        }
       });
     }
   }

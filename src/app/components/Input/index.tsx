@@ -1,14 +1,19 @@
-type Props = {
-  label: string;
-  placeholder: string;
-};
+import { InputHTMLAttributes } from "react";
 
-export default function Input({ label, placeholder }: Props) {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
+  label: string;
+  value?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export default function Input({ label, value, onChange, ...rest }: Props) {
   return (
     <input
       type="text"
-      placeholder={placeholder}
-      className="flex-1 border border-base-200 rounded-lg h-full px-3 text-base w-full focus:outline-none text-accent-focus"
+      value={value}
+      onChange={onChange}
+      {...rest}
+      className="h-full w-full flex-1 rounded-lg border border-base-200 px-3 text-base text-accent-focus focus:outline-none"
     />
   );
 }

@@ -1,16 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { User } from "@prisma/client";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
 import ChatIcon from "@mui/icons-material/Chat";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import SearchIcon from "@mui/icons-material/Search";
 import SettingsIcon from "@mui/icons-material/Settings";
-import Link from "next/link";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import { User } from "@prisma/client";
 
-export default function Home() {
+export default function Contacts() {
   // users is an array of User objects
   const [users, setUsers] = useState<User[]>([]);
 
@@ -26,31 +25,31 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-col h-screen">
-        <div className="bg-white fixed top-0 w-full p-4 shadow-md z-10">
-          <div className="flex justify-between items-center">
-            <IconButton className="p-2 bg-blue-500 rounded-full text-white">
+      <div className="flex h-screen flex-col">
+        <div className="fixed top-0 z-10 w-full bg-white p-4 shadow-md">
+          <div className="flex items-center justify-between">
+            <IconButton className="rounded-full bg-blue-500 p-2 text-white">
               <SearchIcon />
             </IconButton>
-            <Button className="bg-blue-500 text-white py-2 px-4 rounded">
+            <Button className="rounded bg-blue-500 px-4 py-2 text-white">
               + Create New Chat
             </Button>
           </div>
-          <div className="flex justify-center space-x-10 mt-0">
-            <Button className="text-gray-500 px-3 py-1 rounded">All</Button>
-            <Button className="text-gray-500 px-3 py-1 rounded">Unread</Button>
-            <Button className="text-gray-500 px-3 py-1 rounded">Read</Button>
-            <Button className="text-gray-500 px-3 py-1 rounded">Pinned</Button>
+          <div className="mt-0 flex justify-center space-x-10">
+            <Button className="rounded px-3 py-1 text-gray-500">All</Button>
+            <Button className="rounded px-3 py-1 text-gray-500">Unread</Button>
+            <Button className="rounded px-3 py-1 text-gray-500">Read</Button>
+            <Button className="rounded px-3 py-1 text-gray-500">Pinned</Button>
           </div>
         </div>
-        <div className="flex-1 pt-24 mt-4 pb-16 overflow-auto bg-gray-100">
+        <div className="mt-4 flex-1 overflow-auto bg-gray-100 pb-16 pt-24">
           {users.map((user) => (
             <div
               key={user.id}
-              className="flex items-center justify-between p-2 bg-white rounded-lg mb-2 shadow"
+              className="mb-2 flex items-center justify-between rounded-lg bg-white p-2 shadow"
             >
               <div className="flex items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
+                <div className="mr-4 h-12 w-12 rounded-full bg-gray-300"></div>
                 <div>
                   <h1 className="font-bold text-black">{user.firstName}</h1>
                 </div>
@@ -60,20 +59,20 @@ export default function Home() {
                   {user.lastMessageTime || "No message time"}
                 </p>
                 {user.isOnline && (
-                  <span className="h-3 w-3 bg-green-500 rounded-full"></span>
+                  <span className="h-3 w-3 rounded-full bg-green-500"></span>
                 )}
               </div>
             </div>
           ))}
         </div>
-        <div className="bg-white fixed bottom-0 w-full p-4 shadow-md z-10 flex justify-between">
-          <IconButton className="p-3 rounded-full bg-blue-500 text-white">
+        <div className="fixed bottom-0 z-10 flex w-full justify-between bg-white p-4 shadow-md">
+          <IconButton className="rounded-full bg-blue-500 p-3 text-white">
             <ChatIcon />
           </IconButton>
-          <IconButton className="p-3 rounded-full bg-blue-500 text-white">
+          <IconButton className="rounded-full bg-blue-500 p-3 text-white">
             <NotificationsIcon />
           </IconButton>
-          <IconButton className="p-3 rounded-full bg-blue-500 text-white">
+          <IconButton className="rounded-full bg-blue-500 p-3 text-white">
             <SettingsIcon />
           </IconButton>
         </div>

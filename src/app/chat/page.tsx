@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Message, User } from "@prisma/client";
 import { LuSendHorizonal } from "react-icons/lu";
+
+import { IDs } from "../api/chat/route";
 import Header from "../components/Header";
 import Input from "../components/Input";
 import MessageBubble from "../components/MessageBubble";
-import { IDs } from "../api/chat/route";
 
 export default function Home() {
   const [msgs, setMsgs] = useState<Message[]>([]);
@@ -34,7 +35,7 @@ export default function Home() {
   useEffect(() => {
     fetchMessages();
     fetchUsers();
-  }, []);
+  });
 
   // Polling. Not the best way to do it, but it works for now.
   useEffect(() => {
@@ -45,7 +46,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="flex h-screen flex-col">
       <Header
         type="secondary"
         title={
@@ -55,12 +56,12 @@ export default function Home() {
         }
         firstName={otherUser.firstName || ""}
         lastName={otherUser.lastName || ""}
-        avatar={""}
+        avatar=""
       />
 
       {/* Messages */}
-      <div className="w-full flex-1 bg-base-100 overflow-y-auto">
-        <div className="my-6 mx-4 text-app-black flex flex-col gap-6">
+      <div className="w-full flex-1 overflow-y-auto bg-base-100">
+        <div className="mx-4 my-6 flex flex-col gap-6 text-app-black">
           {msgs.map((msg) => (
             <MessageBubble
               key={msg.id.toString()}
@@ -74,7 +75,7 @@ export default function Home() {
       </div>
 
       {/* Input */}
-      <div className="w-full h-20 bg-app-white flex justify-between py-4 px-4 gap-8">
+      <div className="flex h-20 w-full justify-between gap-8 bg-app-white px-4 py-4">
         <Input label="Message" placeholder="Type your message" />
         <button>
           <LuSendHorizonal
