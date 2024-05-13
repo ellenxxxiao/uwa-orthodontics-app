@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import { useEffect, useState } from "react";
 import { User } from "@prisma/client";
 import { LuSearch, LuPenSquare } from "react-icons/lu";
+import Footer from "../components/Footer";
 
 export default function Home() {
   // users is an array of User objects
@@ -32,7 +33,12 @@ export default function Home() {
           }
           title="Contacts"
         />
+
+        {/* main */}
         <div className="w-full flex-1 bg-base-100 overflow-y-auto"></div>
+
+        {/* footer */}
+        <Footer />
       </div>
     </>
   );
