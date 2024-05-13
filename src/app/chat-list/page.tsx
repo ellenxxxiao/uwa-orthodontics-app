@@ -1,10 +1,11 @@
 "use client";
 
-import Header from "../components/Header";
 import { useEffect, useState } from "react";
 import { User } from "@prisma/client";
-import { LuSearch, LuPenSquare } from "react-icons/lu";
+import { LuPenSquare, LuSearch } from "react-icons/lu";
+
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 export default function Home() {
   // users is an array of User objects
@@ -22,7 +23,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-col h-screen">
+      <div className="flex h-screen flex-col">
         <Header
           type="primary"
           iconLeft={
@@ -35,7 +36,7 @@ export default function Home() {
         />
 
         {/* main */}
-        <div className="w-full flex-1 bg-base-100 overflow-y-auto"></div>
+        <div className="w-full flex-1 overflow-y-auto bg-base-100"></div>
 
         {/* footer */}
         <Footer />

@@ -1,14 +1,13 @@
 "use client";
 
-import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function Home() {
   return (
     <>
-      <div className="flex flex-col h-screen">
+      <div className="flex h-screen flex-col">
         {/* main */}
-        <div className="w-full flex-1 bg-base-100 overflow-y-auto">
+        <div className="w-full flex-1 overflow-y-auto bg-base-100">
           REMINDER MAIN
         </div>
 

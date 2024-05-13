@@ -21,7 +21,13 @@ export default function Login() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-between bg-base-100 p-4 dark:bg-slate-800">
       <div className="my-16 w-full max-w-md py-2">
-        <Image src="/logo.png" alt="Logo" width={80} height={80} className="mx-auto h-14 w-14" />
+        <Image
+          src="/logo.png"
+          alt="Logo"
+          width={80}
+          height={80}
+          className="mx-auto h-14 w-14"
+        />
         <h1 className="text-center text-[40px] font-bold tracking-wide text-accent-focus dark:text-slate-400">
           OrthoChat
         </h1>
@@ -80,7 +86,9 @@ export default function Login() {
           <label className="flex items-center">
             <input type="checkbox" className="h-4 w-4 accent-primary-focus" />
 
-            <span className="ml-2 text-sm text-accent-focus dark:text-slate-400">Remember me</span>
+            <span className="ml-2 text-sm text-accent-focus dark:text-slate-400">
+              Remember me
+            </span>
           </label>
           <a
             href="#"
@@ -102,7 +110,13 @@ export default function Login() {
             type="button"
             className="flex h-11 w-full items-center justify-center rounded-lg border border-gray-300 bg-app-white font-medium text-accent-focus hover:bg-base-200"
           >
-            <Image src="/g-logo.svg" alt="Google" width={80} height={80} className="mr-2 h-5 w-5" />
+            <Image
+              src="/g-logo.svg"
+              alt="Google"
+              width={80}
+              height={80}
+              className="mr-2 h-5 w-5"
+            />
             Sign in with Google
           </button>
         </div>

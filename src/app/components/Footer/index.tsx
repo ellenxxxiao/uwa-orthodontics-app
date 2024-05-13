@@ -1,6 +1,6 @@
-import { LuMessageCircle, LuBell, LuSettings } from "react-icons/lu";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { LuBell, LuMessageCircle, LuSettings } from "react-icons/lu";
 
 export default function Footer() {
   const pathname = usePathname();
@@ -10,7 +10,7 @@ export default function Footer() {
   };
 
   return (
-    <div className="px-4 w-full bg-base-100 h-20 sticky bottom-0 flex justify-between items-center border-t border-base-300">
+    <div className="sticky bottom-0 flex h-20 w-full items-center justify-between border-t border-base-300 bg-base-100 px-4">
       <Link href="/chat-list">
         <LuMessageCircle
           size={38}
@@ -18,7 +18,7 @@ export default function Footer() {
           className={`text-primary ${isActive("/chat-list") ? "fill-current" : ""}`}
         />
       </Link>
-      
+
       <Link href="/reminder-list">
         <LuBell
           size={38}

@@ -1,7 +1,7 @@
 "use client";
-import { LuChevronLeft, LuBell } from "react-icons/lu"; // Import icons in a single line if from the same source
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Message, User } from "@prisma/client";
+import { LuBell, LuChevronLeft } from "react-icons/lu"; // Import icons in a single line if from the same source
 import { LuSendHorizonal } from "react-icons/lu";
 
 import { IDs } from "../api/chat/route";

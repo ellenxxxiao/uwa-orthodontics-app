@@ -19,12 +19,19 @@ export default function Register() {
 
   const clearEmail = () => setEmail("");
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
+  const toggleConfirmPasswordVisibility = () =>
+    setShowConfirmPassword(!showConfirmPassword);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between bg-base-100 p-4 dark:bg-slate-800">
       <div className="my-16 w-full max-w-md py-2">
-        <Image src="/logo.png" alt="Logo" width={80} height={80} className="mx-auto h-14 w-14" />
+        <Image
+          src="/logo.png"
+          alt="Logo"
+          width={80}
+          height={80}
+          className="mx-auto h-14 w-14"
+        />
         <h1 className="text-center text-[40px] font-bold tracking-wide text-accent-focus dark:text-slate-400">
           OrthoChat
         </h1>
@@ -109,15 +116,24 @@ export default function Register() {
           Sign Up
         </button>
         <button
-            type="button"
-            className="flex h-11 w-full items-center justify-center rounded-lg border border-gray-300 bg-app-white font-medium text-accent-focus hover:bg-base-200"
-          >
-            <Image src="/g-logo.svg" alt="Google" width={80} height={80} className="mr-2 h-5 w-5" />
-            Sign in with Google
-          </button>
+          type="button"
+          className="flex h-11 w-full items-center justify-center rounded-lg border border-gray-300 bg-app-white font-medium text-accent-focus hover:bg-base-200"
+        >
+          <Image
+            src="/g-logo.svg"
+            alt="Google"
+            width={80}
+            height={80}
+            className="mr-2 h-5 w-5"
+          />
+          Sign in with Google
+        </button>
         <p className="text-center text-sm">
           Already have an account?{" "}
-          <a href="/login" className="font-medium text-primary hover:text-primary-focus">
+          <a
+            href="/login"
+            className="font-medium text-primary hover:text-primary-focus"
+          >
             Sign In
           </a>
         </p>

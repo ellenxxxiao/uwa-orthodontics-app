@@ -22,16 +22,16 @@ export default function Header({
   switch (type) {
     case "secondary":
       return (
-        <div className="px-4 w-full bg-primary h-20 sticky top-0 flex justify-between items-center">
+        <div className="sticky top-0 flex h-20 w-full items-center justify-between bg-primary px-4">
           <button>{iconLeft}</button>
-          <div className="pt-2 flex flex-col gap-1 items-center">
+          <div className="flex flex-col items-center gap-1 pt-2">
             <UserAvatar
               firstName={firstName!}
               lastName={lastName!}
               avatar={avatar!}
               size={42}
             />
-            <h1 className="text-app-white text-sm font-bold">{title}</h1>
+            <h1 className="text-sm font-bold text-app-white">{title}</h1>
           </div>
           <button className="invisible">{iconRight}</button>
         </div>
@@ -39,7 +39,7 @@ export default function Header({
 
     case "primary":
       return (
-        <div className="px-4 w-full bg-base-100 h-20 sticky top-0 flex justify-between items-center border-b border-base-300">
+        <div className="sticky top-0 flex h-20 w-full items-center justify-between border-b border-base-300 bg-base-100 px-4">
           <button>{iconLeft}</button>
           <div className=""></div>
           <button>{iconRight}</button>
