@@ -20,7 +20,7 @@ export default function Header({
   return (
     <div className="px-4 w-full bg-primary h-20 sticky top-0 flex justify-between items-center">
       <button>
-        <LuChevronLeft size={38} strokeWidth={1.2} className="text-white" />
+        <LuChevronLeft size={38} strokeWidth={1.2} className="text-app-white" />
       </button>
       <div className="pt-2 flex flex-col gap-1 items-center">
         <UserAvatar
@@ -29,10 +29,10 @@ export default function Header({
           avatar={avatar}
           size={42}
         />
-        <h1 className="text-white text-sm font-bold">{title}</h1>
+        <h1 className="text-app-white text-sm font-bold">{title}</h1>
       </div>
       <button className="invisible">
-        <LuBell size={30} className="text-white" />
+        <LuBell size={30} className="text-app-white" />
       </button>
     </div>
   );
