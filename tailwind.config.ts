@@ -40,9 +40,11 @@ const config: Config = {
           DEFAULT: "#667085",
           focus: "#344054",
         },
-        base100: "#EDEDED",
-        base200: "#D0D5DD",
-        base300: "#B7BDC8",
+        base: {
+          100: "#EDEDED",
+          200: "#D0D5DD",
+          300: "#B7BDC8",
+        },
         app: {
           white: "#FEFEFE",
           black: "#1E1E1E",
