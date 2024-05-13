@@ -18,7 +18,7 @@ const Login: React.FC = () => {
         <div className="flex flex-col items-center justify-between min-h-screen p-4"> 
             <div className="w-full max-w-md px-8 py-12 mt-8">
                 <img src="/logo.png" alt="Logo" className="mx-auto w-20 h-20" />
-                <h1 className="text-4xl font-bold tracking-wide text-center">OrthoChat</h1>
+                <h1 className="text-4xl font-bold tracking-wide text-center text-accent-focus">OrthoChat</h1>
             </div>
 
             <form onSubmit={handleSubmit} className="w-full max-w-md p-8 space-y-6 rounded-lg min-h-screen">

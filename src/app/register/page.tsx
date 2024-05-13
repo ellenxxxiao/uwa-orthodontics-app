@@ -21,8 +21,8 @@ const Register: React.FC = () => {
         <div className="flex flex-col justify-between min-h-screen p-4">
             <div className="px-8 py-12 mt-8 rounded-lg">
                 <img src="/logo.png" alt="Logo" className="mx-auto w-20 h-20" />
-                <h1 className="text-4xl font-bold tracking-wide text-center">OrthoChat</h1>
-                <h3 className="text-center text-lg">Create your account now</h3>
+                <h1 className="text-4xl font-bold tracking-wide text-center text-accent-focus">OrthoChat</h1>
+                <h3 className="text-center text-md text-accent">Create your account now</h3>
             </div>
 
             <form onSubmit={handleSubmit} className="w-full max-w-md p-8 space-y-6 rounded-lg mx-auto min-h-screen">
