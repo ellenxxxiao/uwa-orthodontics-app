@@ -8,7 +8,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import ChatIcon from "@mui/icons-material/Chat";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
-import Link from "next/link";
 
 export default function Home() {
   // users is an array of User objects
@@ -43,29 +42,7 @@ export default function Home() {
             <Button className="text-gray-500 px-3 py-1 rounded">Pinned</Button>
           </div>
         </div>
-        <div className="flex-1 pt-24 mt-4 pb-16 overflow-auto bg-gray-100">
-          {users.map((user) => (
-            <div
-              key={user.id}
-              className="flex items-center justify-between p-2 bg-white rounded-lg mb-2 shadow"
-            >
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
-                <div>
-                  <h1 className="font-bold text-black">{user.firstName}</h1>
-                </div>
-              </div>
-              <div className="flex items-center justify-end space-x-2">
-                <p className="text-black">
-                  {user.lastMessageTime || "No message time"}
-                </p>
-                {user.isOnline && (
-                  <span className="h-3 w-3 bg-green-500 rounded-full"></span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="flex-1 pt-24 mt-4 pb-16 overflow-auto bg-gray-100"></div>
         <div className="bg-white fixed bottom-0 w-full p-4 shadow-md z-10 flex justify-between">
           <IconButton className="p-3 rounded-full bg-blue-500 text-white">
             <ChatIcon />
