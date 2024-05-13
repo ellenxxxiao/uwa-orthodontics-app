@@ -1,8 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { LuEye, LuEyeOff, LuXCircle } from "react-icons/lu";
 
-const Register: React.FC = () => {
+import Input from "../components/Input";
+
+export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -16,105 +19,109 @@ const Register: React.FC = () => {
 
   const clearEmail = () => setEmail("");
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword(!showConfirmPassword);
+  const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
 
   return (
-    <div className="flex min-h-screen flex-col justify-between p-4">
-      <div className="mt-8 rounded-lg px-8 py-12">
-        <img src="/logo.png" alt="Logo" className="mx-auto h-20 w-20" />
-        <h1 className="text-center text-4xl font-bold tracking-wide text-accent-focus">
+    <div className="flex min-h-screen flex-col items-center justify-between bg-base-100 p-4 dark:bg-slate-800">
+      <div className="my-16 w-full max-w-md py-2">
+        <Image src="/logo.png" alt="Logo" width={80} height={80} className="mx-auto h-14 w-14" />
+        <h1 className="text-center text-[40px] font-bold tracking-wide text-accent-focus dark:text-slate-400">
           OrthoChat
         </h1>
-        <h3 className="text-md text-center text-accent">
+        <h3 className="text-center text-lg text-accent dark:text-slate-400">
           Create your account now
         </h3>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="mx-auto min-h-screen w-full max-w-md space-y-6 rounded-lg p-8"
+        className="my-2 w-full max-w-md flex-1 space-y-8 p-4"
       >
-        <div className="relative">
-          <input
+        {/* Email Input */}
+        <div className="relative flex h-11 w-full items-center">
+          <Input
+            label="Email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="w-full rounded-md border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {email && (
             <button
               type="button"
               onClick={clearEmail}
-              className="absolute inset-y-0 right-0 flex items-center pr-3"
+              className="absolute right-2"
             >
-              <Image src="/x-icon.png" alt="Clear" className="h-5 w-5" />
+              <LuXCircle strokeWidth={1} size={25} className="text-accent" />
             </button>
           )}
         </div>
-        <div className="relative">
-          <input
+
+        {/* Password Input */}
+        <div className="relative flex h-11 w-full items-center">
+          <Input
+            label="Password"
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="w-full rounded-md border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="button"
             onClick={togglePasswordVisibility}
-            className="absolute inset-y-0 right-0 flex items-center pr-3"
+            className="absolute right-2"
           >
-            <Image
-              src={showPassword ? "/hide-icon.png" : "/hide-icon.png"}
-              alt={showPassword ? "Show" : "Hide"}
-              className="h-5 w-5"
-            />
+            {showPassword ? (
+              <LuEyeOff strokeWidth={1} size={25} className="text-accent" />
+            ) : (
+              <LuEye strokeWidth={1} size={25} className="text-accent" />
+            )}
           </button>
         </div>
-        <div className="relative">
-          <input
+
+        {/* Confirm Password Input */}
+        <div className="relative flex h-11 w-full items-center">
+          <Input
+            label="Confirm Password"
             type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm Password"
-            className="w-full rounded-md border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="button"
             onClick={toggleConfirmPasswordVisibility}
-            className="absolute inset-y-0 right-0 flex items-center pr-3"
+            className="absolute right-2"
           >
-            <img
-              src={showConfirmPassword ? "/hide-icon.png" : "/hide-icon.png"}
-              alt={showConfirmPassword ? "Show" : "Hide"}
-              className="h-5 w-5"
-            />
+            {showConfirmPassword ? (
+              <LuEyeOff strokeWidth={1} size={25} className="text-accent" />
+            ) : (
+              <LuEye strokeWidth={1} size={25} className="text-accent" />
+            )}
           </button>
         </div>
+
+        {/* Sign Up Button */}
         <button
           type="submit"
-          className="w-full rounded-md bg-primary px-4 py-2 text-white hover:bg-primary-focus"
+          className="h-11 w-full rounded-lg bg-primary font-medium text-white hover:bg-primary-focus"
         >
           Sign Up
         </button>
         <button
-          type="button"
-          className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-base-200"
-        >
-          <img src="/g-logo.svg" alt="Google" className="mr-2 h-5 w-5" />
-          Sign in with Google
-        </button>
+            type="button"
+            className="flex h-11 w-full items-center justify-center rounded-lg border border-gray-300 bg-app-white font-medium text-accent-focus hover:bg-base-200"
+          >
+            <Image src="/g-logo.svg" alt="Google" width={80} height={80} className="mr-2 h-5 w-5" />
+            Sign in with Google
+          </button>
         <p className="text-center text-sm">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-500 hover:text-primary-focus">
+          <a href="/login" className="font-medium text-primary hover:text-primary-focus">
             Sign In
           </a>
         </p>
       </form>
     </div>
   );
-};
-
-export default Register;
+}
