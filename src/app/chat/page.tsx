@@ -1,5 +1,5 @@
 "use client";
-
+import { LuChevronLeft, LuBell } from "react-icons/lu"; // Import icons in a single line if from the same source
 import { useState, useEffect } from "react";
 import { Message, User } from "@prisma/client";
 import { LuSendHorizonal } from "react-icons/lu";
@@ -48,6 +48,16 @@ export default function Home() {
     <div className="h-screen flex flex-col">
       <Header
         type="secondary"
+        iconLeft={
+          <LuChevronLeft
+            size={35}
+            strokeWidth={1.2}
+            className="text-app-white"
+          />
+        }
+        iconRight={
+          <LuBell size={30} strokeWidth={1.2} className="text-app-white" />
+        }
         title={
           otherUser && otherUser.firstName
             ? `${otherUser.firstName} ${otherUser.lastName}`
