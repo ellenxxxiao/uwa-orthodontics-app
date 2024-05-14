@@ -11,19 +11,24 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deepOrange, deepPurple } from "@mui/material/colors";
+import { deepOrange } from "@mui/material/colors";
 
-const ReminderCard = () => {
+interface addReminderProps {
+  handleEditClick?:()=>{}
+}
+
+const ReminderCard = ({handleEditClick}:addReminderProps) => {
   const [isSwiping, setIsSwiping] = useState(false);
 
   const handleMouseEnter = () => setIsSwiping(true);
   const handleMouseLeave = () => setIsSwiping(false);
 
+
   return (
     <Card
       sx={{
         width: "100%",
-        boxShadow: "0px 10px 5px rgba(0, 0, 0, 0.15)",
+        boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
         transition: "transform 0.3s ease-in-out",
         borderRadius: 2,
         display: "flex",
@@ -72,7 +77,7 @@ const ReminderCard = () => {
             }}
           >
             <IconButton aria-label="edit">
-              <EditIcon sx={{ color: "white" }} />
+              <EditIcon sx={{ color: "white" }}  onClick ={handleEditClick}/>
             </IconButton>
           </Box>
           <Box
