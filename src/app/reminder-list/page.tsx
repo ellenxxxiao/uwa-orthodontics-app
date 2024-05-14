@@ -23,7 +23,7 @@ export default function Home() {
             /> </IconButton>} />
 
         <div className="w-full flex-1 overflow-y-auto bg-base-100">
-          REMINDER MAIN
+          REMINDER MAIN +++
           <div className="  flex flex-col px-2 py-2 gap-4 ">
             <SearchInput />
             <div className="flex flex-col gap-[10px]">
