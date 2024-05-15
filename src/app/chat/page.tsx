@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Message, User } from "@prisma/client";
 import { LuBell, LuChevronLeft } from "react-icons/lu"; // Import icons in a single line if from the same source
 import { LuSendHorizonal } from "react-icons/lu";
 
-import { IDs } from "../api/chat/route";
+
 import Header from "../components/Header";
 import Input from "../components/Input";
 import MessageBubble from "../components/MessageBubble";
+import { IDs } from "../api/chat/route";
 
 export default function Home() {
   const [msgs, setMsgs] = useState<Message[]>([]);
@@ -15,6 +17,8 @@ export default function Home() {
   const otherUserId = IDs.receiverId;
   const [user, setUser] = useState({} as User);
   const [otherUser, setOtherUser] = useState({} as User);
+  const router = useRouter();
+  const [isMounted, setIsMounted] = useState(true); // control request 
 
   const fetchMessages = async () => {
     const res = await fetch("/api/chat");
@@ -35,7 +39,14 @@ export default function Home() {
   useEffect(() => {
     fetchMessages();
     fetchUsers();
-  });
+  }, []);
+
+  useEffect(() => {
+    setIsMounted(true);
+    fetchMessages();
+    fetchUsers();
+    return () => setIsMounted(false); 
+  }, []);   // control request
 
   // Polling. Not the best way to do it, but it works for now.
   useEffect(() => {
@@ -43,10 +54,15 @@ export default function Home() {
     const intervalId = setInterval(fetchMessages, 500);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [isMounted]);
+
+  const handleBackClick = () => {
+    setIsMounted(false); // shut dowm when leave
+    router.push("/chat-list");
+  };
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="h-screen flex flex-col">
       <Header
         type="secondary"
         iconLeft={
@@ -54,6 +70,7 @@ export default function Home() {
             size={35}
             strokeWidth={1.2}
             className="text-app-white"
+            onClick={handleBackClick}
           />
         }
         iconRight={
@@ -66,12 +83,12 @@ export default function Home() {
         }
         firstName={otherUser.firstName || ""}
         lastName={otherUser.lastName || ""}
-        avatar=""
+        avatar={""}
       />
 
       {/* Messages */}
-      <div className="w-full flex-1 overflow-y-auto bg-base-100">
-        <div className="mx-4 my-6 flex flex-col gap-6 text-app-black">
+      <div className="w-full flex-1 bg-base-100 overflow-y-auto">
+        <div className="my-6 mx-4 text-app-black flex flex-col gap-6">
           {msgs.map((msg) => (
             <MessageBubble
               key={msg.id.toString()}
@@ -85,7 +102,7 @@ export default function Home() {
       </div>
 
       {/* Input */}
-      <div className="flex h-20 w-full justify-between gap-8 bg-app-white px-4 py-4">
+      <div className="w-full h-20 bg-app-white flex justify-between py-4 px-4 gap-8">
         <Input label="Message" placeholder="Type your message" />
         <button>
           <LuSendHorizonal
