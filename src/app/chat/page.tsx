@@ -1,4 +1,12 @@
 "use client";
+<<<<<<< Updated upstream
+=======
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Message, User } from "@prisma/client";
+import { LuBell, LuChevronLeft } from "react-icons/lu"; // Import icons in a single line if from the same source
+import { LuSendHorizonal } from "react-icons/lu";
+>>>>>>> Stashed changes
 
 import { useState, useEffect } from "react";
 import { Message, User } from "@prisma/client";
@@ -14,6 +22,8 @@ export default function Home() {
   const otherUserId = IDs.receiverId;
   const [user, setUser] = useState({} as User);
   const [otherUser, setOtherUser] = useState({} as User);
+  const router = useRouter();
+  const [isMounted, setIsMounted] = useState(true); // control request 
 
   const fetchMessages = async () => {
     const res = await fetch("/api/chat");
@@ -36,18 +46,44 @@ export default function Home() {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    setIsMounted(true);
+    fetchMessages();
+    fetchUsers();
+    return () => setIsMounted(false); 
+  }, []);   // control request
+
   // Polling. Not the best way to do it, but it works for now.
   useEffect(() => {
     fetchMessages();
     const intervalId = setInterval(fetchMessages, 500);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [isMounted]);
+
+  const handleBackClick = () => {
+    setIsMounted(false); // shut dowm when leave
+    router.push("/chat-list");
+  };
 
   return (
     <div className="h-screen flex flex-col">
       <Header
         type="secondary"
+<<<<<<< Updated upstream
+=======
+        iconLeft={
+          <LuChevronLeft
+            size={35}
+            strokeWidth={1.2}
+            className="text-app-white"
+            onClick={handleBackClick}
+          />
+        }
+        iconRight={
+          <LuBell size={30} strokeWidth={1.2} className="text-app-white" />
+        }
+>>>>>>> Stashed changes
         title={
           otherUser && otherUser.firstName
             ? `${otherUser.firstName} ${otherUser.lastName}`
