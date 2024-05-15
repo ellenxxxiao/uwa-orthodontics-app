@@ -11,11 +11,19 @@ export default function Home() {
   const router = useRouter();
   // data
   const [users, setUsers] = useState([
+<<<<<<< Updated upstream
     { id: 1, name: "Alian Haidar", time: "3:40 PM", message: "Hi Dr. Lee, when do I change my upper a...", status: "unread" },
     { id: 2, name: "Ellen Xiao", time: "2:59 PM", message: "Bring it with you and we can have a look...", status: "unread" },
     { id: 3, name: "Zimu Zhang", time: "Yesterday", message: "See you then!", status: "read" },
     { id: 4, name: "Neha", time: "Monday", message: "Your next appointment is next Friday at...", status: "read" },
     { id: 5, name: "Runtian Liang", time: "12/4/2024", message: "Thank you. Take care!", status: "read" }
+=======
+    { id: 1, name: "Alian Haidar", time: "3:40 PM", message: "Hi Dr. Lee, when do I change my upper a...", status: "unread", isOnline: true },
+    { id: 2, name: "Ellen Xiao", time: "2:59 PM", message: "Bring it with you and we can have a look...", status: "unread", isOnline: false },
+    { id: 3, name: "Zimu Zhang", time: "Yesterday", message: "See you then!", status: "read", isOnline: true },
+    { id: 4, name: "Neha", time: "Monday", message: "Your next appointment is next Friday at...", status: "read", isOnline: false },
+    { id: 5, name: "Runtian Liang", time: "12/4/2024", message: "Thank you. Take care!", status: "read", isOnline: true }
+>>>>>>> Stashed changes
   ]);
   const [filter, setFilter] = useState("all");
 
@@ -73,7 +81,13 @@ export default function Home() {
                 <div className="w-16 h-16 bg-gray-200 rounded-full mr-4 ml-4 relative">
                   {/* Placeholder for user image */}
                   <img src="/path/to/user/image" alt="User" className="w-full h-full object-cover rounded-full" />
+<<<<<<< Updated upstream
                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+=======
+                  {user.isOnline && (
+                    <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                  )}
+>>>>>>> Stashed changes
                 </div>
                 <div className="flex-1">
                   <div className="flex justify-between items-center">

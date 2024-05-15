@@ -8,9 +8,13 @@ import { LuBell, LuChevronLeft } from "react-icons/lu"; // Import icons in a sin
 import { LuSendHorizonal } from "react-icons/lu";
 >>>>>>> Stashed changes
 
+<<<<<<< Updated upstream
 import { useState, useEffect } from "react";
 import { Message, User } from "@prisma/client";
 import { LuSendHorizonal } from "react-icons/lu";
+=======
+
+>>>>>>> Stashed changes
 import Header from "../components/Header";
 import Input from "../components/Input";
 import MessageBubble from "../components/MessageBubble";
