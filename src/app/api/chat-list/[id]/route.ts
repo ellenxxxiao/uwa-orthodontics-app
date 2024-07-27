@@ -18,16 +18,14 @@ export async function GET(
       orderBy: {}
     });
 
-    if (!user) {
-      // console.error("User not found for ID:", id);
-      return new Response(JSON.stringify({ error: "User not found" }), {
-        status: HttpStatusCode.NotFound
-      });
-    }
-    // console.log("User found:", user);
-    return new Response(JSON.stringify(user), {
-      status: HttpStatusCode.Ok
-    });
+    // if (!chats) {
+    //   return new Response(JSON.stringify({ error: "User not found" }), {
+    //     status: HttpStatusCode.NotFound
+    //   });
+    // }
+    // return new Response(JSON.stringify(user), {
+    //   status: HttpStatusCode.Ok
+    // });
   } catch (error) {
     // console.error("Error accessing database:", error);
     return new Response(JSON.stringify({ error }), {
