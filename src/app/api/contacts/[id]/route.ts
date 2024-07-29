@@ -9,9 +9,14 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const userId = params.id;
-  // console.log("Received ID:", id);
 
   try {
+    if (!userId) {
+      return new Response(JSON.stringify({ error: "User ID is required" }), {
+        status: HttpStatusCode.BadRequest
+      });
+    }
+
     const connections = await prisma.connection.findMany({
       where: {
         OR: [{ clinicianId: userId }, { patientId: userId }]

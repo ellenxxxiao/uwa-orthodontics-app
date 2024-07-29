@@ -12,6 +12,12 @@ export async function GET(
   // console.log("Received ID:", id);
 
   try {
+    if (!id) {
+      return new Response(JSON.stringify({ error: "User ID is required" }), {
+        status: HttpStatusCode.BadRequest
+      });
+    }
+
     const user = await prisma.user.findUnique({
       where: { id }
     });

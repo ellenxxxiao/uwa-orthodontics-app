@@ -12,6 +12,12 @@ export async function GET(
   const userId = params.id;
 
   try {
+    if (!userId) {
+      return new Response(JSON.stringify({ error: "User ID is required" }), {
+        status: HttpStatusCode.BadRequest
+      });
+    }
+
     const messages = await prisma.message.findMany({
       relationLoadStrategy: "join",
       select: {
