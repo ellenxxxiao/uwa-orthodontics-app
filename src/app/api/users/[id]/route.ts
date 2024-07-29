@@ -24,7 +24,10 @@ export async function GET(
     }
     // console.log("User found:", user);
     return new Response(JSON.stringify(user), {
-      status: HttpStatusCode.Ok
+      status: HttpStatusCode.Ok,
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
   } catch (error) {
     // console.error("Error accessing database:", error);
