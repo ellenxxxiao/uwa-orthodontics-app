@@ -5,7 +5,6 @@ import { Message, User } from "@prisma/client";
 import { LuBell, LuChevronLeft } from "react-icons/lu"; // Import icons in a single line if from the same source
 import { LuSendHorizonal } from "react-icons/lu";
 
-
 import Header from "../components/Header";
 import Input from "../components/Input";
 import MessageBubble from "../components/MessageBubble";
@@ -18,7 +17,7 @@ export default function Home() {
   const [user, setUser] = useState({} as User);
   const [otherUser, setOtherUser] = useState({} as User);
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(true); // control request 
+  const [isMounted, setIsMounted] = useState(true); // control request
 
   const fetchMessages = async () => {
     const res = await fetch("/api/chat");
@@ -27,10 +26,10 @@ export default function Home() {
   };
 
   const fetchUsers = async () => {
-    const resUser = await fetch(`/api/user/${currentUserId}`);
+    const resUser = await fetch(`/api/users/${currentUserId}`);
     const user = await resUser.json();
 
-    const resOtherUser = await fetch(`/api/user/${otherUserId}`);
+    const resOtherUser = await fetch(`/api/users/${otherUserId}`);
     const otherUser = await resOtherUser.json();
     setUser(user);
     setOtherUser(otherUser);
@@ -45,8 +44,8 @@ export default function Home() {
     setIsMounted(true);
     fetchMessages();
     fetchUsers();
-    return () => setIsMounted(false); 
-  }, []);   // control request
+    return () => setIsMounted(false);
+  }, []); // control request
 
   // Polling. Not the best way to do it, but it works for now.
   useEffect(() => {
@@ -62,7 +61,7 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="flex h-screen flex-col">
       <Header
         type="secondary"
         iconLeft={
@@ -87,8 +86,8 @@ export default function Home() {
       />
 
       {/* Messages */}
-      <div className="w-full flex-1 bg-base-100 overflow-y-auto">
-        <div className="my-6 mx-4 text-app-black flex flex-col gap-6">
+      <div className="w-full flex-1 overflow-y-auto bg-base-100">
+        <div className="mx-4 my-6 flex flex-col gap-6 text-app-black">
           {msgs.map((msg) => (
             <MessageBubble
               key={msg.id.toString()}
@@ -102,7 +101,7 @@ export default function Home() {
       </div>
 
       {/* Input */}
-      <div className="w-full h-20 bg-app-white flex justify-between py-4 px-4 gap-8">
+      <div className="flex h-20 w-full justify-between gap-8 bg-app-white px-4 py-4">
         <Input label="Message" placeholder="Type your message" />
         <button>
           <LuSendHorizonal
