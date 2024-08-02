@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Message, User } from "@prisma/client";
 import { LuBell, LuChevronLeft } from "react-icons/lu";
@@ -26,6 +26,16 @@ export default function Home() {
   const [otherUser, setOtherUser] = useState({} as User);
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(true); // control request
+
+  const ScrollToBottom = () => {
+    const elementRef = useRef<HTMLDivElement | null>(null);
+    useEffect(() => {
+      if (elementRef.current) {
+        elementRef.current.scrollIntoView();
+      }
+    });
+    return <div ref={elementRef} />;
+  };
 
   const chatForm = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -130,6 +140,7 @@ export default function Home() {
             />
           ))}
         </div>
+        <ScrollToBottom />
       </div>
 
       {/* Input */}
