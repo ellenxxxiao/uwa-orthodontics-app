@@ -29,7 +29,8 @@ export default function Home() {
 
   const chatForm = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { message: "" }
+    defaultValues: { message: "" },
+    mode: "onChange"
   });
 
   const fetchMessages = async () => {
@@ -51,8 +52,9 @@ export default function Home() {
     //     text: data.message
     //   })
     // });
-    // chatForm.reset();
+    chatForm.reset();
     console.log(data);
+    // reset();
   }
 
   const fetchUsers = async () => {
@@ -131,16 +133,24 @@ export default function Home() {
       </div>
 
       {/* Input */}
-      <div className="flex h-20 w-full justify-between gap-8 bg-app-white px-4 py-4">
-        <Input label="Message" placeholder="Type your message" />
-        <button>
+      <form
+        onSubmit={chatForm.handleSubmit(onSubmit)}
+        className="flex h-20 w-full justify-between gap-8 bg-app-white px-4 py-4"
+      >
+        <input
+          className="h-full w-full flex-1 rounded-lg border border-base-200 px-3 text-base text-accent-focus focus:outline-none"
+          placeholder="Type a message..."
+          {...chatForm.register("message")}
+        />
+
+        <button type="submit" disabled={!chatForm.formState.isValid}>
           <LuSendHorizonal
             size={30}
             strokeWidth={1.6}
-            className="text-primary"
+            className={`${chatForm.formState.isValid ? "text-primary" : "text-gray-400"}`}
           />
         </button>
-      </div>
+      </form>
     </div>
   );
 }
