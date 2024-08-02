@@ -2,8 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Message, User } from "@prisma/client";
-import { LuBell, LuChevronLeft } from "react-icons/lu";
-import { LuSendHorizonal } from "react-icons/lu";
+import { LuBell, LuChevronLeft, LuSend } from "react-icons/lu";
 
 import Header from "../components/Header";
 import Input from "../components/Input";
@@ -51,20 +50,19 @@ export default function Home() {
 
   function onSubmit(data: z.infer<typeof schema>, e: any) {
     e.preventDefault();
-    // fetch("/api/chat", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify({
-    //     senderId: currentUserId,
-    //     receiverId: otherUserId,
-    //     text: data.message
-    //   })
-    // });
+    fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        senderId: currentUserId,
+        receiverId: otherUserId,
+        text: data.message
+      })
+    });
     chatForm.reset();
-    console.log(data);
-    // reset();
+    // console.log(data);
   }
 
   const fetchUsers = async () => {
@@ -89,7 +87,7 @@ export default function Home() {
     return () => setIsMounted(false);
   }, []); // control request
 
-  // Polling. Not the best way to do it, but it works for now.
+  // FIXME: Polling. Not the best way to do it, but it works for now.
   useEffect(() => {
     fetchMessages();
     const intervalId = setInterval(fetchMessages, 500);
@@ -148,19 +146,25 @@ export default function Home() {
         onSubmit={chatForm.handleSubmit(onSubmit)}
         className="flex h-20 w-full justify-between gap-8 bg-app-white px-4 py-4"
       >
-        <input
-          className="h-full w-full flex-1 rounded-lg border border-base-200 px-3 text-base text-accent-focus focus:outline-none"
-          placeholder="Type a message..."
-          {...chatForm.register("message")}
-        />
-
-        <button type="submit" disabled={!chatForm.formState.isValid}>
-          <LuSendHorizonal
-            size={30}
-            strokeWidth={1.6}
-            className={`${chatForm.formState.isValid ? "text-primary" : "text-gray-400"}`}
+        <div className="relative h-full w-full">
+          <input
+            className="h-full w-full flex-1 rounded-full border border-base-200 px-3 text-base text-accent-focus focus:outline-none"
+            placeholder="Type a message..."
+            {...chatForm.register("message")}
           />
-        </button>
+
+          <button
+            type="submit"
+            disabled={!chatForm.formState.isValid}
+            className={`${chatForm.formState.isValid ? "" : "hidden"} absolute right-1 top-1/2 h-5/6 w-1/12 -translate-y-1/2 transform rounded-full bg-primary`}
+          >
+            <LuSend
+              size={25}
+              strokeWidth={1.6}
+              className="mx-auto text-app-white"
+            />
+          </button>
+        </div>
       </form>
     </div>
   );
