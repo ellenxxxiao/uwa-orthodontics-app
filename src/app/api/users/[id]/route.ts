@@ -12,6 +12,12 @@ export async function GET(
   // console.log("Received ID:", id);
 
   try {
+    if (!id) {
+      return new Response(JSON.stringify({ error: "User ID is required" }), {
+        status: HttpStatusCode.BadRequest
+      });
+    }
+
     const user = await prisma.user.findUnique({
       where: { id }
     });
@@ -24,7 +30,10 @@ export async function GET(
     }
     // console.log("User found:", user);
     return new Response(JSON.stringify(user), {
-      status: HttpStatusCode.Ok
+      status: HttpStatusCode.Ok,
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
   } catch (error) {
     // console.error("Error accessing database:", error);
