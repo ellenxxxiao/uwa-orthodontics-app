@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 
 type Props = {
-  key: string;
   text: string;
   isSender: boolean;
   time: Date;
@@ -13,14 +12,13 @@ const formatTime = (time: Date) => {
 };
 
 export default function MessageBubble({
-  key,
   time,
   showTime,
   text,
   isSender
 }: Props) {
   return (
-    <div key={key} className={`flex ${isSender ? "justify-end" : ""}`}>
+    <div className={`flex ${isSender ? "justify-end" : ""}`}>
       <div className="flex flex-col">
         <div
           className={`${

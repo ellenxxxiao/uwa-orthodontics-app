@@ -2,13 +2,21 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Message, User } from "@prisma/client";
-import { LuBell, LuChevronLeft } from "react-icons/lu"; // Import icons in a single line if from the same source
+import { LuBell, LuChevronLeft } from "react-icons/lu";
 import { LuSendHorizonal } from "react-icons/lu";
 
 import Header from "../components/Header";
 import Input from "../components/Input";
 import MessageBubble from "../components/MessageBubble";
 import { IDs } from "../api/chat/route";
+
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Control, useForm } from "react-hook-form";
+
+const schema = z.object({
+  message: z.string().trim().min(1)
+});
 
 export default function Home() {
   const [msgs, setMsgs] = useState<Message[]>([]);
@@ -19,11 +27,33 @@ export default function Home() {
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(true); // control request
 
+  const chatForm = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { message: "" }
+  });
+
   const fetchMessages = async () => {
     const res = await fetch("/api/chat");
     const messages = await res.json();
     setMsgs(messages);
   };
+
+  function onSubmit(data: z.infer<typeof schema>, e: any) {
+    e.preventDefault();
+    // fetch("/api/chat", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({
+    //     senderId: currentUserId,
+    //     receiverId: otherUserId,
+    //     text: data.message
+    //   })
+    // });
+    // chatForm.reset();
+    console.log(data);
+  }
 
   const fetchUsers = async () => {
     const resUser = await fetch(`/api/users/${currentUserId}`);
@@ -90,7 +120,7 @@ export default function Home() {
         <div className="mx-4 my-6 flex flex-col gap-6 text-app-black">
           {msgs.map((msg) => (
             <MessageBubble
-              key={msg.id.toString()}
+              key={msg.id}
               text={msg.text}
               isSender={msg.senderId === currentUserId}
               time={msg.sentAt}
