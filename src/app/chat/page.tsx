@@ -1,16 +1,15 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef,useState } from "react";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
+import { useForm } from "react-hook-form";
 import { LuBell, LuChevronLeft, LuSend } from "react-icons/lu";
+import { z } from "zod";
 
+import { IDs } from "../api/chat/route";
 import Header from "../components/Header";
 import MessageBubble from "../components/MessageBubble";
-import { IDs } from "../api/chat/route";
-
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 
 const schema = z.object({
   message: z.string().trim().min(1)
@@ -121,7 +120,7 @@ export default function Home() {
         }
         firstName={otherUser.firstName || ""}
         lastName={otherUser.lastName || ""}
-        avatar={""}
+        avatar=""
       />
 
       {/* Messages */}
