@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { HttpStatusCode } from "axios";
 
 const prisma = new PrismaClient();
 
@@ -19,12 +20,12 @@ export async function GET(request: Request) {
       }
     });
     return new Response(JSON.stringify(messages), {
-      status: 200,
+      status: HttpStatusCode.Ok,
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
     return new Response(JSON.stringify({ error }), {
-      status: 500,
+      status: HttpStatusCode.InternalServerError,
       headers: { "Content-Type": "application/json" }
     });
   }
@@ -42,12 +43,12 @@ export async function POST(request: Request) {
       }
     });
     return new Response(JSON.stringify(message), {
-      status: 201,
+      status: HttpStatusCode.Created,
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
     return new Response(JSON.stringify({ error }), {
-      status: 500,
+      status: HttpStatusCode.InternalServerError,
       headers: { "Content-Type": "application/json" }
     });
   }
