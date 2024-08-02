@@ -47,7 +47,6 @@ export default function Register() {
         {/* Email Input */}
         <div className="relative flex h-11 w-full items-center">
           <Input
-            label="Email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -67,7 +66,6 @@ export default function Register() {
         {/* Password Input */}
         <div className="relative flex h-11 w-full items-center">
           <Input
-            label="Password"
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -89,7 +87,6 @@ export default function Register() {
         {/* Confirm Password Input */}
         <div className="relative flex h-11 w-full items-center">
           <Input
-            label="Confirm Password"
             type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}

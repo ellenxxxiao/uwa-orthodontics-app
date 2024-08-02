@@ -40,7 +40,6 @@ export default function Login() {
         {/* Email Input */}
         <div className="relative flex h-11 w-full items-center">
           <Input
-            label="Email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -60,7 +59,6 @@ export default function Login() {
         {/* Password Input */}
         <div className="relative flex h-11 w-full items-center">
           <Input
-            label="Password"
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
