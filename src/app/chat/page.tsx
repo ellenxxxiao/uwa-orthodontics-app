@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef,useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
@@ -19,10 +19,10 @@ export default function Home() {
   const [msgs, setMsgs] = useState<Message[]>([]);
   const currentUserId = IDs.senderId;
   const otherUserId = IDs.receiverId;
-  const [user, setUser] = useState({} as User);
+  // const [user, setUser] = useState({} as User);
   const [otherUser, setOtherUser] = useState({} as User);
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(true); // control request
+  // const [isMounted, setIsMounted] = useState(true); // control request
 
   const ScrollToBottom = () => {
     const elementRef = useRef<HTMLDivElement | null>(null);
@@ -47,7 +47,7 @@ export default function Home() {
   };
 
   function onSubmit(data: z.infer<typeof schema>) {
-    console.log(data);
+    // console.log(data);
 
     fetch("/api/chat", {
       method: "POST",
@@ -64,26 +64,26 @@ export default function Home() {
   }
 
   const fetchUsers = async () => {
-    const resUser = await fetch(`/api/users/${currentUserId}`);
-    const user = await resUser.json();
+    // const resUser = await fetch(`/api/users/${currentUserId}`);
+    // const user = await resUser.json();
 
     const resOtherUser = await fetch(`/api/users/${otherUserId}`);
     const otherUser = await resOtherUser.json();
-    setUser(user);
+    // setUser(user);
     setOtherUser(otherUser);
   };
 
   useEffect(() => {
     fetchMessages();
     fetchUsers();
-  }, []);
+  });
 
-  useEffect(() => {
-    setIsMounted(true);
-    fetchMessages();
-    fetchUsers();
-    return () => setIsMounted(false);
-  }, []); // control request
+  // useEffect(() => {
+  //   setIsMounted(true);
+  //   fetchMessages();
+  //   fetchUsers();
+  //   return () => setIsMounted(false);
+  // }, []); // control request
 
   // FIXME: Polling. Not the best way to do it, but it works for now.
   // useEffect(() => {
@@ -94,7 +94,7 @@ export default function Home() {
   // }, [isMounted]);
 
   const handleBackClick = () => {
-    setIsMounted(false); // shut dowm when leave
+    // setIsMounted(false); // shut dowm when leave
     router.push("/chat-list");
   };
 

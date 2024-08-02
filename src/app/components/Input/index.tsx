@@ -1,12 +1,11 @@
 import { InputHTMLAttributes } from "react";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
   value?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function Input({ label, value, onChange, ...rest }: Props) {
+export default function Input({ value, onChange, ...rest }: Props) {
   return (
     <input
       type="text"
