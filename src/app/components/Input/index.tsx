@@ -1,10 +1,8 @@
 import { InputHTMLAttributes } from "react";
-import { Control } from "react-hook-form";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
-  name: string;
-  placeholder?: string;
-  control: Control<any>;
+  label: string;
+  value?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

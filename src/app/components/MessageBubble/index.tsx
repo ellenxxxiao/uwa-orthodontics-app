@@ -24,6 +24,7 @@ export default function MessageBubble({
           className={`${
             isSender ? "rounded-br" : "rounded-bl"
           } max-w-xs rounded-2xl bg-app-white p-4 text-sm text-app-black md:max-w-md md:text-base`}
+          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
         >
           {text}
         </div>
