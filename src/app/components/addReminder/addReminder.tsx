@@ -90,7 +90,7 @@ export default function AddReminer() {
           boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
           transition: "transform 0.3s ease-in-out",
           borderRadius: 1,
-          display: "flex",
+          display: "flex"
         }}
       >
         <Box

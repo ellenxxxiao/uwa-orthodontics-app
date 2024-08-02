@@ -44,7 +44,7 @@ export default function Home() {
           }
           iconRight={
             showAddButton ? (
-              <Button >Add</Button>
+              <Button>Add</Button>
             ) : (
               <IconButton aria-label="back" className="bg-base-100">
                 <AddIcon
