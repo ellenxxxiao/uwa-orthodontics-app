@@ -30,17 +30,19 @@ export default function Chat() {
 
     const fetchMessages = async () => {
       try {
-        const res = await fetch(`/api/chat?userId=${currentUserId}&otherUserId=${allowedReceiverId}`);
+        const res = await fetch(
+          `/api/chat?userId=${currentUserId}&otherUserId=${allowedReceiverId}`
+        );
         if (res.ok) {
           const messages = await res.json();
           setMsgs(messages);
         } else {
-          if (process.env.NODE_ENV !== 'production') {
+          if (process.env.NODE_ENV !== "production") {
             throw new Error("Failed to fetch messages");
           }
         }
       } catch (error) {
-        if (process.env.NODE_ENV !== 'production') {
+        if (process.env.NODE_ENV !== "production") {
           throw new Error("Error fetching messages");
         }
       }
@@ -53,12 +55,12 @@ export default function Chat() {
           const otherUserData = await resOtherUser.json();
           setOtherUser(otherUserData);
         } else {
-          if (process.env.NODE_ENV !== 'production') {
+          if (process.env.NODE_ENV !== "production") {
             throw new Error("Failed to fetch other user");
           }
         }
       } catch (error) {
-        if (process.env.NODE_ENV !== 'production') {
+        if (process.env.NODE_ENV !== "production") {
           throw new Error("Error fetching other user");
         }
       }
@@ -80,10 +82,10 @@ export default function Chat() {
   // Ensure that the routeId check does not conditionally alter the execution of hooks
   if (routeId !== allowedReceiverId) {
     return (
-      <div className="flex h-screen flex-col justify-center items-center">
+      <div className="flex h-screen flex-col items-center justify-center">
         <h1 className="text-4xl font-bold">404 - Page Not Found</h1>
         <button
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
           onClick={() => router.push("/chat-list")}
         >
           Go Back to Chat List
@@ -108,7 +110,9 @@ export default function Chat() {
           <LuBell size={30} strokeWidth={1.2} className="text-app-white" />
         }
         title={
-          otherUser ? `${otherUser.firstName} ${otherUser.lastName}` : "Loading..."
+          otherUser
+            ? `${otherUser.firstName} ${otherUser.lastName}`
+            : "Loading..."
         }
         firstName={otherUser?.firstName || ""}
         lastName={otherUser?.lastName || ""}
