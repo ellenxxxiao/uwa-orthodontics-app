@@ -1,16 +1,16 @@
 import React, { useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
+  Avatar,
+  Box,
   Card,
   CardContent,
-  Typography,
-  IconButton,
-  Box,
-  Avatar,
-  Stack,
   Chip,
+  IconButton,
+  Stack,
+  Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { deepOrange } from "@mui/material/colors";
 
 interface addReminderProps {
@@ -36,7 +36,7 @@ const ReminderCard = ({handleEditClick}:addReminderProps) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Stack direction="row" width={"100%"}>
+      <Stack direction="row" width="100%">
         <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
           <Avatar sx={{ bgcolor: deepOrange[500] }}>N</Avatar>
         </Box>
@@ -44,10 +44,10 @@ const ReminderCard = ({handleEditClick}:addReminderProps) => {
         <CardContent
           sx={{ flex: "1 1 auto", display: "flex", flexDirection: "column" }}
         >
-          <Typography variant="body2" fontSize={"16px"}>
+          <Typography variant="body2" fontSize="16px">
             Name: Neha
           </Typography>
-          <Typography variant="body2" fontSize={"14px"}>
+          <Typography variant="body2" fontSize="14px">
             Reminder: Repeat
           </Typography>
         </CardContent>
