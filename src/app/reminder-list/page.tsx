@@ -1,13 +1,14 @@
 "use client";
+import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { Button, IconButton } from "@mui/material";
+
+import AddReminer from "../components/addReminder/addReminder";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import ReminderCard from "../components/reminderCard/reminderCard";
 import SearchInput from "../components/searchInput/searchInput";
-import { Button, Card, IconButton } from "@mui/material";
-import { useState } from "react";
-import AddReminer from "../components/addReminder/addReminder";
 
 export default function Home() {
   const [showForm, setShowForm] = useState(false);
@@ -31,7 +32,7 @@ export default function Home() {
         {/* main */}
         <Header
           title={showHeader}
-          type={"primary"}
+          type="primary"
           iconLeft={
             <IconButton aria-label="back" className="bg-base-100">
               <ChevronLeftIcon
@@ -43,7 +44,7 @@ export default function Home() {
           }
           iconRight={
             showAddButton ? (
-              <Button >Add</Button>
+              <Button>Add</Button>
             ) : (
               <IconButton aria-label="back" className="bg-base-100">
                 <AddIcon

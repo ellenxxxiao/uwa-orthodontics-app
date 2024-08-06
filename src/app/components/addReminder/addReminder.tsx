@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Autocomplete,
   Box,
@@ -9,13 +10,11 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { useState } from "react";
-import React from "react";
 
 export default function AddReminer() {
   const [repeat, setRepeat] = React.useState("");
@@ -91,7 +90,7 @@ export default function AddReminer() {
           boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
           transition: "transform 0.3s ease-in-out",
           borderRadius: 1,
-          display: "flex",
+          display: "flex"
         }}
       >
         <Box

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
+
 import { ChatListItem } from "@/types/chat";
 
 const prisma = new PrismaClient();

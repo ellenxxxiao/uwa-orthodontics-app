@@ -1,8 +1,8 @@
 import * as React from "react";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
+import IconButton from "@mui/material/IconButton";
+import InputBase from "@mui/material/InputBase";
+import Paper from "@mui/material/Paper";
 
 export default function SearchInput() {
   return (
@@ -18,8 +18,8 @@ export default function SearchInput() {
         boxShadow: "none", // Remove default box-shadow for 3D effect customization
         transition: "box-shadow 0.3s ease-in-out", // Enable hover effect
         "&:hover": {
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.35)", // Custom 3D hover effect
-        },
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.35)" // Custom 3D hover effect
+        }
       }}
     >
       <InputBase
