@@ -76,7 +76,7 @@ export default function Home() {
   useEffect(() => {
     fetchMessages();
     fetchUsers();
-  });
+  }, []);
 
   // useEffect(() => {
   //   setIsMounted(true);
