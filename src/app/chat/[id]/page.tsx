@@ -1,28 +1,31 @@
 "use client";
+
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation"; // Import useParams
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { LuBell, LuChevronLeft, LuSend } from "react-icons/lu";
 import { z } from "zod";
 
-import { IDs } from "../api/chat/route";
-import Header from "../components/Header";
-import MessageBubble from "../components/MessageBubble";
+import Header from "../../components/Header";
+import MessageBubble from "../../components/MessageBubble";
 
 const schema = z.object({
   message: z.string().trim().min(1)
 });
 
-export default function Home() {
-  const [msgs, setMsgs] = useState<Message[]>([]);
-  const currentUserId = IDs.senderId;
-  const otherUserId = IDs.receiverId;
-  // const [user, setUser] = useState({} as User);
-  const [otherUser, setOtherUser] = useState({} as User);
+export default function Chat() {
   const router = useRouter();
-  // const [isMounted, setIsMounted] = useState(true); // control request
+  const params = useParams(); // Use useParams to get dynamic route parameters
+  const routeId = params.id; // Extract id from params
+
+  // Fixed user IDs
+  const currentUserId = "0d7e9ae9-dcd9-4bc9-8908-1715778cfaf9";
+  const allowedReceiverId = "8a35ed21-2acd-4846-acab-3a42fb1aa733";
+
+  const [msgs, setMsgs] = useState<Message[]>([]);
+  const [otherUser, setOtherUser] = useState<User | null>(null);
 
   const ScrollToBottom = () => {
     const elementRef = useRef<HTMLDivElement | null>(null);
@@ -40,12 +43,6 @@ export default function Home() {
     mode: "onChange"
   });
 
-  const fetchMessages = async () => {
-    const res = await fetch("/api/chat");
-    const messages = await res.json();
-    setMsgs(messages);
-  };
-
   function onSubmit(data: z.infer<typeof schema>) {
     // console.log(data);
 
@@ -56,47 +53,83 @@ export default function Home() {
       },
       body: JSON.stringify({
         senderId: currentUserId,
-        receiverId: otherUserId,
+        receiverId: allowedReceiverId,
         text: data.message
       })
     });
     chatForm.reset();
   }
 
-  const fetchUsers = async () => {
-    // const resUser = await fetch(`/api/users/${currentUserId}`);
-    // const user = await resUser.json();
-
-    const resOtherUser = await fetch(`/api/users/${otherUserId}`);
-    const otherUser = await resOtherUser.json();
-    // setUser(user);
-    setOtherUser(otherUser);
-  };
-
   useEffect(() => {
+    if (routeId !== allowedReceiverId) {
+      // If the route ID doesn't match, redirect to 404 page or display 404 message
+      // Prevent multiple redirects by returning early if the IDs don't match
+      return;
+    }
+
+    const fetchMessages = async () => {
+      try {
+        const res = await fetch("/api/chat");
+        if (res.ok) {
+          const messages = await res.json();
+          setMsgs(messages);
+        } else {
+          if (process.env.NODE_ENV !== "production") {
+            throw new Error("Failed to fetch messages");
+          }
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV !== "production") {
+          throw new Error("Error fetching messages");
+        }
+      }
+    };
+
+    const fetchOtherUser = async () => {
+      try {
+        const resOtherUser = await fetch(`/api/users/${allowedReceiverId}`);
+        if (resOtherUser.ok) {
+          const otherUserData = await resOtherUser.json();
+          setOtherUser(otherUserData);
+        } else {
+          if (process.env.NODE_ENV !== "production") {
+            throw new Error("Failed to fetch other user");
+          }
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV !== "production") {
+          throw new Error("Error fetching other user");
+        }
+      }
+    };
+
     fetchMessages();
-    fetchUsers();
-  }, []);
+    fetchOtherUser();
 
-  // useEffect(() => {
-  //   setIsMounted(true);
-  //   fetchMessages();
-  //   fetchUsers();
-  //   return () => setIsMounted(false);
-  // }, []); // control request
+    // // Set up a timer to poll for new messages
+    // const intervalId = setInterval(fetchMessages, 5000);
 
-  // FIXME: Polling. Not the best way to do it, but it works for now.
-  // useEffect(() => {
-  //   fetchMessages();
-  //   const intervalId = setInterval(fetchMessages, 500);
-
-  //   return () => clearInterval(intervalId);
-  // }, [isMounted]);
+    // return () => clearInterval(intervalId);
+  }, [routeId, router]); // Add dependencies
 
   const handleBackClick = () => {
-    // setIsMounted(false); // shut dowm when leave
     router.push("/chat-list");
   };
+
+  // Ensure that the routeId check does not conditionally alter the execution of hooks
+  if (routeId !== allowedReceiverId) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center">
+        <h1 className="text-4xl font-bold">404 - Page Not Found</h1>
+        <button
+          className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
+          onClick={() => router.push("/chat-list")}
+        >
+          Go Back to Chat List
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen flex-col">
@@ -114,12 +147,12 @@ export default function Home() {
           <LuBell size={30} strokeWidth={1.2} className="text-app-white" />
         }
         title={
-          otherUser && otherUser.firstName
+          otherUser
             ? `${otherUser.firstName} ${otherUser.lastName}`
             : "Loading..."
         }
-        firstName={otherUser.firstName || ""}
-        lastName={otherUser.lastName || ""}
+        firstName={otherUser?.firstName || ""}
+        lastName={otherUser?.lastName || ""}
         avatar=""
       />
 
@@ -128,7 +161,7 @@ export default function Home() {
         <div className="mx-4 my-6 flex flex-col gap-6 text-app-black">
           {msgs.map((msg) => (
             <MessageBubble
-              key={msg.id}
+              key={msg.id.toString()}
               text={msg.text}
               isSender={msg.senderId === currentUserId}
               time={msg.sentAt}

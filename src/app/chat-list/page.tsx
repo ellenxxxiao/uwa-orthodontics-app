@@ -1,70 +1,84 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LuPenSquare, LuSearch } from "react-icons/lu";
 
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import Footer from "@/app/components/Footer";
+import Header from "@/app/components/Header";
+
+interface ChatUser {
+  contactUser: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  lastMessage: {
+    text: string;
+    sentAt: string; // ISO formatted date string
+    read?: boolean; // Assuming the API returns this field
+  };
+}
 
 export default function Home() {
   const router = useRouter();
-  // data
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Alian Haidar",
-      time: "3:40 PM",
-      message: "Hi Dr. Lee, when do I change my upper a...",
-      status: "unread",
-      isOnline: true
-    },
-    {
-      id: 2,
-      name: "Ellen Xiao",
-      time: "2:59 PM",
-      message: "Bring it with you and we can have a look...",
-      status: "unread",
-      isOnline: false
-    },
-    {
-      id: 3,
-      name: "Zimu Zhang",
-      time: "Yesterday",
-      message: "See you then!",
-      status: "read",
-      isOnline: true
-    },
-    {
-      id: 4,
-      name: "Neha",
-      time: "Monday",
-      message: "Your next appointment is next Friday at...",
-      status: "read",
-      isOnline: false
-    },
-    {
-      id: 5,
-      name: "Runtian Liang",
-      time: "12/4/2024",
-      message: "Thank you. Take care!",
-      status: "read",
-      isOnline: true
-    }
-  ]);
+
+  // Define the user list with ChatUser type
+  const [users, setUsers] = useState<ChatUser[]>([]);
   const [filter, setFilter] = useState("all");
 
-  // useEffect(() => {
-  //   fetchUsers();
-  // }, []);
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await fetch(
+          "/api/chat-list/0d7e9ae9-dcd9-4bc9-8908-1715778cfaf9"
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data: ChatUser[] = await response.json(); // Type assertion
+        setUsers(data);
+      } catch (error) {
+        if (process.env.NODE_ENV !== "production") {
+          throw new Error("Failed to fetch users");
+        }
+      }
+    }
+
+    fetchUsers();
+  }, []);
 
   const filteredUsers = users.filter((user) => {
     if (filter === "all") return true;
-    return user.status === filter;
+    return filter === "unread" ? !user.lastMessage.read : user.lastMessage.read;
   });
 
-  const handleChatClick = () => {
-    router.push("/chat");
+  // Function to format the date into a relative time string
+  const formatRelativeTime = (sentAt: string) => {
+    const now = new Date();
+    const sentDate = new Date(sentAt);
+    const diffInSeconds = Math.floor(
+      (now.getTime() - sentDate.getTime()) / 1000
+    );
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInDays > 0) {
+      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+    } else if (diffInHours > 0) {
+      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+    } else if (diffInMinutes > 0) {
+      return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
+    } else {
+      return `${diffInSeconds} second${diffInSeconds > 1 ? "s" : ""} ago`;
+    }
+  };
+
+  const handleChatClick = (userId: string) => {
+    // Pass user ID to the chat page
+    router.push(`/chat/${userId}`);
   };
 
   return (
@@ -81,7 +95,7 @@ export default function Home() {
           title="Contacts"
         />
 
-        {/* main */}
+        {/* Main content */}
         <div className="flex w-full flex-1 flex-col overflow-hidden bg-base-100">
           <div className="flex justify-around bg-white p-4 shadow-md">
             <button
@@ -106,39 +120,66 @@ export default function Home() {
           <div className="flex-1 overflow-y-auto p-4">
             {filteredUsers.map((user) => (
               <div
-                key={user.id}
+                role="button"
+                tabIndex={0}
+                key={user.contactUser.id}
                 className="relative mb-4 flex cursor-pointer items-center rounded-lg bg-white p-4 shadow"
-                onClick={handleChatClick}
+                onClick={() => handleChatClick(user.contactUser.id)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handleChatClick(user.contactUser.id);
+                  }
+                }}
               >
-                {filter === "all" && user.status === "unread" && (
+                {filter === "all" && !user.lastMessage.read && (
                   <div className="absolute left-0 ml-3 h-3 w-3 rounded-full bg-blue-500"></div>
                 )}
                 <div className="relative ml-4 mr-4 h-16 w-16 rounded-full bg-gray-200">
                   {/* Placeholder for user image */}
-                  <img
+                  <Image
                     src="/path/to/user/image"
                     alt="User"
                     className="h-full w-full rounded-full object-cover"
+                    layout="responsive"
+                    width={1}
+                    height={1}
                   />
-                  {user.isOnline && (
-                    <div className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-green-500"></div>
-                  )}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-black">
-                      {user.name}
+                    <h3
+                      className="w-32 truncate text-lg font-bold text-black" // Limit name length
+                      style={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth: "8rem"
+                      }}
+                    >
+                      {user.contactUser.firstName} {user.contactUser.lastName}
                     </h3>
-                    <span className="text-sm text-gray-500">{user.time}</span>
+                    <span className="text-sm text-gray-500">
+                      {formatRelativeTime(user.lastMessage.sentAt)}
+                    </span>
                   </div>
-                  <p className="text-gray-600">{user.message}</p>
+                  <p
+                    className="w-48 truncate text-gray-600" // Limit message length
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: "12rem"
+                    }}
+                  >
+                    {user.lastMessage.text}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* footer */}
+        {/* Footer */}
         <Footer />
       </div>
     </>
