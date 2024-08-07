@@ -9,7 +9,7 @@ export const IDs = {
 };
 
 // GET
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const messages = await prisma.message.findMany({
       where: {
@@ -43,12 +43,12 @@ export async function POST(request: Request) {
       }
     });
     return new Response(JSON.stringify(message), {
-      status: 201,
+      status: HttpStatusCode.Created,
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
     return new Response(JSON.stringify({ error }), {
-      status: 500,
+      status: HttpStatusCode.InternalServerError,
       headers: { "Content-Type": "application/json" }
     });
   }
