@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LuPenSquare, LuSearch } from "react-icons/lu";
 
-import Footer from "@/app/components/Footer";
-import Header from "@/app/components/Header";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 interface ChatUser {
   contactUser: {

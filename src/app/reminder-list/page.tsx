@@ -4,11 +4,11 @@ import AddIcon from "@mui/icons-material/Add";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Button, IconButton } from "@mui/material";
 
-import AddReminer from "../components/addReminder/addReminder";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import ReminderCard from "../components/reminderCard/reminderCard";
-import SearchInput from "../components/searchInput/searchInput";
+import AddReminer from "@/components/addReminder/addReminder";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import ReminderCard from "@/components/reminderCard/reminderCard";
+import SearchInput from "@/components/searchInput/searchInput";
 
 export default function Home() {
   const [showForm, setShowForm] = useState(false);

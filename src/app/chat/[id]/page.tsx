@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import { LuBell, LuChevronLeft, LuSend } from "react-icons/lu";
 import { z } from "zod";
 
-import Header from "../../components/Header";
-import MessageBubble from "../../components/MessageBubble";
+import Header from "@/components/Header";
+import MessageBubble from "@/components/MessageBubble";
 
 const schema = z.object({
   message: z.string().trim().min(1)

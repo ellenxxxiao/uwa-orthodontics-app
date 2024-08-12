@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { LuEye, LuEyeOff, LuXCircle } from "react-icons/lu";
 
-import Input from "../components/Input";
+import Input from "@/components/Input";
 
 export default function Login() {
   const [email, setEmail] = useState("");
