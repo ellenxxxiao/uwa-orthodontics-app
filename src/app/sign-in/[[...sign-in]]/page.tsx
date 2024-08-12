@@ -1,8 +1,8 @@
-import { SignUp } from "@clerk/nextjs";
+import { SignIn } from "@clerk/nextjs";
 export default function Page() {
   return (
     <div className="flex h-screen w-screen items-center">
-      <SignUp
+      <SignIn
         appearance={{
           elements: {
             logoBox: "h-16",

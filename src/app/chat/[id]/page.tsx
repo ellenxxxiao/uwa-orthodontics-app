@@ -193,6 +193,7 @@ export default function Chat() {
           <button
             type="submit"
             disabled={!chatForm.formState.isValid}
+            // FIXME: visibility?
             className={`${chatForm.formState.isValid ? "" : ""} absolute right-1 top-1/2 h-5/6 w-12 -translate-y-1/2 transform rounded-full bg-primary`}
           >
             <LuSend className="mx-auto text-xl text-app-white" />

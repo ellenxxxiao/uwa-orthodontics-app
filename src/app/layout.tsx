@@ -24,15 +24,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        layout: {
+          unsafe_disableDevelopmentModeWarnings: true
+        },
+        variables: {
+          colorPrimary: "#2A8BF2"
+        }
+      }}
+    >
       <html lang="en">
         <body>
           {/* <SignedOut>
             <SignInButton />
-          </SignedOut> */}
+          </SignedOut>
           <SignedIn>
             <UserButton />
-          </SignedIn>
+          </SignedIn> */}
           {children}
         </body>
       </html>
