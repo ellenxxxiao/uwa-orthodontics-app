@@ -19,6 +19,7 @@
     "prisma:reset": "prisma migrate reset --force && prisma db push"
   },
   "dependencies": {
+    "@clerk/elements": "^0.12.4",
     "@clerk/nextjs": "^5.3.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
