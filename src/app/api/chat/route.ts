@@ -1,7 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
+import { WebSocketServer } from "ws";
 
 const prisma = new PrismaClient();
+const wss = new WebSocketServer({ port: 8080 });
+
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
+});
 
 export const IDs = {
   senderId: "0d7e9ae9-dcd9-4bc9-8908-1715778cfaf9",
@@ -42,6 +52,14 @@ export async function POST(request: Request) {
         text
       }
     });
+
+    // Broadcast new messages to all connected clients
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(message));
+      }
+    });
+
     return new Response(JSON.stringify(message), {
       status: 201,
       headers: { "Content-Type": "application/json" }

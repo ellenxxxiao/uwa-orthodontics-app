@@ -37,9 +37,23 @@ export default function Home() {
       <div className="flex h-screen flex-col">
         <Header
           type="primary"
+<<<<<<< Updated upstream
           iconLeft={<LuSearch size={30} strokeWidth={1.3} className="text-primary" />}
           iconRight={<LuPenSquare size={30} strokeWidth={1.3} className="text-primary" />}
           title="Contacts"
+=======
+          iconLeft={
+            <LuSearch size={30} strokeWidth={1.3} className="text-primary" />
+          }
+          iconRight={
+            <LuPenSquare 
+            size={30} 
+            strokeWidth={1.3} 
+            className="text-primary"
+            onClick={() => router.push("/contacts")} />
+          }
+          title="Chats"
+>>>>>>> Stashed changes
         />
 
         {/* main */}
