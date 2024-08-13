@@ -1,7 +1,12 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { WebhookEvent } from "@clerk/nextjs/server";
+import { WebhookEvent, UserJSON } from "@clerk/nextjs/server";
+import { PrismaClient, Role } from "@prisma/client";
+import { HttpStatusCode } from "axios";
 
+const prisma = new PrismaClient();
+
+// Handles user related Clerk webhooks
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
@@ -49,15 +54,79 @@ export async function POST(req: Request) {
     });
   }
 
-  // Do something with the payload
-  // For this guide, you simply log the payload to the console
-  const { id } = evt.data;
   const eventType = evt.type;
-  console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
-  console.log("Webhook body:", body);
+  const clerkUser = evt.data as UserJSON;
 
-  if (evt.type === "user.created") {
-    console.log("userId:", evt.data.id);
+  // User created event
+  switch (eventType) {
+    case "user.created":
+      console.log("User created event");
+      try {
+        const user = await prisma.user.create({
+          data: {
+            id: clerkUser.id,
+            createdAt: new Date(clerkUser.created_at),
+            updatedAt: new Date(clerkUser.updated_at),
+            email: clerkUser.email_addresses[0].email_address,
+            firstName: clerkUser.first_name!,
+            lastName: clerkUser.last_name!,
+            role: Role.PATIENT
+          }
+        });
+        return new Response(JSON.stringify(user), {
+          status: HttpStatusCode.Created,
+          headers: { "Content-Type": "application/json" }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error }), {
+          status: HttpStatusCode.InternalServerError,
+          headers: { "Content-Type": "application/json" }
+        });
+      }
+    case "user.updated":
+      console.log("User updated event");
+      try {
+        const user = await prisma.user.update({
+          where: {
+            id: clerkUser.id
+          },
+          data: {
+            updatedAt: new Date(clerkUser.updated_at),
+            email: clerkUser.email_addresses[0].email_address,
+            firstName: clerkUser.first_name!,
+            lastName: clerkUser.last_name!
+          }
+        });
+        return new Response(JSON.stringify(user), {
+          status: HttpStatusCode.Ok,
+          headers: { "Content-Type": "application/json" }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error }), {
+          status: HttpStatusCode.InternalServerError,
+          headers: { "Content-Type": "application/json" }
+        });
+      }
+    case "user.deleted":
+      console.log("User deleted event");
+      try {
+        const user = await prisma.user.delete({
+          where: {
+            id: clerkUser.id
+          }
+        });
+        return new Response(JSON.stringify(user), {
+          status: HttpStatusCode.Ok,
+          headers: { "Content-Type": "application/json" }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error }), {
+          status: HttpStatusCode.InternalServerError,
+          headers: { "Content-Type": "application/json" }
+        });
+      }
+    default:
+      console.log("Unknown event type");
   }
 
   return new Response("", { status: 200 });
