@@ -1,21 +1,32 @@
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
+import { auth } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
-export const IDs = {
-  senderId: "0d7e9ae9-dcd9-4bc9-8908-1715778cfaf9",
-  receiverId: "8a35ed21-2acd-4846-acab-3a42fb1aa733"
-};
-
 // GET
-export async function GET() {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  "use server";
+
+  const { userId } = auth();
+
+  if (!userId) {
+    return new Response(JSON.stringify({ error: "Not Authorized" }), {
+      status: HttpStatusCode.Unauthorized
+    });
+  }
+
+  console.log(params);
+  const otherUserId = params.id;
   try {
     const messages = await prisma.message.findMany({
       where: {
         OR: [
-          { senderId: IDs.senderId, receiverId: IDs.receiverId },
-          { senderId: IDs.receiverId, receiverId: IDs.senderId }
+          { senderId: userId!, receiverId: otherUserId },
+          { senderId: otherUserId, receiverId: userId! }
         ]
       }
     });
@@ -24,6 +35,7 @@ export async function GET() {
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
+    console.log(error);
     return new Response(JSON.stringify({ error }), {
       status: HttpStatusCode.InternalServerError,
       headers: { "Content-Type": "application/json" }
