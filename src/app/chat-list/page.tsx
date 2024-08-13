@@ -7,6 +7,7 @@ import { LuPenSquare, LuSearch } from "react-icons/lu";
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { useUser } from "@clerk/clerk-react";
 
 interface ChatUser {
   contactUser: {
@@ -21,7 +22,14 @@ interface ChatUser {
   };
 }
 
-export default function Home() {
+export default function ChatList() {
+  const { isSignedIn, isLoaded } = useUser();
+
+  // FIXME: redirect to login page if user is not signed in
+  if (isLoaded && !isSignedIn) {
+    return <div>Not signed in</div>;
+  }
+
   const router = useRouter();
 
   // Define the user list with ChatUser type
@@ -31,23 +39,22 @@ export default function Home() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch(
-          "/api/chat-list/0d7e9ae9-dcd9-4bc9-8908-1715778cfaf9"
-        );
+        const response = await fetch(`/api/chat-list/`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data: ChatUser[] = await response.json(); // Type assertion
         setUsers(data);
       } catch (error) {
+        console.log(error);
         if (process.env.NODE_ENV !== "production") {
           throw new Error("Failed to fetch users");
         }
       }
     }
 
-    fetchUsers();
-  }, []);
+    isLoaded && fetchUsers();
+  }, [isLoaded]);
 
   const filteredUsers = users.filter((user) => {
     if (filter === "all") return true;
