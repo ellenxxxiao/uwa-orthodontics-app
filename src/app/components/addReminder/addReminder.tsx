@@ -30,42 +30,36 @@ export default function AddReminer() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+      <div className="w-full flex-1 flex flex-col overflow-hidden bg-base-100">
+        <div className="flex-1 overflow-y-auto p-4">
       <Box
-        className="flex flex-row justify-between "
+        className="flex flex-row mb-2 justify-between bg-white rounded-lg shadow"
         sx={{
-          width: "100%",
+          width: "100",
           boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
           transition: "transform 0.3s ease-in-out",
-          borderRadius: 1,
+          borderRadius: 2,
           display: "flex",
-          p: 1
-        }}
-      >
-        <Typography className="self-center">Patient</Typography>
+          p: 1}}>
+        <Typography className="self-center text-black">Patient</Typography>
         <Autocomplete
           className="self-center"
           disablePortal
           id="combo-box-demo"
           options={["Neha1", "Neha2", "Neha3"]}
           style={{ width: "200px", border: "none" }}
-          renderInput={(params) => (
-            <TextField {...params} sx={{ border: "none" }} />
-          )}
-        />
+          renderInput={(params) => (<TextField {...params} sx={{ border: "none" }} />)}/>
       </Box>
       <Box
-        className="justify-between "
+        className="flex flex-row mb-2 justify-between bg-white rounded-lg shadow"
         sx={{
           width: "100%",
           boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
           transition: "transform 0.3s ease-in-out",
-          borderRadius: 1,
+          borderRadius: 2,
           display: "flex",
-          p: 1
-        }}
-      >
-        <Typography className="self-center">Repeat</Typography>
+          p: 1}}>
+        <Typography className="self-center text-black">Repeat</Typography>
         <FormControl sx={{ width: "200px" }}>
           <InputLabel id="demo-simple-select-label">Repeat</InputLabel>
           <Select
@@ -73,8 +67,7 @@ export default function AddReminer() {
             id="demo-simple-select"
             value={repeat}
             label="Repeat"
-            onChange={handleChangeRepeat}
-          >
+            onChange={handleChangeRepeat}>
             <MenuItem value={1}>Weekly</MenuItem>
             <MenuItem value={2}>Monthly</MenuItem>
             <MenuItem value={3}>Yearly</MenuItem>
@@ -84,108 +77,72 @@ export default function AddReminer() {
       </Box>
 
       <Box
-        className="flex flex-col "
+        className="flex flex-col mb-4 bg-white"
         sx={{
           width: "100%",
           boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
           transition: "transform 0.3s ease-in-out",
-          borderRadius: 1,
-          display: "flex"
-        }}
-      >
+          borderRadius: 2,
+          display: "flex"}}>
         <Box
           className="justify-between"
           sx={{
             width: "100%",
-            borderRadius: 1,
+            borderRadius: 2,
             display: "flex",
-            p: 1
-          }}
-        >
-          <Typography className="self-center">Start Date</Typography>
+            p: 1}}>
+          <Typography className="self-center text-black">Start Date</Typography>
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                slotProps={{
-                  textField: {
-                    sx: {
-                      width: "200px",
-                      borderWidth: "0px"
-                    }
-                  }
-                }}
-              />
+              <DatePicker slotProps={{textField: { sx: {width: "200px",borderWidth: "0px"}}}}/>
             </DemoContainer>
           </LocalizationProvider>
         </Box>
 
         <Box
-          className="justify-between "
+          className="justify-between"
           sx={{
             width: "100%",
-            borderRadius: 1,
+            borderRadius: 2,
             display: "flex",
-            p: 1
-          }}
-        >
-          <Typography className="self-center">End Date</Typography>
+            p: 1}}>
+          <Typography className="self-center text-black">End Date</Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                slotProps={{
-                  textField: {
-                    sx: {
-                      width: "200px",
-                      borderWidth: "0px"
-                    }
-                  }
-                }}
-              />
+              <DatePicker slotProps={{ textField: {sx: {width: "200px",borderWidth: "0px"}}}}/>
             </DemoContainer>
           </LocalizationProvider>
         </Box>
 
         <Box
-          className="justify-between "
-          sx={{
-            width: "100%",
-            borderRadius: 1,
-            display: "flex",
-            p: 1
-          }}
-        >
-          <Typography className="self-center">Time</Typography>
+          className="justify-between"
+          sx={{ width: "100%", borderRadius: 2, display: "flex", p: 1 }}>
+          <Typography className="self-center text-black">Time</Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["TimePicker"]}>
               <TimePicker
-                label="Basic time picker"
+                label=""
                 slotProps={{
                   textField: {
                     sx: {
                       width: "200px",
-                      borderWidth: "0px"
-                    }
-                  }
-                }}
-              />
+                      borderWidth: "0px"}}}}/>
             </DemoContainer>
           </LocalizationProvider>
         </Box>
       </Box>
 
       <Box
-        className="justify-between "
+        className="justify-between mb-4 bg-white"
         sx={{
           width: "100%",
           boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
           transition: "transform 0.3s ease-in-out",
-          borderRadius: 1,
+          borderRadius: 2,
           display: "flex",
-          p: 1
-        }}
-      >
-        <Typography className="self-center">Type</Typography>
+          p: 1}}>
+        <Typography className="self-center text-black">Type</Typography>
         <FormControl sx={{ width: "200px" }}>
           <InputLabel id="demo-simple-select-label">Type</InputLabel>
           <Select
@@ -193,31 +150,27 @@ export default function AddReminer() {
             id="demo-simple-select"
             value={type}
             label="Type"
-            onChange={handleChangeType}
-          >
-            <MenuItem value={1}>Weekly</MenuItem>
-            <MenuItem value={2}>Monthly</MenuItem>
-            <MenuItem value={3}>Yearly</MenuItem>
-            <MenuItem value={4}>Custom</MenuItem>
+            onChange={handleChangeType}>
+            <MenuItem value={1}>Aligner</MenuItem>
+            <MenuItem value={2}>Appointment</MenuItem>
+            <MenuItem value={3}>Custom</MenuItem>
           </Select>
         </FormControl>
       </Box>
 
       <Box
-        className="justify-between "
+        className="justify-between bg-white"
         sx={{
           width: "100%",
           boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
           transition: "transform 0.3s ease-in-out",
-          borderRadius: "4px",
-          display: "flex"
-        }}
-      >
+          borderRadius: 2,
+          display: "flex"}}>
         <textarea
           placeholder="Notes"
-          style={{ width: "100%", borderRadius: "4px", padding: "10px" }}
-        />
+          style={{ width: "100%", borderRadius: "4px", padding: "10px" }}/>
       </Box>
+    </div>
     </div>
   );
 }
