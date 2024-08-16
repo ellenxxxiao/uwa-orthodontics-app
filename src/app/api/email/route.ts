@@ -8,8 +8,8 @@ export async function POST() {
     const { data, error } = await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
       to: ['alian.haidar01@gmail.com'],
-      subject: 'Hello world',
-      react: EmailTemplate({ firstName: 'Alian' }),
+      subject: 'Orthodontics Chat App',
+      react: EmailTemplate({ firstName: 'Patient' }),
     });
 
     if (error) {

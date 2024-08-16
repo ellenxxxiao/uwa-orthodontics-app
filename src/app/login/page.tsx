@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { LuEye, LuEyeOff, LuXCircle } from "react-icons/lu";
+import axios from "axios"; // For making API requests
 
 import Input from "../components/Input";
 
@@ -9,6 +10,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [testEmail, setTestEmail] = useState(""); // New state for the test email input
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -17,6 +19,21 @@ export default function Login() {
 
   const clearEmail = () => setEmail("");
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
+  // Function to send a test email
+  const sendTestEmail = async () => {
+    try {
+      const response = await axios.post("/api/email", {
+        to: testEmail,
+      });
+      if (response.status === 200) {
+        alert("Test email sent successfully!");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert("Failed to send test email.");
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between bg-base-100 p-4 dark:bg-slate-800">
@@ -83,7 +100,6 @@ export default function Login() {
         <div className="flex items-center justify-between">
           <label className="flex items-center">
             <input type="checkbox" className="h-4 w-4 accent-primary-focus" />
-
             <span className="ml-2 text-sm text-accent-focus dark:text-slate-400">
               Remember me
             </span>
@@ -127,6 +143,20 @@ export default function Login() {
             Sign up
           </a>
         </p>
+
+        {/* Test Email Input and Button */}
+        <div className="mt-8">
+          <h3 className="text-center text-lg font-semibold text-accent-focus dark:text-slate-400">
+            Test Email
+          </h3>
+            <button
+              type="button"
+              onClick={sendTestEmail}
+              className="h-11 rounded-lg bg-primary px-4 font-medium text-app-white hover:bg-primary-focus"
+            >
+              Send Test Email
+            </button>
+        </div>
       </form>
     </div>
   );
