@@ -1,8 +1,8 @@
+import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 
 import { ChatListItem } from "@/types/chat";
-import { auth } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 

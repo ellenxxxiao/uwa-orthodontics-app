@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation"; // Import useParams
+import { useUser } from "@clerk/clerk-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
 import { useForm } from "react-hook-form";
@@ -11,18 +12,12 @@ import { z } from "zod";
 import Header from "@/components/Header";
 import MessageBubble from "@/components/MessageBubble";
 
-import { useUser } from "@clerk/clerk-react";
-
 const schema = z.object({
   message: z.string().trim().min(1)
 });
 
 export default function Chat() {
   const { isSignedIn, user, isLoaded } = useUser();
-
-  if (isLoaded && !isSignedIn) {
-    return <div>Not signed in</div>;
-  }
 
   const router = useRouter();
   const params = useParams(); // Use useParams to get dynamic route parameters
@@ -62,6 +57,11 @@ export default function Chat() {
   }
 
   useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/sign-in");
+      return;
+    }
+
     const fetchMessages = async () => {
       try {
         const res = await fetch(`/api/chat/${otherUserId}`);
@@ -100,7 +100,7 @@ export default function Chat() {
 
     isLoaded && fetchMessages();
     isLoaded && fetchOtherUser();
-  }, [isLoaded, user]); // Add dependencies
+  }, [isLoaded, isSignedIn, otherUserId, router]); // Add dependencies
 
   const handleBackClick = () => {
     router.push("/chat-list");

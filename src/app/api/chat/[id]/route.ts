@@ -1,6 +1,6 @@
+import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
-import { auth } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
@@ -19,7 +19,6 @@ export async function GET(
     });
   }
 
-  console.log(params);
   const otherUserId = params.id;
   try {
     const messages = await prisma.message.findMany({
@@ -35,7 +34,6 @@ export async function GET(
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
-    console.log(error);
     return new Response(JSON.stringify({ error }), {
       status: HttpStatusCode.InternalServerError,
       headers: { "Content-Type": "application/json" }

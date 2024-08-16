@@ -1,8 +1,8 @@
-import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { WebhookEvent, UserJSON } from "@clerk/nextjs/server";
+import { UserJSON, WebhookEvent } from "@clerk/nextjs/server";
 import { PrismaClient, Role } from "@prisma/client";
 import { HttpStatusCode } from "axios";
+import { Webhook } from "svix";
 
 const prisma = new PrismaClient();
 
@@ -25,7 +25,6 @@ export async function POST(req: Request) {
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    console.log("Error occured -- no svix headers");
     return new Response("Error occured -- no svix headers", {
       status: 400
     });
@@ -60,7 +59,6 @@ export async function POST(req: Request) {
   // User created event
   switch (eventType) {
     case "user.created":
-      console.log("User created event");
       try {
         const user = await prisma.user.create({
           data: {
@@ -84,7 +82,6 @@ export async function POST(req: Request) {
         });
       }
     case "user.updated":
-      console.log("User updated event");
       try {
         const user = await prisma.user.update({
           where: {
@@ -108,7 +105,6 @@ export async function POST(req: Request) {
         });
       }
     case "user.deleted":
-      console.log("User deleted event");
       try {
         const user = await prisma.user.delete({
           where: {
@@ -126,7 +122,6 @@ export async function POST(req: Request) {
         });
       }
     default:
-      console.log("Unknown event type");
   }
 
   return new Response("", { status: 200 });

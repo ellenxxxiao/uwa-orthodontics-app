@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/clerk-react";
 import { LuPenSquare, LuSearch } from "react-icons/lu";
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { useUser } from "@clerk/clerk-react";
 
 interface ChatUser {
   contactUser: {
@@ -24,19 +24,16 @@ interface ChatUser {
 
 export default function ChatList() {
   const { isSignedIn, isLoaded } = useUser();
-
-  // FIXME: redirect to login page if user is not signed in
-  if (isLoaded && !isSignedIn) {
-    return <div>Not signed in</div>;
-  }
-
-  const router = useRouter();
-
-  // Define the user list with ChatUser type
   const [users, setUsers] = useState<ChatUser[]>([]);
   const [filter, setFilter] = useState("all");
 
+  const router = useRouter();
+
   useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/sign-in");
+      return;
+    }
     async function fetchUsers() {
       try {
         const response = await fetch(`/api/chat-list/`);
@@ -46,15 +43,12 @@ export default function ChatList() {
         const data: ChatUser[] = await response.json(); // Type assertion
         setUsers(data);
       } catch (error) {
-        console.log(error);
-        if (process.env.NODE_ENV !== "production") {
-          throw new Error("Failed to fetch users");
-        }
+        throw new Error("Failed to fetch users");
       }
     }
 
     isLoaded && fetchUsers();
-  }, [isLoaded]);
+  }, [isLoaded, isSignedIn, router]);
 
   const filteredUsers = users.filter((user) => {
     if (filter === "all") return true;
@@ -84,7 +78,6 @@ export default function ChatList() {
   };
 
   const handleChatClick = (userId: string) => {
-    // Pass user ID to the chat page
     router.push(`/chat/${userId}`);
   };
 
