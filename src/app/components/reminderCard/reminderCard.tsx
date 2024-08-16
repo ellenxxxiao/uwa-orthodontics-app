@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
+  Avatar,
+  Box,
   Avatar,
   Box,
   Card,
   CardContent,
+  Chip,
   Chip,
   IconButton,
   Stack,
@@ -14,15 +19,14 @@ import {
 import { deepOrange } from "@mui/material/colors";
 
 interface addReminderProps {
-  handleEditClick?:()=>{}
+  handleEditClick?: () => {};
 }
 
-const ReminderCard = ({handleEditClick}:addReminderProps) => {
+const ReminderCard = ({ handleEditClick }: addReminderProps) => {
   const [isSwiping, setIsSwiping] = useState(false);
 
   const handleMouseEnter = () => setIsSwiping(true);
   const handleMouseLeave = () => setIsSwiping(false);
-
 
   return (
     <Card
@@ -31,7 +35,7 @@ const ReminderCard = ({handleEditClick}:addReminderProps) => {
         boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
         transition: "transform 0.3s ease-in-out",
         borderRadius: 2,
-        display: "flex",
+        display: "flex"
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -51,8 +55,12 @@ const ReminderCard = ({handleEditClick}:addReminderProps) => {
             Reminder: Repeat
           </Typography>
         </CardContent>
-        <Box sx={{ display: "flex", alignItems: "top", py:2, px:1}}>
-          <Chip size="small" label="Appointment" sx={{ backgroundColor: "orange", color:"white" }} />
+        <Box sx={{ display: "flex", alignItems: "top", py: 2, px: 1 }}>
+          <Chip
+            size="small"
+            label="Appointment"
+            sx={{ backgroundColor: "orange", color: "white" }}
+          />
         </Box>
 
         <Box
@@ -64,7 +72,7 @@ const ReminderCard = ({handleEditClick}:addReminderProps) => {
             transform: "translateX(100%)",
             transition: "transform 0.3s ease-in-out",
             //   justifyContent: "center",
-            ...(isSwiping && { transform: "translateX(0)" }),
+            ...(isSwiping && { transform: "translateX(0)" })
           }}
           className="flex flex-row"
         >
@@ -73,11 +81,11 @@ const ReminderCard = ({handleEditClick}:addReminderProps) => {
             sx={{
               background: "#c4c4c4",
               justifyContent: "center",
-              height: "100%",
+              height: "100%"
             }}
           >
             <IconButton aria-label="edit">
-              <EditIcon sx={{ color: "white" }}  onClick ={handleEditClick}/>
+              <EditIcon sx={{ color: "white" }} onClick={handleEditClick} />
             </IconButton>
           </Box>
           <Box

@@ -97,8 +97,11 @@ export default function Home() {
 
         {/* Main content */}
         <div className="flex w-full flex-1 flex-col overflow-hidden bg-base-100">
+        {/* Main content */}
+        <div className="flex w-full flex-1 flex-col overflow-hidden bg-base-100">
           <div className="flex justify-around bg-white p-4 shadow-md">
             <button
+              className={`rounded-full px-4 py-2 ${filter === "all" ? "bg-blue-500 text-white" : "text-blue-500"}`}
               className={`rounded-full px-4 py-2 ${filter === "all" ? "bg-blue-500 text-white" : "text-blue-500"}`}
               onClick={() => setFilter("all")}
             >
