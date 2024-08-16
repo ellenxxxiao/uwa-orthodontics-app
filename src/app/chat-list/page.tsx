@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/clerk-react";
 import { LuPenSquare, LuSearch } from "react-icons/lu";
 
-import Footer from "@/app/components/Footer";
-import Header from "@/app/components/Header";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 interface ChatUser {
   contactUser: {
@@ -21,33 +22,33 @@ interface ChatUser {
   };
 }
 
-export default function Home() {
-  const router = useRouter();
-
-  // Define the user list with ChatUser type
+export default function ChatList() {
+  const { isSignedIn, isLoaded } = useUser();
   const [users, setUsers] = useState<ChatUser[]>([]);
   const [filter, setFilter] = useState("all");
 
+  const router = useRouter();
+
   useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/sign-in");
+      return;
+    }
     async function fetchUsers() {
       try {
-        const response = await fetch(
-          "/api/chat-list/0d7e9ae9-dcd9-4bc9-8908-1715778cfaf9"
-        );
+        const response = await fetch(`/api/chat-list/`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data: ChatUser[] = await response.json(); // Type assertion
         setUsers(data);
       } catch (error) {
-        if (process.env.NODE_ENV !== "production") {
-          throw new Error("Failed to fetch users");
-        }
+        throw new Error("Failed to fetch users");
       }
     }
 
-    fetchUsers();
-  }, []);
+    isLoaded && fetchUsers();
+  }, [isLoaded, isSignedIn, router]);
 
   const filteredUsers = users.filter((user) => {
     if (filter === "all") return true;
@@ -77,7 +78,6 @@ export default function Home() {
   };
 
   const handleChatClick = (userId: string) => {
-    // Pass user ID to the chat page
     router.push(`/chat/${userId}`);
   };
 
