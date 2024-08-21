@@ -4,6 +4,7 @@ import { PrismaClient, Role } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 import { Webhook } from "svix";
 
+
 const prisma = new PrismaClient();
 
 // Handles user related Clerk webhooks

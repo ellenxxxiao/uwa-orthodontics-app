@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation"; // Import useParams
+import { useParams, useRouter } from "next/navigation"; 
 import { useUser } from "@clerk/clerk-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
@@ -17,6 +17,7 @@ const schema = z.object({
 });
 
 export default function Chat() {
+  
   const { isSignedIn, user, isLoaded } = useUser();
 
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function Chat() {
   const [msgs, setMsgs] = useState<Message[]>([]);
   const otherUserId = params.id; // Extract id from params
   const [otherUser, setOtherUser] = useState<User | null>(null);
+  const [wsPort, setWsPort] = useState(null);
 
   const ScrollToBottom = () => {
     const elementRef = useRef<HTMLDivElement | null>(null);
@@ -42,7 +44,7 @@ export default function Chat() {
   });
 
   function onSubmit(data: z.infer<typeof schema>) {
-    fetch("/api/chat", {
+    fetch("/api/chat/${otherUserId}", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -66,8 +68,9 @@ export default function Chat() {
       try {
         const res = await fetch(`/api/chat/${otherUserId}`);
         if (res.ok) {
-          const messages = await res.json();
-          setMsgs(messages);
+          const data = await res.json();
+          setMsgs(data.messages);
+          setWsPort(data.wsPort);
         } else {
           if (process.env.NODE_ENV !== "production") {
             throw new Error("Failed to fetch messages");
@@ -100,7 +103,37 @@ export default function Chat() {
 
     isLoaded && fetchMessages();
     isLoaded && fetchOtherUser();
+
   }, [isLoaded, isSignedIn, otherUserId, router]); // Add dependencies
+
+  // Setup WebSocket connection
+useEffect(() => {
+  if (wsPort) {
+    const socket = new WebSocket(`ws://localhost:${wsPort}`);  
+
+    socket.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+
+    socket.onmessage = (event) => {
+      const newMessage = JSON.parse(event.data);
+      setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
+    };
+
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    return () => {
+      socket.close(); 
+    };
+  }
+}, [wsPort]);
+
 
   const handleBackClick = () => {
     router.push("/chat-list");
