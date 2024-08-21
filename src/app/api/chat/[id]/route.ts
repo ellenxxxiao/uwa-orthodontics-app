@@ -22,7 +22,7 @@ export async function GET(
   }
 
   const otherUserId = params.id;
-  initializeWSServer(); 
+  initializeWSServer();
 
   try {
     const messages = await prisma.message.findMany({
@@ -34,8 +34,8 @@ export async function GET(
       }
     });
 
-    const wsPort  = getWSPort();
-    
+    const wsPort = getWSPort();
+
     return new Response(JSON.stringify({ messages, wsPort }), {
       status: HttpStatusCode.Ok,
       headers: { "Content-Type": "application/json" }
@@ -47,7 +47,6 @@ export async function GET(
     });
   }
 }
-
 
 // POST
 export async function POST(request: Request) {
@@ -70,7 +69,7 @@ export async function POST(request: Request) {
           client.send(JSON.stringify(message));
         }
       });
-    } 
+    }
 
     return new Response(JSON.stringify(message), {
       status: HttpStatusCode.Created,

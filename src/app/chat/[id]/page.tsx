@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation"; 
+import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/clerk-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
@@ -17,7 +17,6 @@ const schema = z.object({
 });
 
 export default function Chat() {
-  
   const { isSignedIn, user, isLoaded } = useUser();
 
   const router = useRouter();
@@ -103,37 +102,35 @@ export default function Chat() {
 
     isLoaded && fetchMessages();
     isLoaded && fetchOtherUser();
-
   }, [isLoaded, isSignedIn, otherUserId, router]); // Add dependencies
 
   // Setup WebSocket connection
-useEffect(() => {
-  if (wsPort) {
-    const socket = new WebSocket(`ws://localhost:${wsPort}`);  
+  useEffect(() => {
+    if (wsPort) {
+      const socket = new WebSocket(`ws://localhost:${wsPort}`);
 
-    socket.onopen = () => {
-      console.log('Connected to WebSocket server');
-    };
+      socket.onopen = () => {
+        console.log("Connected to WebSocket server");
+      };
 
-    socket.onmessage = (event) => {
-      const newMessage = JSON.parse(event.data);
-      setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
-    };
+      socket.onmessage = (event) => {
+        const newMessage = JSON.parse(event.data);
+        setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
+      };
 
-    socket.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
+      socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
 
-    socket.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
+      socket.onclose = () => {
+        console.log("WebSocket connection closed");
+      };
 
-    return () => {
-      socket.close(); 
-    };
-  }
-}, [wsPort]);
-
+      return () => {
+        socket.close();
+      };
+    }
+  }, [wsPort]);
 
   const handleBackClick = () => {
     router.push("/chat-list");
