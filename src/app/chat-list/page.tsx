@@ -92,7 +92,7 @@ export default function ChatList() {
           iconRight={
             <LuPenSquare size={30} strokeWidth={1.3} className="text-primary" />
           }
-          title="Contacts"
+          title="Chats"
         />
 
         {/* Main content */}
