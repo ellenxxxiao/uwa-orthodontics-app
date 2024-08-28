@@ -1,7 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
+import { Resend } from 'resend';
+import { EmailTemplate } from '../../components/emailTemplate/email-template';
 
 const prisma = new PrismaClient();
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Utility function to safely extract error messages from unknown errors
 function getErrorMessage(error: unknown): string {
@@ -11,41 +14,55 @@ function getErrorMessage(error: unknown): string {
   return String(error); // Fallback for non-Error objects
 }
 
-// GET: Fetch reminders based on criteria like setById, setForId, isReminderActive, etc.
+// Helper function to send an email via Resend
+async function sendEmail(subject: string, actionType: 'created' | 'updated' | 'deleted', templateData: any) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'OrthoChat <onboarding@resend.dev>',
+      to: ['alian.haidar01@gmail.com'], // Hardcoded email recipient
+      subject: subject,
+      react: EmailTemplate({ ...templateData, actionType }),
+    });
+
+    if (error) {
+      console.error('Failed to send email:', error);
+      throw new Error('Failed to send email');
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error sending email:', err);
+  }
+}
+
+// GET: Fetch reminders
 export async function GET(request: Request) {
   try {
-    // Parse the query parameters from the URL
     const url = new URL(request.url);
     const setById = url.searchParams.get('setById');
     const setForId = url.searchParams.get('setForId');
     const isReminderActive = url.searchParams.get('isReminderActive') === 'true';
 
-    // Build conditions for Prisma query based on available query parameters
     const conditions: any = {};
     if (setById) conditions.setById = setById;
     if (setForId) conditions.setForId = setForId;
     if (typeof isReminderActive === 'boolean') conditions.isReminderActive = isReminderActive;
 
-    // Fetch reminders from the database
-    const reminders = await prisma.reminder.findMany({
-      where: conditions,
-    });
+    const reminders = await prisma.reminder.findMany({ where: conditions });
 
-    // Return the fetched reminders as a response
     return new Response(JSON.stringify(reminders), {
       status: HttpStatusCode.Ok,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    // Handle errors safely by extracting the message from the error
     return new Response(JSON.stringify({ error: getErrorMessage(error) }), {
       status: HttpStatusCode.InternalServerError,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
 
-// POST: Create a new reminder in the database
+// POST: Create a new reminder
 export async function POST(request: Request) {
   try {
     const { setById, setForId, scheduledAt, startDate, endDate, description, type, intervalInDays } = await request.json();
@@ -53,11 +70,10 @@ export async function POST(request: Request) {
     if (!['ALIGNER', 'APPOINTMENT', 'OTHER'].includes(type)) {
       return new Response(JSON.stringify({ error: "Invalid type provided" }), {
         status: HttpStatusCode.BadRequest,
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Create a new reminder in the database
     const reminder = await prisma.reminder.create({
       data: {
         setById,
@@ -66,22 +82,30 @@ export async function POST(request: Request) {
         startDate: new Date(startDate),
         endDate: new Date(endDate),
         description,
-        type, // Must match one of the enum values
+        type,
         intervalInDays,
-        isReminderActive: true, // Initially mark the reminder as active
-      }
+        isReminderActive: true,
+      },
     });
 
-    // Return the created reminder as a response
+    // Send email when a reminder is created
+    await sendEmail('New Reminder Created', 'created', {
+      firstName: 'Patient',
+      description,
+      startDate: startDate,
+      endDate: endDate,
+      type,
+      intervalInDays
+    });
+
     return new Response(JSON.stringify(reminder), {
       status: HttpStatusCode.Created,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    // Handle errors safely by extracting the message from the error
     return new Response(JSON.stringify({ error: getErrorMessage(error) }), {
       status: HttpStatusCode.InternalServerError,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
@@ -91,23 +115,20 @@ export async function PUT(request: Request) {
   try {
     const { id, setById, setForId, scheduledAt, startDate, endDate, description, type, intervalInDays, isReminderActive } = await request.json();
 
-    // Ensure the reminder ID is provided
     if (!id) {
       return new Response(JSON.stringify({ error: "Reminder ID is required" }), {
         status: HttpStatusCode.BadRequest,
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Validate reminder type
     if (!['ALIGNER', 'APPOINTMENT', 'OTHER'].includes(type)) {
       return new Response(JSON.stringify({ error: "Invalid type provided" }), {
         status: HttpStatusCode.BadRequest,
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Update the reminder in the database
     const updatedReminder = await prisma.reminder.update({
       where: { id },
       data: {
@@ -120,52 +141,65 @@ export async function PUT(request: Request) {
         type,
         intervalInDays,
         isReminderActive,
-      }
+      },
     });
 
-    // Return the updated reminder as a response
+    // Send email when a reminder is updated
+    await sendEmail('Reminder Updated', 'updated', {
+      firstName: 'Patient',
+      description,
+      startDate: startDate,
+      endDate: endDate,
+      type,
+      intervalInDays
+    });
+
     return new Response(JSON.stringify(updatedReminder), {
       status: HttpStatusCode.Ok,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    // Handle errors safely by extracting the message from the error
     return new Response(JSON.stringify({ error: getErrorMessage(error) }), {
       status: HttpStatusCode.InternalServerError,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
 
-// DELETE: Delete an existing reminder and return a success message
+// DELETE: Delete an existing reminder
 export async function DELETE(request: Request) {
-    try {
-      const { id } = await request.json();
-  
-      // Ensure the reminder ID is provided
-      if (!id) {
-        return new Response(JSON.stringify({ error: "Reminder ID is required" }), {
-          status: HttpStatusCode.BadRequest,
-          headers: { "Content-Type": "application/json" }
-        });
-      }
-  
-      // Delete the reminder from the database
-      await prisma.reminder.delete({
-        where: { id }
-      });
-  
-      // Return success message
-      return new Response(JSON.stringify({ message: "Reminder deleted successfully" }), {
-        status: HttpStatusCode.Ok,
-        headers: { "Content-Type": "application/json" }
-      });
-    } catch (error) {
-      // Handle errors safely by extracting the message from the error
-      return new Response(JSON.stringify({ error: getErrorMessage(error) }), {
-        status: HttpStatusCode.InternalServerError,
-        headers: { "Content-Type": "application/json" }
+  try {
+    const { id, description, startDate, endDate, type, intervalInDays } = await request.json();
+
+    if (!id) {
+      return new Response(JSON.stringify({ error: "Reminder ID is required" }), {
+        status: HttpStatusCode.BadRequest,
+        headers: { "Content-Type": "application/json" },
       });
     }
+
+    await prisma.reminder.delete({
+      where: { id },
+    });
+
+    // Send email when a reminder is deleted
+    await sendEmail('Reminder Deleted', 'deleted', {
+      firstName: 'Patient',
+      description: `Your Reminder has been deleted successfully.`,
+      startDate: startDate,
+      endDate: endDate,
+      type,
+      intervalInDays
+    });
+
+    return new Response(JSON.stringify({ message: "Reminder deleted successfully" }), {
+      status: HttpStatusCode.Ok,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: getErrorMessage(error) }), {
+      status: HttpStatusCode.InternalServerError,
+      headers: { "Content-Type": "application/json" },
+    });
   }
-  
+}

@@ -2,10 +2,22 @@ import * as React from 'react';
 
 interface EmailTemplateProps {
   firstName: string;
+  actionType: 'created' | 'updated' | 'deleted';
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+  type?: string;
+  intervalInDays?: number;
 }
 
-export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
+export const EmailTemplate: React.FC<EmailTemplateProps> = ({
   firstName,
+  actionType,
+  description,
+  startDate,
+  endDate,
+  type,
+  intervalInDays,
 }) => (
   <div
     style={{
@@ -29,9 +41,12 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
       }}
     >
       <h1 style={{ color: '#ffffff', fontSize: '24px', margin: 0 }}>
-        Welcome to OrthoChat, {firstName}!
+        {actionType === 'created' && `Your Reminder has been Created!`}
+        {actionType === 'updated' && `Your Reminder has been Updated!`}
+        {actionType === 'deleted' && `Your Reminder has been Deleted!`}
       </h1>
     </div>
+
     <div
       style={{
         padding: '20px',
@@ -44,21 +59,24 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
         Hi {firstName},
       </p>
       <p style={{ fontSize: '16px' }}>
-        We're excited to have you on board! OrthoChat is designed to make
-        communication in the healthcare space easier and more efficient.
-        Whether you're chatting with colleagues or organizing patient records,
-        we're here to help.
+        {actionType === 'created' && `Your reminder has been created successfully.`}
+        {actionType === 'updated' && `Your reminder has been updated successfully.`}
+        {actionType === 'deleted' && `Your reminder has been deleted successfully.`}
       </p>
+      {description && <p style={{ fontSize: '16px' }}>Description: {description}</p>}
+      {startDate && <p style={{ fontSize: '16px' }}>Start Date: {startDate}</p>}
+      {endDate && <p style={{ fontSize: '16px' }}>End Date: {endDate}</p>}
+      {type && <p style={{ fontSize: '16px' }}>Type: {type}</p>}
+      {intervalInDays !== undefined && (
+        <p style={{ fontSize: '16px' }}>Interval: {intervalInDays} day(s)</p>
+      )}
       <p style={{ fontSize: '16px' }}>
-        If you ever need any assistance, don't hesitate to reach out to our
-        support team.
-      </p>
-      <p style={{ fontSize: '16px', marginBottom: '0' }}>
         Best regards,
         <br />
         The OrthoChat Team
       </p>
     </div>
+
     <div
       style={{
         marginTop: '20px',
@@ -67,12 +85,15 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
         color: '#777',
       }}
     >
-      <p>
+      <p style={{ margin: '0 0 8px 0' }}>
         OrthoChat Inc. | 123 Healthcare Ave, Suite 456 | City, State ZIP
       </p>
-      <p>
+      <p style={{ margin: '0' }}>
         If you no longer wish to receive emails from us, you can{' '}
-        <a href="#" style={{ color: '#007bff', textDecoration: 'none' }}>
+        <a
+          href="#"
+          style={{ color: '#007bff', textDecoration: 'underline' }}
+        >
           unsubscribe here
         </a>.
       </p>
