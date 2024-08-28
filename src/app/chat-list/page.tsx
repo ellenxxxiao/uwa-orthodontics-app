@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/nextjs";
 import { LuPenSquare, LuSearch } from "react-icons/lu";
 
 import Footer from "@/components/Footer";
@@ -92,7 +92,7 @@ export default function ChatList() {
           iconRight={
             <LuPenSquare size={30} strokeWidth={1.3} className="text-primary" />
           }
-          title="Contacts"
+          title="Chats"
         />
 
         {/* Main content */}
