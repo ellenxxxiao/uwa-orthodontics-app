@@ -57,6 +57,7 @@ export default function Login() {
         {/* Email Input */}
         <div className="relative flex h-11 w-full items-center">
           <Input
+            
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -76,6 +77,7 @@ export default function Login() {
         {/* Password Input */}
         <div className="relative flex h-11 w-full items-center">
           <Input
+          
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -149,6 +151,13 @@ export default function Login() {
           <h3 className="text-center text-lg font-semibold text-accent-focus dark:text-slate-400">
             Test Email
           </h3>
+          <div className="flex items-center space-x-4">
+            <Input
+              type="email"
+              value={testEmail}
+              onChange={(e) => setTestEmail(e.target.value)}
+              placeholder="Enter test email"
+            />
             <button
               type="button"
               onClick={sendTestEmail}
@@ -156,6 +165,7 @@ export default function Login() {
             >
               Send Test Email
             </button>
+          </div>
         </div>
       </form>
     </div>
