@@ -9,8 +9,16 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AddReminder from "../components/addReminder/addReminder";
 
+<<<<<<< HEAD
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+=======
+import AddReminer from "@/components/addReminder";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import ReminderCard from "@/components/reminderCard";
+import SearchInput from "@/components/searchInput";
+>>>>>>> origin/main
 
 enum RepeatPeriod {
   Weekly,

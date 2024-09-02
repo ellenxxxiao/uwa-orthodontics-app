@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 
@@ -5,20 +6,19 @@ import { ChatListItem } from "@/types/chat";
 
 const prisma = new PrismaClient();
 
-// GET. Example: http://localhost:3000/api/chat-list/0d7e9ae9-dcd9-4bc9-8908-1715778cfaf9
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const userId = params.id;
+// GET. Example: http://localhost:3000/api/chat-list/
+export async function GET() {
+  "use server";
+
+  const { userId } = auth();
+
+  if (!userId) {
+    return new Response(JSON.stringify({ error: "Not Authorized" }), {
+      status: HttpStatusCode.Unauthorized
+    });
+  }
 
   try {
-    if (!userId) {
-      return new Response(JSON.stringify({ error: "User ID is required" }), {
-        status: HttpStatusCode.BadRequest
-      });
-    }
-
     const messages = await prisma.message.findMany({
       relationLoadStrategy: "join",
       select: {
