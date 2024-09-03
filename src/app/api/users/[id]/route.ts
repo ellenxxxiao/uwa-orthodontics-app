@@ -1,5 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
+import { clerkClient, createClerkClient } from "@clerk/clerk-sdk-node";
+import { UpdateUserSchema } from "@/schema/user";
+import { z } from "zod";
+
+const clerk = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY
+});
 
 const prisma = new PrismaClient();
 
@@ -9,7 +16,6 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
-  // console.log("Received ID:", id);
 
   try {
     if (!id) {
@@ -23,12 +29,10 @@ export async function GET(
     });
 
     if (!user) {
-      // console.error("User not found for ID:", id);
       return new Response(JSON.stringify({ error: "User not found" }), {
         status: HttpStatusCode.NotFound
       });
     }
-    // console.log("User found:", user);
     return new Response(JSON.stringify(user), {
       status: HttpStatusCode.Ok,
       headers: {
@@ -36,7 +40,54 @@ export async function GET(
       }
     });
   } catch (error) {
-    // console.error("Error accessing database:", error);
+    return new Response(JSON.stringify({ error }), {
+      status: HttpStatusCode.InternalServerError
+    });
+  }
+}
+// PATCH. Update user in both database and Clerk.
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
+
+  try {
+    if (!id) {
+      return new Response(JSON.stringify({ error: "User ID is required" }), {
+        status: HttpStatusCode.BadRequest
+      });
+    }
+
+    const body = await request.json();
+
+    // Safe parse request body for update user schema
+    const parseResult = UpdateUserSchema.safeParse(body);
+
+    if (!parseResult.success) {
+      return new Response(JSON.stringify({ error: parseResult.error }), {
+        status: HttpStatusCode.BadRequest
+      });
+    }
+
+    const updateUserData = parseResult.data;
+
+    //  Update user in the database
+    const user = await prisma.user.update({
+      where: { id },
+      data: updateUserData
+    });
+
+    // Update user in Clerk
+    await clerkClient.users.updateUser(id, updateUserData);
+
+    return new Response(JSON.stringify(user), {
+      status: HttpStatusCode.Ok,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+  } catch (error) {
     return new Response(JSON.stringify({ error }), {
       status: HttpStatusCode.InternalServerError
     });
