@@ -9,7 +9,7 @@ export async function POST() {
       from: 'Acme <onboarding@resend.dev>',
       to: ['alian.haidar01@gmail.com'],
       subject: 'Orthodontics Chat App',
-      react: EmailTemplate({ firstName: 'Patient' }),
+      react: EmailTemplate({ firstName: 'Patient', actionType: 'created' }),
     });
 
     if (error) {
