@@ -35,7 +35,7 @@ export default function ChatList() {
     }
     async function fetchUsers() {
       try {
-        const response = await fetch(`/api/chat-list/`);
+        const response = await fetch("/api/chat-list/");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -82,7 +82,7 @@ export default function ChatList() {
 
   return (
     <>
-      <div className="flex h-screen flex-col">
+      <div className="flex h-full flex-col">
         <Header
           type="primary"
           iconLeft={
@@ -95,7 +95,7 @@ export default function ChatList() {
         />
 
         {/* Main content */}
-        <div className="flex w-full flex-1 flex-col overflow-hidden bg-base-100">
+        <div className="flex w-full flex-1 flex-col overflow-hidden bg-white">
           <div className="flex justify-around bg-white p-4 shadow-md">
             <button
               className={`rounded-full px-4 py-2 ${filter === "all" ? "bg-blue-500 text-white" : "text-blue-500"}`}

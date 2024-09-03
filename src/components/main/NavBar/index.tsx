@@ -1,5 +1,5 @@
 "use client";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LuUser2, LuBell, LuMessageCircle, LuSettings } from "react-icons/lu";
@@ -14,7 +14,7 @@ export default function NavBar() {
   return (
     <>
       <SignedIn>
-        <div className="h-screen w-1/6 min-w-16 max-w-60 bg-pink-200">
+        <div className="h-screen w-1/6 min-w-16 max-w-60">
           {/* avatar */}
           <div className="mx-auto mb-32 h-10 w-10 pt-10">
             <UserButton

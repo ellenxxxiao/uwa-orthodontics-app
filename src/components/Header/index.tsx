@@ -39,7 +39,7 @@ export default function Header({
 
     case "primary":
       return (
-        <div className="sticky top-0 flex h-20 w-full items-center justify-between border-b border-base-300 bg-base-100 px-4">
+        <div className="sticky top-0 flex h-20 w-full items-center justify-between border-b border-base-300 bg-white px-4">
           <button>{iconLeft}</button>
           <div className="text-sm font-bold text-gray-500 ">{title}</div>
           <button>{iconRight}</button>

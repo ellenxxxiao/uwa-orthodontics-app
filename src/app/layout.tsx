@@ -35,9 +35,11 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <body className="flex bg-base-100">
+        <body className="flex h-screen bg-base-100">
           <NavBar />
-          <main className="flex-1">{children}</main>
+          <main className="m-8 flex-1 overflow-hidden rounded-xl shadow-md">
+            {children}
+          </main>
         </body>
       </html>
     </ClerkProvider>
