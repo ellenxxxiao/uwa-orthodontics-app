@@ -72,14 +72,14 @@ export async function PATCH(
 
     const updateUserData = parseResult.data;
 
+    // Update user in Clerk
+    await clerkClient.users.updateUser(id, updateUserData);
+
     //  Update user in the database
     const user = await prisma.user.update({
       where: { id },
       data: updateUserData
     });
-
-    // Update user in Clerk
-    await clerkClient.users.updateUser(id, updateUserData);
 
     return new Response(JSON.stringify(user), {
       status: HttpStatusCode.Ok,
@@ -87,6 +87,44 @@ export async function PATCH(
         "Content-Type": "application/json"
       }
     });
+  } catch (error) {
+    return new Response(JSON.stringify({ error }), {
+      status: HttpStatusCode.InternalServerError
+    });
+  }
+}
+
+// DELETE. Delete user in both database and Clerk.
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
+
+  try {
+    if (!id) {
+      return new Response(JSON.stringify({ error: "User ID is required" }), {
+        status: HttpStatusCode.BadRequest
+      });
+    }
+
+    // Delete user in Clerk
+    await clerkClient.users.deleteUser(id);
+
+    // Delete user in the database
+    await prisma.user.delete({
+      where: { id }
+    });
+
+    return new Response(
+      JSON.stringify({ message: `User with ID ${id} deleted successfully.` }),
+      {
+        status: HttpStatusCode.Ok,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
   } catch (error) {
     return new Response(JSON.stringify({ error }), {
       status: HttpStatusCode.InternalServerError
