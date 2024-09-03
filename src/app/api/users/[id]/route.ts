@@ -75,18 +75,15 @@ export async function PATCH(
     // Update user in Clerk
     await clerkClient.users.updateUser(id, updateUserData);
 
-    //  Update user in the database
-    const user = await prisma.user.update({
-      where: { id },
-      data: updateUserData
-    });
-
-    return new Response(JSON.stringify(user), {
-      status: HttpStatusCode.Ok,
-      headers: {
-        "Content-Type": "application/json"
+    return new Response(
+      JSON.stringify({ message: `User with ID ${id} updated successfully.` }),
+      {
+        status: HttpStatusCode.Ok,
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
-    });
+    );
   } catch (error) {
     return new Response(JSON.stringify({ error }), {
       status: HttpStatusCode.InternalServerError
@@ -110,11 +107,6 @@ export async function DELETE(
 
     // Delete user in Clerk
     await clerkClient.users.deleteUser(id);
-
-    // Delete user in the database
-    await prisma.user.delete({
-      where: { id }
-    });
 
     return new Response(
       JSON.stringify({ message: `User with ID ${id} deleted successfully.` }),
