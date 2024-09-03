@@ -9,6 +9,7 @@ import {
 } from "@clerk/nextjs";
 
 import "./globals.css";
+import NavBar from "@/components/main/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,14 +35,9 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <body>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-          {children}
+        <body className="flex bg-base-100">
+          <NavBar />
+          <main className="flex-1">{children}</main>
         </body>
       </html>
     </ClerkProvider>

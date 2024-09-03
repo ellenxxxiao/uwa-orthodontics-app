@@ -47,7 +47,7 @@ const config = {
           focus: "#344054"
         },
         base: {
-          100: "#EDEDED",
+          100: "#F5F5F5",
           200: "#D0D5DD",
           300: "#B7BDC8"
         },

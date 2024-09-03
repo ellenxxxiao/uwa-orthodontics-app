@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { LuPenSquare, LuSearch } from "react-icons/lu";
 
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
 interface ChatUser {
@@ -178,9 +177,6 @@ export default function ChatList() {
             ))}
           </div>
         </div>
-
-        {/* Footer */}
-        <Footer />
       </div>
     </>
   );
