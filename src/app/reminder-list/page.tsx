@@ -51,7 +51,6 @@ export default function ReminderList() {
           <button
             onClick={() => {
               setIsOpen(true);
-              console.log(isOpen);
             }}
           >
             <LuPlusCircle

@@ -56,8 +56,8 @@ const reminderFormSchema = z.object({
   patient: z.string(),
   repeat: z.nativeEnum(RepeatType),
   reminderType: z.nativeEnum(ReminderType),
-  startDate: z.date(),
-  endDate: z.date()
+  startDate: z.date()
+  // endDate: z.date()
 });
 
 // FIXME: Mock data
@@ -96,6 +96,9 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
 
   function onSubmit(values: z.infer<typeof reminderFormSchema>) {
     console.log(values);
+    // Reset with empty values or specific defaults
+    reminderForm.reset();
+    onClose();
   }
 
   return (
@@ -126,19 +129,26 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
 
             <CustomField
               control={reminderForm.control}
-              name="reminderType"
-              label="Type"
+              name="repeat"
+              label="Repeat"
+              placeholder="Never"
+              options={repeatTypes}
+            />
+
+            <CustomField
+              control={reminderForm.control}
+              name="startDate"
+              label="Starts"
               placeholder="Select"
-              options={reminderTypes}
               isDatePicker
             />
 
             <CustomField
               control={reminderForm.control}
-              name="repeat"
-              label="Repeat"
-              placeholder="Never"
-              options={repeatTypes}
+              name="reminderType"
+              label="Type"
+              placeholder="Select"
+              options={reminderTypes}
             />
 
             <DialogFooter />
