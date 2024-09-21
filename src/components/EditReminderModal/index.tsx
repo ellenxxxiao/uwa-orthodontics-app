@@ -2,9 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReminderType, RepeatType } from "@prisma/client";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+import { useState, useRef } from "react";
 
+import { Label } from "@/components/ui/label";
 import CustomField from "@/components/CustomField";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,14 +16,23 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog-custom";
-import { Form } from "@/components/ui/form";
+import { TimePickerInput } from "@/components/ui/time-picker-input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "@/components/ui/form";
 
 const reminderFormSchema = z.object({
   patient: z.string(),
   repeat: z.nativeEnum(RepeatType),
   reminderType: z.nativeEnum(ReminderType),
-  startDate: z.date()
-  // endDate: z.date()
+  startDate: z.date(),
+  time: z.date(),
+  endDate: z.date().optional()
 });
 
 // FIXME: Mock data
@@ -53,6 +64,11 @@ interface Props {
 }
 
 export default function EditProfileModal({ isOpen, onClose }: Props) {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
+  const minuteRef = useRef<HTMLInputElement>(null);
+  const hourRef = useRef<HTMLInputElement>(null);
+
   const reminderForm = useForm<z.infer<typeof reminderFormSchema>>({
     resolver: zodResolver(reminderFormSchema),
     defaultValues: {}
@@ -104,6 +120,49 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
               label="Starts"
               placeholder="Select"
               isDatePicker
+            />
+
+            <FormField
+              control={reminderForm.control}
+              name="time"
+              render={({ field }) => (
+                <FormItem className="flex flex-row justify-between">
+                  <FormLabel className="w-22 lg:max-5xl:min-w-40 lg:max-5xl:text-lg mt-2 self-center px-2 py-2 align-baseline text-base font-bold">
+                    Time
+                  </FormLabel>
+                  <div className="lg:max-5xl:w-full flex justify-start">
+                    <FormControl>
+                      <div className="flex items-end gap-2">
+                        <div className="grid gap-1 text-center">
+                          <Label htmlFor="hours" className="text-xs">
+                            Hours
+                          </Label>
+                          <TimePickerInput
+                            picker="hours"
+                            date={field.value}
+                            setDate={field.onChange}
+                            ref={hourRef}
+                            onRightFocus={() => minuteRef.current?.focus()}
+                          />
+                        </div>
+                        <div className="grid gap-1 text-center">
+                          <Label htmlFor="minutes" className="text-xs">
+                            Minutes
+                          </Label>
+                          <TimePickerInput
+                            picker="minutes"
+                            date={field.value}
+                            setDate={field.onChange}
+                            ref={minuteRef}
+                            onLeftFocus={() => hourRef.current?.focus()}
+                          />
+                        </div>
+                      </div>
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
 
             <CustomField
