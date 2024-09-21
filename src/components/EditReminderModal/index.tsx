@@ -1,11 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { Control, useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
+import { ReminderType, RepeatType } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -21,7 +22,8 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
+  DialogFooter
 } from "@/components/ui/dialog-custom";
 import {
   Form,
@@ -39,9 +41,6 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-import { ReminderType, RepeatType } from "@prisma/client";
-import { DialogFooter } from "../ui/dialog";
-
 // enum RepeatType {
 //   NEVER = "Never",
 //   DAILY = "Every Day",
@@ -52,10 +51,12 @@ import { DialogFooter } from "../ui/dialog";
 //   CUSTOM = "Custom"
 // }
 
-const profileFormSchema = z.object({
+const reminderFormSchema = z.object({
   patient: z.string(),
   repeat: z.nativeEnum(RepeatType),
-  reminderType: z.nativeEnum(ReminderType)
+  reminderType: z.nativeEnum(ReminderType),
+  startDate: z.date(),
+  endDate: z.date()
 });
 
 // FIXME: Mock data
@@ -181,12 +182,12 @@ function CustomDropdownField({
 }
 
 export default function EditProfileModal({ isOpen, onClose }: Props) {
-  const profileForm = useForm<z.infer<typeof profileFormSchema>>({
-    resolver: zodResolver(profileFormSchema),
+  const reminderForm = useForm<z.infer<typeof reminderFormSchema>>({
+    resolver: zodResolver(reminderFormSchema),
     defaultValues: {}
   });
 
-  function onSubmit(values: z.infer<typeof profileFormSchema>) {
+  function onSubmit(values: z.infer<typeof reminderFormSchema>) {
     console.log(values);
   }
 
@@ -203,13 +204,13 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
         {/* FORM SECTION */}
 
         {/* Edit Profile Form */}
-        <Form {...profileForm}>
+        <Form {...reminderForm}>
           <form
-            onSubmit={profileForm.handleSubmit(onSubmit)}
+            onSubmit={reminderForm.handleSubmit(onSubmit)}
             className="md:max-5xl:w-2/3 mx-auto mt-4 space-y-6"
           >
             <CustomDropdownField
-              control={profileForm.control}
+              control={reminderForm.control}
               name="patient"
               label="Patient"
               placeholder="Select a patient"
@@ -217,7 +218,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
             />
 
             <CustomDropdownField
-              control={profileForm.control}
+              control={reminderForm.control}
               name="reminderType"
               label="Type"
               placeholder="Select"
@@ -227,7 +228,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
             {/* Datetime */}
 
             <CustomDropdownField
-              control={profileForm.control}
+              control={reminderForm.control}
               name="repeat"
               label="Repeat"
               placeholder="Never"
