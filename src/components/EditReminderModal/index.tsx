@@ -1,56 +1,20 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronDown, CalendarIcon } from "lucide-react";
-import { useState } from "react";
-import { Control, useForm } from "react-hook-form";
-import { z } from "zod";
-import { format } from "date-fns";
 import { ReminderType, RepeatType } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import CustomField from "@/components/CustomField";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogFooter
+  DialogTitle
 } from "@/components/ui/dialog-custom";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-
-// enum RepeatType {
-//   NEVER = "Never",
-//   DAILY = "Every Day",
-//   WEEKLY = "Every Week",
-//   FORNIGHTLY = "Every Fortnight",
-//   MONTHLY = "Every Month",
-//   YEARLY = "Every Year",
-//   CUSTOM = "Custom"
-// }
+import { Form } from "@/components/ui/form";
 
 const reminderFormSchema = z.object({
   patient: z.string(),
@@ -96,7 +60,6 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
 
   function onSubmit(values: z.infer<typeof reminderFormSchema>) {
     console.log(values);
-    // Reset with empty values or specific defaults
     reminderForm.reset();
     onClose();
   }

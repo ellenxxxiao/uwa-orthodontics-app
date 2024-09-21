@@ -1,19 +1,13 @@
 "use client";
 
-import { LuPlusCircle, LuSearch, LuStepBack, LuSave } from "react-icons/lu";
-import { Button, Card, IconButton } from "@mui/material";
-import { useState, ChangeEvent } from "react";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import {useState } from "react";
+import { ReminderType } from "@prisma/client";
+import { LuPlusCircle,LuSearch } from "react-icons/lu";
 
-import AddReminder from "@/components/addReminder";
+import EditReminderModal from "@/components/EditReminderModal";
 import Header from "@/components/Header";
 import ReminderCard from "@/components/ReminderCard";
-import SearchInput from "@/components/searchInput";
-
 import type { ReminderItem } from "@/types/reminder";
-import { ReminderType } from "@prisma/client";
-import EditReminderModal from "@/components/EditReminderModal";
 
 export default function ReminderList() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +24,7 @@ export default function ReminderList() {
     },
     {
       reminderId: 2,
-      patientName: "Jane Doe",
+      patientName: "Ellen Xiao",
       startDate: "2022-10-01",
       endDate: "2022-10-31",
       intervalInDays: 7,

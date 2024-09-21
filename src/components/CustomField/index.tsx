@@ -1,3 +1,8 @@
+import { useState } from "react";
+import { format, startOfDay } from "date-fns";
+import { CalendarIcon,Check, ChevronDown } from "lucide-react";
+import { Control } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -9,25 +14,18 @@ import {
   CommandList
 } from "@/components/ui/command";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-
-import { Check, ChevronDown, CalendarIcon } from "lucide-react";
-import { useState } from "react";
-import { Control } from "react-hook-form";
-import { format, startOfDay } from "date-fns";
 
 interface CustomFieldProps {
   control: Control<any>;
@@ -65,7 +63,7 @@ export default function CustomField({
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
-                      variant={"outline"}
+                      variant="outline"
                       className={cn(
                         "w-44 pl-3 text-left font-normal md:w-56",
                         !field.value && "text-muted-foreground"

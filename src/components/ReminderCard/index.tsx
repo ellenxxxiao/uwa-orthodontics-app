@@ -1,4 +1,5 @@
 import type { ReminderItem } from "@/types/reminder";
+
 import UserAvatar from "../UserAvatar";
 
 type Props = {
