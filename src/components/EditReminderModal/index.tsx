@@ -184,7 +184,6 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
                       </div>
                     </FormControl>
                   </div>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -212,7 +211,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
                     placeholder="Add a description"
                     className="w-22 ml-2"
                   />
-                  <FormMessage />
+                  {/* <FormMessage /> */}
                 </FormItem>
               )}
             />

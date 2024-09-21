@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format, startOfDay } from "date-fns";
-import { CalendarIcon,Check, ChevronDown } from "lucide-react";
+import { CalendarIcon, Check, ChevronDown } from "lucide-react";
 import { Control } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -151,7 +151,7 @@ export default function CustomField({
               </Popover>
             )}
           </div>
-          <FormMessage />
+          {/* <FormMessage /> */}
         </FormItem>
       )}
     />
