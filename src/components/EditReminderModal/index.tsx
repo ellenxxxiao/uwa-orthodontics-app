@@ -2,12 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronDown } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import { Control, useForm } from "react-hook-form";
 import { z } from "zod";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Command,
   CommandEmpty,
@@ -39,6 +40,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import { ReminderType, RepeatType } from "@prisma/client";
+import { DialogFooter } from "../ui/dialog";
 
 // enum RepeatType {
 //   NEVER = "Never",
@@ -192,7 +194,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="md:max-5xl:5/6 md:max-5xl:px-10 md:max-5xl:py-8 w-11/12 max-w-[900px] rounded-lg p-4">
         <DialogHeader>
-          <DialogTitle className="md:max-5xl:text-3xl md:max-5xl:font-bold my-2 ml-2 text-left text-2xl">
+          <DialogTitle className="md:max-5xl:text-3xl md:max-5xl:font-bold my-2 ml-2 text-left text-xl">
             Edit Reminder
           </DialogTitle>
           <div className="border-t border-base-300"></div>
@@ -204,7 +206,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
         <Form {...profileForm}>
           <form
             onSubmit={profileForm.handleSubmit(onSubmit)}
-            className="md:max-5xl:w-2/3 mx-auto mt-6 space-y-6"
+            className="md:max-5xl:w-2/3 mx-auto mt-4 space-y-6"
           >
             <CustomDropdownField
               control={profileForm.control}
@@ -216,19 +218,23 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
 
             <CustomDropdownField
               control={profileForm.control}
+              name="reminderType"
+              label="Type"
+              placeholder="Select"
+              options={reminderTypes}
+            />
+
+            {/* Datetime */}
+
+            <CustomDropdownField
+              control={profileForm.control}
               name="repeat"
               label="Repeat"
               placeholder="Never"
               options={repeatTypes}
             />
 
-            <CustomDropdownField
-              control={profileForm.control}
-              name="reminderType"
-              label="Type"
-              placeholder="Select"
-              options={reminderTypes}
-            />
+            <DialogFooter />
 
             <div className="absolute -top-1 right-6">
               <Button
