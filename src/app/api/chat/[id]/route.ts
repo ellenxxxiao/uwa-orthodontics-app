@@ -50,9 +50,22 @@ export async function GET(
 }
 
 // POST
-export async function POST(request: Request) {
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return new Response(JSON.stringify({ error: "Not Authorized" }), {
+      status: HttpStatusCode.Unauthorized
+    });
+  }
+
+  const senderId = userId;
+  const receiverId = params.id;
   try {
-    const { senderId, receiverId, text } = await request.json();
+    const { text } = await request.json();
     const message = await prisma.message.create({
       data: {
         senderId,
