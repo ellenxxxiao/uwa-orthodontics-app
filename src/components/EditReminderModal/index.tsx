@@ -8,6 +8,7 @@ import { z } from "zod";
 import { format } from "date-fns";
 import { ReminderType, RepeatType } from "@prisma/client";
 
+import CustomField from "@/components/CustomField";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -87,100 +88,6 @@ interface Props {
   onClose: () => void;
 }
 
-type FormFieldProps = {
-  control: Control<any>;
-  name: string;
-  label: string;
-  placeholder: string;
-};
-
-// Custom dropdown form field component
-function CustomDropdownField({
-  control,
-  name,
-  label,
-  placeholder,
-  options
-}: {
-  control: Control<any>;
-  name: string;
-  label: string;
-  placeholder: string;
-  options: { value: string; label: string }[];
-}) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className="flex flex-row justify-between gap-x-4">
-          <FormLabel className="w-22 lg:max-5xl:min-w-40 lg:max-5xl:text-lg mt-2 px-2 py-2 align-baseline text-base font-bold">
-            {label}
-          </FormLabel>
-          <div className="lg:max-5xl:w-full flex justify-start">
-            <Popover open={dropdownOpen} onOpenChange={setDropdownOpen}>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={dropdownOpen}
-                    className="lg:max-5xl:rounded-lg lg:max-5xl:text-base flex w-44 flex-row justify-between space-x-6 pl-4 pr-2 md:w-56"
-                  >
-                    <span>
-                      {field.value
-                        ? options.find((option) => option.value === field.value)
-                            ?.label
-                        : placeholder}
-                    </span>
-                    <ChevronDown size={20} />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-
-              <PopoverContent className="w-[200px] p-0">
-                <Command>
-                  <CommandInput
-                    placeholder={`Search ${label.toLowerCase()}...`}
-                  />
-                  <CommandList>
-                    <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
-                    <CommandGroup>
-                      {options.map((option) => (
-                        <CommandItem
-                          value={option.label}
-                          key={option.value}
-                          onSelect={() => {
-                            field.onChange(option.value);
-                            setDropdownOpen(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              option.value === field.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {option.label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </div>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-}
-
 export default function EditProfileModal({ isOpen, onClose }: Props) {
   const reminderForm = useForm<z.infer<typeof reminderFormSchema>>({
     resolver: zodResolver(reminderFormSchema),
@@ -209,7 +116,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
             onSubmit={reminderForm.handleSubmit(onSubmit)}
             className="md:max-5xl:w-2/3 mx-auto mt-4 space-y-6"
           >
-            <CustomDropdownField
+            <CustomField
               control={reminderForm.control}
               name="patient"
               label="Patient"
@@ -217,17 +124,16 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
               options={patients}
             />
 
-            <CustomDropdownField
+            <CustomField
               control={reminderForm.control}
               name="reminderType"
               label="Type"
               placeholder="Select"
               options={reminderTypes}
+              isDatePicker
             />
 
-            {/* Datetime */}
-
-            <CustomDropdownField
+            <CustomField
               control={reminderForm.control}
               name="repeat"
               label="Repeat"
