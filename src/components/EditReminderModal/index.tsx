@@ -25,6 +25,7 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 
 const reminderFormSchema = z.object({
   patient: z.string(),
@@ -32,6 +33,7 @@ const reminderFormSchema = z.object({
   reminderType: z.nativeEnum(ReminderType),
   startDate: z.date(),
   time: z.date(),
+  description: z.string().optional(),
   endDate: z.date().optional()
 });
 
@@ -103,8 +105,9 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
         <Form {...reminderForm}>
           <form
             onSubmit={reminderForm.handleSubmit(onSubmit)}
-            className="md:max-5xl:w-2/3 mx-auto mt-4 space-y-6"
+            className="md:max-5xl:w-2/3 mx-auto mt-4 w-11/12 space-y-6"
           >
+            {/* Patient dropdown with search */}
             <CustomField
               control={reminderForm.control}
               name="patient"
@@ -113,6 +116,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
               options={patients}
             />
 
+            {/* Repeat type*/}
             <CustomField
               control={reminderForm.control}
               name="repeat"
@@ -121,6 +125,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
               options={repeatTypes}
             />
 
+            {/* Start date picker */}
             <CustomField
               control={reminderForm.control}
               name="startDate"
@@ -140,6 +145,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
               />
             )}
 
+            {/* Time picker */}
             <FormField
               control={reminderForm.control}
               name="time"
@@ -183,6 +189,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
               )}
             />
 
+            {/* Reminder Type */}
             <CustomField
               control={reminderForm.control}
               name="reminderType"
@@ -191,7 +198,26 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
               options={reminderTypes}
             />
 
-            <DialogFooter />
+            {/* Description */}
+            <FormField
+              control={reminderForm.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="w-22 lg:max-5xl:min-w-40 lg:max-5xl:text-lg mt-2 p-2 align-baseline text-base font-bold">
+                    Description
+                  </FormLabel>
+                  <Textarea
+                    {...field}
+                    placeholder="Add a description"
+                    className="w-22 ml-2"
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter className="py-1" />
 
             <div className="absolute -top-1 right-6">
               <Button
