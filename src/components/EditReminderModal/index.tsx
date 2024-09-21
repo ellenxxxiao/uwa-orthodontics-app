@@ -71,7 +71,14 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
 
   const reminderForm = useForm<z.infer<typeof reminderFormSchema>>({
     resolver: zodResolver(reminderFormSchema),
-    defaultValues: {}
+    defaultValues: {
+      repeat: RepeatType.NEVER
+    }
+  });
+
+  const selectedRepeat = useWatch({
+    control: reminderForm.control,
+    name: "repeat"
   });
 
   function onSubmit(values: z.infer<typeof reminderFormSchema>) {
@@ -121,6 +128,17 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
               placeholder="Select"
               isDatePicker
             />
+
+            {/* Conditionally render the end date field */}
+            {selectedRepeat !== RepeatType.NEVER && (
+              <CustomField
+                control={reminderForm.control}
+                name="endDate"
+                label="Ends"
+                placeholder="Select"
+                isDatePicker
+              />
+            )}
 
             <FormField
               control={reminderForm.control}

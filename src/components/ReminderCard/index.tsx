@@ -32,7 +32,7 @@ export default function ReminderCard({ reminder }: Props) {
             {reminder.patientName}
           </h3>
           <span
-            className={`rounded-2xl p-2 text-base font-medium ${classes.split(" ")[1]} text-white`} // Use the background class
+            className={`flex items-center justify-center rounded-2xl p-2 font-mono text-base font-bold leading-none ${classes.split(" ")[1]} text-white`}
           >
             {reminder.reminderType}
           </span>
