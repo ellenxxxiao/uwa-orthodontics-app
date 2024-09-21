@@ -1,8 +1,8 @@
 "use client";
 
-import {useState } from "react";
+import { useState } from "react";
 import { ReminderType } from "@prisma/client";
-import { LuPlusCircle,LuSearch } from "react-icons/lu";
+import { LuPlusCircle, LuSearch } from "react-icons/lu";
 
 import EditReminderModal from "@/components/EditReminderModal";
 import Header from "@/components/Header";
