@@ -7,15 +7,16 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 import AddReminder from "@/components/addReminder";
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ReminderCard from "@/components/ReminderCard";
 import SearchInput from "@/components/searchInput";
 
 import type { ReminderItem } from "@/types/reminder";
 import { ReminderType } from "@prisma/client";
+import EditReminderModal from "@/components/EditReminderModal";
 
 export default function ReminderList() {
+  const [isOpen, setIsOpen] = useState(false);
   // mock list of reminders
   const reminders: ReminderItem[] = [
     {
@@ -40,13 +41,25 @@ export default function ReminderList() {
 
   return (
     <div className="flex h-screen flex-col">
+      <EditReminderModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       <Header
         type="primary"
         iconLeft={
           <LuSearch size={30} strokeWidth={1.3} className="text-primary" />
         }
         iconRight={
-          <LuPlusCircle size={30} strokeWidth={1.3} className="text-primary" />
+          <button
+            onClick={() => {
+              setIsOpen(true);
+              console.log(isOpen);
+            }}
+          >
+            <LuPlusCircle
+              size={30}
+              strokeWidth={1.3}
+              className="text-primary"
+            />
+          </button>
         }
         title="Reminders"
       />
