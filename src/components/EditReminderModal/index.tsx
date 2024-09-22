@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReminderType, RepeatType } from "@prisma/client";
 import { useForm, useWatch } from "react-hook-form";
@@ -25,6 +25,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TimePickerInput } from "@/components/ui/time-picker-input";
+import type { ReminderItem } from "@/types/reminder";
 
 const reminderFormSchema = z.object({
   patient: z.string(),
@@ -62,11 +63,10 @@ const reminderTypes = [
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  reminder: ReminderItem | null;
 }
 
-export default function EditProfileModal({ isOpen, onClose }: Props) {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-
+export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
   const minuteRef = useRef<HTMLInputElement>(null);
   const hourRef = useRef<HTMLInputElement>(null);
 
@@ -77,13 +77,64 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
     }
   });
 
+  const { reset, setValue, getValues } = reminderForm;
+
+  useEffect(() => {
+    if (reminder) {
+      // Reset the form values with the provided reminder data
+      reset({
+        patient: reminder.patientName,
+        repeat: reminder.repeat || RepeatType.NEVER,
+        reminderType: reminder.reminderType,
+        startDate: new Date(reminder.startDate),
+        time: new Date(reminder.startDate), // Assuming time is embedded in startDate
+        description: reminder.description || "",
+        endDate: reminder.endDate ? new Date(reminder.endDate) : undefined
+      });
+    } else {
+      // Reset to default values if no reminder is provided (e.g., adding a new reminder)
+      reset({
+        repeat: RepeatType.NEVER
+      });
+    }
+  }, [reminder, reset]);
+
+  const selectedTime = useWatch({
+    control: reminderForm.control,
+    name: "time"
+  });
+
+  useEffect(() => {
+    if (selectedTime) {
+      const currentStartDate = getValues("startDate");
+      const currentEndDate = getValues("endDate");
+
+      // Function to merge the date with the selected time
+      const setDateWithTime = (date: Date, time: Date) => {
+        const newDate = new Date(date);
+        newDate.setHours(time.getHours());
+        newDate.setMinutes(time.getMinutes());
+        return newDate;
+      };
+
+      // Update startDate with selected time
+      setValue("startDate", setDateWithTime(currentStartDate, selectedTime));
+
+      // If endDate exists, update endDate with selected time
+      if (currentEndDate) {
+        setValue("endDate", setDateWithTime(currentEndDate, selectedTime));
+      }
+    }
+  }, [selectedTime, getValues, setValue]);
+
   const selectedRepeat = useWatch({
     control: reminderForm.control,
     name: "repeat"
   });
 
   function onSubmit(values: z.infer<typeof reminderFormSchema>) {
-    console.log(values);
+    const { time, ...formValuesWithoutTime } = values;
+    console.log(formValuesWithoutTime);
     reminderForm.reset();
     onClose();
   }

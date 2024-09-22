@@ -4,6 +4,7 @@ import UserAvatar from "../UserAvatar";
 
 type Props = {
   reminder: ReminderItem;
+  onClick: () => void;
 };
 
 // Define full Tailwind class names
@@ -13,15 +14,14 @@ const colorMap = {
   OTHER: "border-gray-500 bg-gray-500"
 };
 
-export default function ReminderCard({ reminder }: Props) {
+export default function ReminderCard({ reminder, onClick }: Props) {
   // Use fallback color classes if the reminder type is not recognized
   const classes = colorMap[reminder.reminderType];
 
   return (
     <div
       className={`relative flex cursor-pointer flex-row items-center rounded-r-lg border-l-8 bg-white p-3 ${classes.split(" ")[0]}`}
-      // onClick={() => handleReminderCardClick(i)}
-      // onKeyDown={() => handleReminderCardClick(i)}
+      onClick={onClick}
     >
       <div className="mr-4">
         <UserAvatar fullName={reminder.patientName} size={70} />

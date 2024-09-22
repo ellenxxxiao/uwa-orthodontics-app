@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ReminderType } from "@prisma/client";
+import { ReminderType, RepeatType } from "@prisma/client";
 import { LuPlusCircle, LuSearch } from "react-icons/lu";
 
 import EditReminderModal from "@/components/EditReminderModal";
@@ -11,6 +11,10 @@ import type { ReminderItem } from "@/types/reminder";
 
 export default function ReminderList() {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedReminder, setSelectedReminder] = useState<ReminderItem | null>(
+    null
+  );
+
   // mock list of reminders
   const reminders: ReminderItem[] = [
     {
@@ -20,22 +24,32 @@ export default function ReminderList() {
       endDate: "2022-10-31",
       intervalInDays: 7,
       reminderType: ReminderType.ALIGNER,
-      description: "ReminderType.ALIGNER"
+      description: "ReminderType.ALIGNER",
+      repeat: RepeatType.WEEKLY
     },
     {
       reminderId: 2,
       patientName: "Ellen Xiao",
       startDate: "2022-10-01",
-      endDate: "2022-10-31",
       intervalInDays: 7,
       reminderType: ReminderType.APPOINTMENT,
-      description: "ReminderType.APPOINTMENT"
+      description: "ReminderType.APPOINTMENT",
+      repeat: RepeatType.NEVER
     }
   ];
 
+  const handleCardClick = (reminder: ReminderItem) => {
+    setSelectedReminder(reminder);
+    setIsOpen(true);
+  };
+
   return (
     <div className="flex h-screen flex-col">
-      <EditReminderModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <EditReminderModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        reminder={selectedReminder}
+      />
       <Header
         type="primary"
         iconLeft={
@@ -60,7 +74,11 @@ export default function ReminderList() {
         {/* main */}
         <div className="flex flex-col gap-4 p-4">
           {reminders.map((reminder, i) => (
-            <ReminderCard key={reminder.reminderId} reminder={reminder} />
+            <ReminderCard
+              key={reminder.reminderId}
+              reminder={reminder}
+              onClick={() => handleCardClick(reminder)}
+            />
           ))}
         </div>
       </div>
