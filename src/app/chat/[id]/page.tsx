@@ -175,7 +175,7 @@ export default function Chat() {
           className="flex h-20 w-full justify-between gap-8 bg-app-white px-4 py-4"
         >
           <div className="relative h-full w-full flex-1 ">
-            <div className="h-full w-5/6 rounded-lg bg-[#F0F0F0] text-accent-focus md:max-2xl:w-11/12">
+            <div className="h-full w-5/6 rounded-lg bg-[#F0F0F0] text-accent-focus md:w-11/12">
               <Textarea
                 style={{ resize: "none", height: "50px" }}
                 className="w-full border-none bg-transparent px-3 py-2 text-base focus:outline-none focus-visible:ring-0"
@@ -194,7 +194,7 @@ export default function Chat() {
               type="submit"
               disabled={!chatForm.formState.isValid}
               // FIXME: visibility?
-              className={`${chatForm.formState.isValid ? "" : ""} absolute right-0  top-1/2 h-5/6 w-12 -translate-y-1/2 transform rounded-full md:max-2xl:right-4`}
+              className={`${chatForm.formState.isValid ? "" : ""} absolute right-0  top-1/2 h-5/6 w-12 -translate-y-1/2 transform rounded-full md:right-4`}
             >
               <LuSend className="mx-auto text-3xl text-primary" />
             </button>
