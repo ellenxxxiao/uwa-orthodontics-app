@@ -20,7 +20,7 @@ export default function ReminderList() {
     {
       reminderId: 1,
       patientName: "John Doe",
-      startDate: "2022-10-01",
+      startDate: "2022-10-01 11:11:00",
       endDate: "2022-10-31",
       intervalInDays: 7,
       reminderType: ReminderType.ALIGNER,
