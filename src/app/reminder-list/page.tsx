@@ -33,7 +33,7 @@ export default function ReminderList() {
       startDate: "2022-10-01",
       intervalInDays: 7,
       reminderType: ReminderType.APPOINTMENT,
-      description: "ReminderType.APPOINTMENT",
+      description: "RemindesdfsfsdfsdfsdfsdfrTsdofMENT",
       repeat: RepeatType.NEVER
     }
   ];
@@ -44,18 +44,14 @@ export default function ReminderList() {
   };
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-full flex-col">
       <EditReminderModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         reminder={selectedReminder}
       />
       <Header
-        type="primary"
-        iconLeft={
-          <LuSearch size={30} strokeWidth={1.3} className="text-primary" />
-        }
-        iconRight={
+        nodeRight={
           <button
             onClick={() => {
               setIsOpen(true);
@@ -68,9 +64,9 @@ export default function ReminderList() {
             />
           </button>
         }
-        title="Reminders"
+        nodeTitle={<span>Reminders</span>}
       />
-      <div className="flex flex-1 flex-col bg-base-100">
+      <div className="flex flex-1 flex-col bg-app-white">
         {/* main */}
         <div className="flex flex-col gap-4 p-4">
           {reminders.map((reminder, i) => (

@@ -7,6 +7,7 @@ import { useUser } from "@clerk/nextjs";
 import { LuPenSquare, LuSearch } from "react-icons/lu";
 
 import Header from "@/components/main/Header";
+import UserAvatar from "@/components/main/UserAvatar";
 
 interface ChatUser {
   contactUser: {
@@ -98,21 +99,19 @@ export default function ChatList() {
                 role="button"
                 tabIndex={0}
                 key={user.contactUser.id}
-                className="relative mb-4 flex cursor-pointer items-center rounded-lg bg-white p-2 shadow"
+                className="relative mb-4 flex cursor-pointer items-center rounded-lg bg-white p-2 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]"
                 onClick={() => handleChatClick(user.contactUser.id)}
               >
                 {filter === "all" && !user.lastMessage.read && (
                   <div className="absolute left-0 ml-3 h-3 w-3 rounded-full bg-blue-500"></div>
                 )}
-                <div className="relative ml-4 mr-4 h-12 w-12 rounded-full bg-gray-200">
-                  {/* Placeholder for user image */}
-                  <Image
-                    src="/path/to/user/image"
-                    alt="User"
-                    className="h-full w-full rounded-full object-cover"
-                    layout="responsive"
-                    width={48}
-                    height={48}
+
+                {/* Avatar box */}
+                <div className="mr-4">
+                  <UserAvatar
+                    fullName={`${user.contactUser.firstName} ${user.contactUser.lastName}`}
+                    size={48}
+                    borderRadius="2.5rem"
                   />
                 </div>
                 <div className="flex-1">
