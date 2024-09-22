@@ -30,194 +30,182 @@ export default function AddReminer() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <Box
-        className="flex flex-row justify-between "
-        sx={{
-          width: "100%",
-          boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
-          transition: "transform 0.3s ease-in-out",
-          borderRadius: 1,
-          display: "flex",
-          p: 1
-        }}
-      >
-        <Typography className="self-center">Patient</Typography>
-        <Autocomplete
-          className="self-center"
-          disablePortal
-          id="combo-box-demo"
-          options={["Neha1", "Neha2", "Neha3"]}
-          style={{ width: "200px", border: "none" }}
-          renderInput={(params) => (
-            <TextField {...params} sx={{ border: "none" }} />
-          )}
-        />
-      </Box>
-      <Box
-        className="justify-between "
-        sx={{
-          width: "100%",
-          boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
-          transition: "transform 0.3s ease-in-out",
-          borderRadius: 1,
-          display: "flex",
-          p: 1
-        }}
-      >
-        <Typography className="self-center">Repeat</Typography>
-        <FormControl sx={{ width: "200px" }}>
-          <InputLabel id="demo-simple-select-label">Repeat</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={repeat}
-            label="Repeat"
-            onChange={handleChangeRepeat}
+    <div className="flex w-full flex-1 flex-col overflow-hidden bg-base-100">
+      <div className="flex-1 overflow-y-auto p-4">
+        <Box
+          className="mb-2 flex flex-row justify-between rounded-lg bg-white shadow"
+          sx={{
+            width: "100",
+            boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
+            transition: "transform 0.3s ease-in-out",
+            borderRadius: 2,
+            display: "flex",
+            p: 1
+          }}
+        >
+          <Typography className="self-center text-black">Patient</Typography>
+          <Autocomplete
+            className="self-center"
+            disablePortal
+            id="combo-box-demo"
+            options={["Neha1", "Neha2", "Neha3"]}
+            style={{ width: "200px", border: "none" }}
+            renderInput={(params) => (
+              <TextField {...params} sx={{ border: "none" }} />
+            )}
+          />
+        </Box>
+        <Box
+          className="mb-2 flex flex-row justify-between rounded-lg bg-white shadow"
+          sx={{
+            width: "100%",
+            boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
+            transition: "transform 0.3s ease-in-out",
+            borderRadius: 2,
+            display: "flex",
+            p: 1
+          }}
+        >
+          <Typography className="self-center text-black">Repeat</Typography>
+          <FormControl sx={{ width: "200px" }}>
+            <InputLabel id="demo-simple-select-label">Repeat</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={repeat}
+              label="Repeat"
+              onChange={handleChangeRepeat}
+            >
+              <MenuItem value={1}>Weekly</MenuItem>
+              <MenuItem value={2}>Monthly</MenuItem>
+              <MenuItem value={3}>Yearly</MenuItem>
+              <MenuItem value={4}>Custom</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box
+          className="mb-4 flex flex-col bg-white"
+          sx={{
+            width: "100%",
+            boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
+            transition: "transform 0.3s ease-in-out",
+            borderRadius: 2,
+            display: "flex"
+          }}
+        >
+          <Box
+            className="justify-between"
+            sx={{
+              width: "100%",
+              borderRadius: 2,
+              display: "flex",
+              p: 1
+            }}
           >
-            <MenuItem value={1}>Weekly</MenuItem>
-            <MenuItem value={2}>Monthly</MenuItem>
-            <MenuItem value={3}>Yearly</MenuItem>
-            <MenuItem value={4}>Custom</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+            <Typography className="self-center text-black">
+              Start Date
+            </Typography>
 
-      <Box
-        className="flex flex-col "
-        sx={{
-          width: "100%",
-          boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
-          transition: "transform 0.3s ease-in-out",
-          borderRadius: 1,
-          display: "flex"
-        }}
-      >
-        <Box
-          className="justify-between"
-          sx={{
-            width: "100%",
-            borderRadius: 1,
-            display: "flex",
-            p: 1
-          }}
-        >
-          <Typography className="self-center">Start Date</Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  slotProps={{
+                    textField: { sx: { width: "200px", borderWidth: "0px" } }
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Box>
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                slotProps={{
-                  textField: {
-                    sx: {
-                      width: "200px",
-                      borderWidth: "0px"
-                    }
-                  }
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Box>
-
-        <Box
-          className="justify-between "
-          sx={{
-            width: "100%",
-            borderRadius: 1,
-            display: "flex",
-            p: 1
-          }}
-        >
-          <Typography className="self-center">End Date</Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                slotProps={{
-                  textField: {
-                    sx: {
-                      width: "200px",
-                      borderWidth: "0px"
-                    }
-                  }
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Box>
-
-        <Box
-          className="justify-between "
-          sx={{
-            width: "100%",
-            borderRadius: 1,
-            display: "flex",
-            p: 1
-          }}
-        >
-          <Typography className="self-center">Time</Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["TimePicker"]}>
-              <TimePicker
-                label="Basic time picker"
-                slotProps={{
-                  textField: {
-                    sx: {
-                      width: "200px",
-                      borderWidth: "0px"
-                    }
-                  }
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Box>
-      </Box>
-
-      <Box
-        className="justify-between "
-        sx={{
-          width: "100%",
-          boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
-          transition: "transform 0.3s ease-in-out",
-          borderRadius: 1,
-          display: "flex",
-          p: 1
-        }}
-      >
-        <Typography className="self-center">Type</Typography>
-        <FormControl sx={{ width: "200px" }}>
-          <InputLabel id="demo-simple-select-label">Type</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={type}
-            label="Type"
-            onChange={handleChangeType}
+          <Box
+            className="justify-between"
+            sx={{
+              width: "100%",
+              borderRadius: 2,
+              display: "flex",
+              p: 1
+            }}
           >
-            <MenuItem value={1}>Weekly</MenuItem>
-            <MenuItem value={2}>Monthly</MenuItem>
-            <MenuItem value={3}>Yearly</MenuItem>
-            <MenuItem value={4}>Custom</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+            <Typography className="self-center text-black">End Date</Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  slotProps={{
+                    textField: { sx: { width: "200px", borderWidth: "0px" } }
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Box>
 
-      <Box
-        className="justify-between "
-        sx={{
-          width: "100%",
-          boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
-          transition: "transform 0.3s ease-in-out",
-          borderRadius: "4px",
-          display: "flex"
-        }}
-      >
-        <textarea
-          placeholder="Notes"
-          style={{ width: "100%", borderRadius: "4px", padding: "10px" }}
-        />
-      </Box>
+          <Box
+            className="justify-between"
+            sx={{ width: "100%", borderRadius: 2, display: "flex", p: 1 }}
+          >
+            <Typography className="self-center text-black">Time</Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["TimePicker"]}>
+                <TimePicker
+                  label=""
+                  slotProps={{
+                    textField: {
+                      sx: {
+                        width: "200px",
+                        borderWidth: "0px"
+                      }
+                    }
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Box>
+        </Box>
+
+        <Box
+          className="mb-4 justify-between bg-white"
+          sx={{
+            width: "100%",
+            boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
+            transition: "transform 0.3s ease-in-out",
+            borderRadius: 2,
+            display: "flex",
+            p: 1
+          }}
+        >
+          <Typography className="self-center text-black">Type</Typography>
+          <FormControl sx={{ width: "200px" }}>
+            <InputLabel id="demo-simple-select-label">Type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={type}
+              label="Type"
+              onChange={handleChangeType}
+            >
+              <MenuItem value={1}>Aligner</MenuItem>
+              <MenuItem value={2}>Appointment</MenuItem>
+              <MenuItem value={3}>Custom</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box
+          className="justify-between bg-white"
+          sx={{
+            width: "100%",
+            boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.15)",
+            transition: "transform 0.3s ease-in-out",
+            borderRadius: 2,
+            display: "flex"
+          }}
+        >
+          <textarea
+            placeholder="Notes"
+            style={{ width: "100%", borderRadius: "4px", padding: "10px" }}
+          />
+        </Box>
+      </div>
     </div>
   );
 }

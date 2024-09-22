@@ -1,86 +1,87 @@
 "use client";
+
 import { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { Button, IconButton } from "@mui/material";
+import { ReminderType, RepeatType } from "@prisma/client";
+import { LuPlusCircle, LuSearch } from "react-icons/lu";
 
-import AddReminer from "@/components/addReminder";
-import Footer from "@/components/Footer";
+import EditReminderModal from "@/components/EditReminderModal";
 import Header from "@/components/Header";
-import ReminderCard from "@/components/reminderCard";
-import SearchInput from "@/components/searchInput";
+import ReminderCard from "@/components/ReminderCard";
+import type { ReminderItem } from "@/types/reminder";
 
-export default function Home() {
-  const [showForm, setShowForm] = useState(false);
-  const [showAddButton, setshowAddButton] = useState(false);
-  const [showHeader, setshowHeader] = useState("");
+export default function ReminderList() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedReminder, setSelectedReminder] = useState<ReminderItem | null>(
+    null
+  );
 
-  const handleAddButtonClick = () => {
-    setShowForm(true);
-    setshowAddButton(true);
-    setshowHeader("Add Reminder");
-  };
-  const handleBackButtonClick = () => {
-    setShowForm(false);
-    setshowAddButton(false);
-    setshowHeader("");
+  // mock list of reminders
+  const reminders: ReminderItem[] = [
+    {
+      reminderId: 1,
+      patientName: "John Doe",
+      startDate: "2022-10-01 11:11:00",
+      endDate: "2022-10-31",
+      intervalInDays: 7,
+      reminderType: ReminderType.ALIGNER,
+      description: "ReminderType.ALIGNER",
+      repeat: RepeatType.WEEKLY
+    },
+    {
+      reminderId: 2,
+      patientName: "Ellen Xiao",
+      startDate: "2022-10-01",
+      intervalInDays: 7,
+      reminderType: ReminderType.APPOINTMENT,
+      description: "ReminderType.APPOINTMENT",
+      repeat: RepeatType.NEVER
+    }
+  ];
+
+  const handleCardClick = (reminder: ReminderItem) => {
+    setSelectedReminder(reminder);
+    setIsOpen(true);
   };
 
   return (
-    <>
-      <div className="flex h-screen flex-col">
+    <div className="flex h-screen flex-col">
+      <EditReminderModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        reminder={selectedReminder}
+      />
+      <Header
+        type="primary"
+        iconLeft={
+          <LuSearch size={30} strokeWidth={1.3} className="text-primary" />
+        }
+        iconRight={
+          <button
+            onClick={() => {
+              setIsOpen(true);
+            }}
+          >
+            <LuPlusCircle
+              size={30}
+              strokeWidth={1.3}
+              className="text-primary"
+            />
+          </button>
+        }
+        title="Reminders"
+      />
+      <div className="flex flex-1 flex-col bg-base-100">
         {/* main */}
-        <Header
-          title={showHeader}
-          type="primary"
-          iconLeft={
-            <IconButton aria-label="back" className="bg-base-100">
-              <ChevronLeftIcon
-                fontSize="large"
-                sx={{ padding: 1 }}
-                onClick={handleBackButtonClick}
-              />
-            </IconButton>
-          }
-          iconRight={
-            showAddButton ? (
-              <Button>Add</Button>
-            ) : (
-              <IconButton aria-label="back" className="bg-base-100">
-                <AddIcon
-                  fontSize="large"
-                  onClick={handleAddButtonClick}
-                  sx={{ padding: 1 }}
-                />{" "}
-              </IconButton>
-            )
-          }
-        />
-
-        <div className="w-full flex-1 overflow-y-auto bg-base-100">
-          {showForm ? (
-            <div className="  flex flex-col gap-4 px-6 py-2">
-              <AddReminer />
-            </div>
-          ) : (
-            <>
-              <div className="  flex flex-col gap-4 px-6 py-2">
-                <SearchInput />
-                <div className="flex flex-col gap-[10px]">
-                  <ReminderCard />
-                  <ReminderCard />
-                  <ReminderCard />
-                  <ReminderCard />
-                  <ReminderCard />
-                </div>
-              </div>
-            </>
-          )}
+        <div className="flex flex-col gap-4 p-4">
+          {reminders.map((reminder, i) => (
+            <ReminderCard
+              key={reminder.reminderId}
+              reminder={reminder}
+              onClick={() => handleCardClick(reminder)}
+            />
+          ))}
         </div>
-
-        {/* footer */}
-        <Footer />
       </div>
-    </>
+    </div>
   );
 }

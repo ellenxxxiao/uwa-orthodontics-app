@@ -155,8 +155,9 @@ export default function Chat() {
               ? `${otherUser.firstName} ${otherUser.lastName}`
               : "Loading..."
           }
-          firstName={otherUser?.firstName || ""}
-          lastName={otherUser?.lastName || ""}
+          fullName={
+            otherUser ? `${otherUser.firstName} ${otherUser.lastName}` : ""
+          }
           avatar=""
         />
 

@@ -34,7 +34,7 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <body>
+        <body className={inter.className}>
           <SignedOut>
             <SignInButton />
           </SignedOut>
