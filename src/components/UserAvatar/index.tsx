@@ -19,6 +19,7 @@ function stringToColor(string: string) {
 }
 
 function stringAvatar(name: string) {
+  if (!name) return { chilren: "", sx: {} };
   return {
     sx: {
       bgcolor: stringToColor(name),
