@@ -18,12 +18,12 @@ function stringToColor(string: string) {
   return color;
 }
 
-function stringAvatar(name: string) {
+function stringAvatar(name: string, borderRadius: string = "0.5rem") {
   if (!name) return { chilren: "", sx: {} };
   return {
     sx: {
       bgcolor: stringToColor(name),
-      borderRadius: "1rem"
+      borderRadius: borderRadius
     },
     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`
   };
@@ -33,11 +33,17 @@ import { Avatar } from "@mui/material";
 
 type Props = {
   fullName: string;
-  avatar?: string;
   size: number;
+  avatar?: string;
+  borderRadius?: string;
 };
 
-export default function UserAvatar({ avatar, fullName, size }: Props) {
+export default function UserAvatar({
+  avatar,
+  fullName,
+  size,
+  borderRadius
+}: Props) {
   return (
     <div style={{ position: "relative" }}>
       {avatar ? (
@@ -48,9 +54,13 @@ export default function UserAvatar({ avatar, fullName, size }: Props) {
         />
       ) : (
         <Avatar
-          {...stringAvatar(fullName)} // Use the stringAvatar function
-          sx={{ ...stringAvatar(fullName).sx, width: size, height: size }} // Spread sx and override with size
-          variant="rounded"
+          {...stringAvatar(fullName, borderRadius)} // Use the stringAvatar function
+          sx={{
+            ...stringAvatar(fullName, borderRadius).sx,
+            width: size,
+            height: size
+          }} // Spread sx and override with size
+          variant="square"
         />
       )}
     </div>

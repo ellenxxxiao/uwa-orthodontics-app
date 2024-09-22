@@ -23,7 +23,7 @@ export default function MessageBubble({
         <div
           className={`${
             isSender ? "rounded-br" : "rounded-bl"
-          } max-w-xs rounded-2xl bg-app-white p-4 text-sm text-app-black md:max-w-md md:text-base`}
+          } max-w-xs rounded-2xl bg-[#F0F0F0] p-4 text-sm text-app-black md:max-w-md md:text-base`}
           style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
         >
           {text}

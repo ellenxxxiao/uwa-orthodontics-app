@@ -1,45 +1,18 @@
-import UserAvatar from "@/components/main/UserAvatar"; // Importing the UserAvatar component
-
 type Props = {
-  type: "primary" | "secondary";
-  iconLeft: React.ReactNode;
-  iconRight?: React.ReactNode;
-  title?: string;
-  fullName?: string;
-  avatar?: string;
+  nodeRight?: React.ReactNode;
+  nodeTitle?: React.ReactNode;
 };
 
-export default function Header({
-  type,
-  iconLeft,
-  iconRight,
-  fullName,
-  avatar,
-  title
-}: Props) {
-  switch (type) {
-    case "secondary":
-      return (
-        <div className="sticky top-0 flex h-20 w-full items-center justify-between bg-primary px-4">
-          <button>{iconLeft}</button>
-          <div className="flex flex-col items-center gap-1 pt-2">
-            <UserAvatar fullName={fullName!} avatar={avatar!} size={42} />
-            <h1 className="text-lg font-bold text-app-white">{title}</h1>
-          </div>
-          <button className="invisible">{iconRight}</button>
-        </div>
-      );
+export default function Header({ nodeRight, nodeTitle }: Props) {
+  return (
+    <div className="sticky top-0 flex h-20 w-full items-center justify-between bg-white px-4">
+      {/* Title aligned to the left */}
+      <div className="flex-grow text-3xl font-bold text-accent-focus">
+        {nodeTitle}
+      </div>
 
-    case "primary":
-      return (
-        <div className="sticky top-0 flex h-20 w-full items-center justify-between border-b border-base-300 bg-white px-4">
-          <button>{iconLeft}</button>
-          <div className="text-lg font-bold text-gray-500 ">{title}</div>
-          {iconRight}
-        </div>
-      );
-
-    default:
-      return null;
-  }
+      {/* Icon aligned to the right */}
+      <div className="flex items-center">{nodeRight}</div>
+    </div>
+  );
 }

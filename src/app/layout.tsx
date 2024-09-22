@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import {
-  ClerkProvider
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 
 import NavBar from "@/components/main/NavBar";
 
@@ -34,7 +32,7 @@ export default function RootLayout({
       <html lang="en">
         <body className="flex h-screen bg-base-100">
           <NavBar />
-          <main className="m-8 flex-1 overflow-hidden rounded-xl shadow-md">
+          <main className="my-4 mr-4 flex-1 overflow-auto rounded-xl shadow-md md:max-2xl:m-8">
             {children}
           </main>
         </body>

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignedIn, UserButton } from "@clerk/nextjs";
-import { LuBell, LuMessageCircle, LuSettings,LuUser2 } from "react-icons/lu";
+import { LuBell, LuMessageCircle, LuSettings, LuUser2 } from "react-icons/lu";
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ export default function NavBar() {
       <SignedIn>
         <div className="h-screen w-1/6 min-w-16 max-w-60">
           {/* avatar */}
-          <div className="mx-auto mb-32 h-10 w-10 pt-10">
+          <div className="mx-auto mb-32 mt-6 h-12 w-12">
             <UserButton
               appearance={{
                 elements: {
