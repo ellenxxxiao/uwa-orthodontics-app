@@ -32,7 +32,7 @@ export default function RootLayout({
       <html lang="en">
         <body className="flex h-screen bg-base-100">
           <NavBar />
-          <main className="my-4 mr-4 flex-1 overflow-auto rounded-xl shadow-md md:max-2xl:m-8">
+          <main className="my-4 mr-4 flex-1 overflow-auto rounded-xl shadow-md md:max-2xl:m-8 md:max-2xl:ml-0">
             {children}
           </main>
         </body>
