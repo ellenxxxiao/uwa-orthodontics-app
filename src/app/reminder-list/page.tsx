@@ -4,9 +4,9 @@ import { useState } from "react";
 import { ReminderType, RepeatType } from "@prisma/client";
 import { LuPlusCircle, LuSearch } from "react-icons/lu";
 
-import EditReminderModal from "@/components/EditReminderModal";
-import Header from "@/components/Header";
-import ReminderCard from "@/components/ReminderCard";
+import EditReminderModal from "@/components/main/EditReminderModal";
+import Header from "@/components/main/Header";
+import ReminderCard from "@/components/main/ReminderCard";
 import type { ReminderItem } from "@/types/reminder";
 
 export default function ReminderList() {

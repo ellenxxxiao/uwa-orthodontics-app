@@ -1,4 +1,4 @@
-import UserAvatar from "../UserAvatar"; // Importing the UserAvatar component
+import UserAvatar from "@/components/main/UserAvatar"; // Importing the UserAvatar component
 
 type Props = {
   type: "primary" | "secondary";

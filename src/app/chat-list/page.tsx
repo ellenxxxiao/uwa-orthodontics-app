@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { LuPenSquare, LuSearch } from "react-icons/lu";
 
-import Header from "@/components/Header";
+import Header from "@/components/main/Header";
 
 interface ChatUser {
   contactUser: {

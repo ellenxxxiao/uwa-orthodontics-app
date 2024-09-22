@@ -1,8 +1,8 @@
 "use client";
-import { SignedIn, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LuUser2, LuBell, LuMessageCircle, LuSettings } from "react-icons/lu";
+import { SignedIn, UserButton } from "@clerk/nextjs";
+import { LuBell, LuMessageCircle, LuSettings,LuUser2 } from "react-icons/lu";
 
 export default function NavBar() {
   const pathname = usePathname();

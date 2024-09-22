@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useEffect,useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReminderType, RepeatType } from "@prisma/client";
 import { useForm, useWatch } from "react-hook-form";
