@@ -43,14 +43,12 @@ export default function Chat() {
   });
 
   function onSubmit(data: z.infer<typeof schema>) {
-    fetch("/api/chat/${otherUserId}", {
+    fetch(`/api/chat/${otherUserId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        senderId: user!.id,
-        receiverId: otherUserId,
         text: data.message
       })
     });
@@ -157,8 +155,9 @@ export default function Chat() {
               ? `${otherUser.firstName} ${otherUser.lastName}`
               : "Loading..."
           }
-          firstName={otherUser?.firstName || ""}
-          lastName={otherUser?.lastName || ""}
+          fullName={
+            otherUser ? `${otherUser.firstName} ${otherUser.lastName}` : ""
+          }
           avatar=""
         />
 
