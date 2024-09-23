@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReminderType, RepeatType } from "@prisma/client";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import CustomField from "@/components/CustomField";
+import CustomField from "@/components/main/CustomField";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -134,6 +134,7 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
 
   function onSubmit(values: z.infer<typeof reminderFormSchema>) {
     const { time, ...formValuesWithoutTime } = values;
+    // FIXME: PATCH request to update the reminder
     console.log(formValuesWithoutTime);
     reminderForm.reset();
     onClose();
