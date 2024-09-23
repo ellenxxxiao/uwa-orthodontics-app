@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
+
 import { getWSPort, getWSServer } from "@/lib/ws-server";
 import { initializeWSServer } from "@/lib/ws-server";
 
@@ -49,9 +50,22 @@ export async function GET(
 }
 
 // POST
-export async function POST(request: Request) {
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return new Response(JSON.stringify({ error: "Not Authorized" }), {
+      status: HttpStatusCode.Unauthorized
+    });
+  }
+
+  const senderId = userId;
+  const receiverId = params.id;
   try {
-    const { senderId, receiverId, text } = await request.json();
+    const { text } = await request.json();
     const message = await prisma.message.create({
       data: {
         senderId,
