@@ -38,7 +38,7 @@ export default function RootLayout({
           </ClerkLoading>
           <ClerkLoaded>
             <NavBar />
-            <main className="shadow-standard my-4 mr-4 flex-1 overflow-auto rounded-xl md:max-2xl:m-8 md:max-2xl:ml-0">
+            <main className="my-4 mr-4 flex-1 overflow-auto rounded-xl shadow-standard md:max-2xl:m-8 md:max-2xl:ml-0">
               {children}
             </main>
           </ClerkLoaded>

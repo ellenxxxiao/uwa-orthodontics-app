@@ -98,7 +98,7 @@ export default function ChatList() {
                 role="button"
                 tabIndex={0}
                 key={user.contactUser.id}
-                className="shadow-standard relative mb-4 flex cursor-pointer items-center rounded-lg bg-white p-2"
+                className="relative mb-4 flex cursor-pointer items-center rounded-lg bg-white p-2 shadow-standard"
                 onClick={() => handleChatClick(user.contactUser.id)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {

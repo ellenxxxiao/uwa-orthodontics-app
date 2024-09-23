@@ -32,7 +32,7 @@ export default function ReminderCard({ reminder, onClick }: Props) {
     <div
       role="button"
       tabIndex={0}
-      className={`shadow-standard relative flex h-20 cursor-pointer flex-row items-center rounded-r-lg border-l-8 bg-white p-3 ${classes.split(" ")[0]}`}
+      className={`relative flex h-20 cursor-pointer flex-row items-center rounded-r-lg border-l-8 bg-white p-3 shadow-standard ${classes.split(" ")[0]}`}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
