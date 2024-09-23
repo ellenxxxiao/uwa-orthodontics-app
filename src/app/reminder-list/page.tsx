@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ReminderType, RepeatType } from "@prisma/client";
-import { LuPlusCircle, LuSearch } from "react-icons/lu";
+import { LuPlusCircle } from "react-icons/lu";
 
 import EditReminderModal from "@/components/main/EditReminderModal";
 import Header from "@/components/main/Header";
@@ -69,7 +69,7 @@ export default function ReminderList() {
       <div className="flex flex-1 flex-col bg-app-white">
         {/* main */}
         <div className="flex flex-col gap-4 p-4">
-          {reminders.map((reminder, i) => (
+          {reminders.map((reminder) => (
             <ReminderCard
               key={reminder.reminderId}
               reminder={reminder}

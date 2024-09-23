@@ -1,8 +1,9 @@
-import type { ReminderItem } from "@/types/reminder";
+import { RepeatType } from "@prisma/client";
 import { TbCalendarRepeat } from "react-icons/tb";
 
+import type { ReminderItem } from "@/types/reminder";
+
 import UserAvatar from "../UserAvatar";
-import { RepeatType } from "@prisma/client";
 
 type Props = {
   reminder: ReminderItem;
@@ -29,8 +30,16 @@ export default function ReminderCard({ reminder, onClick }: Props) {
 
   return (
     <div
-      className={`relative flex h-20 cursor-pointer flex-row items-center rounded-r-lg border-l-8 bg-white p-3 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] ${classes.split(" ")[0]}`}
+      role="button"
+      tabIndex={0}
+      className={`shadow-standard relative flex h-20 cursor-pointer flex-row items-center rounded-r-lg border-l-8 bg-white p-3 ${classes.split(" ")[0]}`}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
     >
       <div className="mr-4">
         <UserAvatar fullName={reminder.patientName} size={48} />

@@ -134,6 +134,7 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
 
   function onSubmit(values: z.infer<typeof reminderFormSchema>) {
     const { time, ...formValuesWithoutTime } = values;
+    // FIXME: PATCH request to update the reminder
     console.log(formValuesWithoutTime);
     reminderForm.reset();
     onClose();

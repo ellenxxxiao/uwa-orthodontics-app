@@ -6,13 +6,12 @@ import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
 import { useForm } from "react-hook-form";
-import { LuBell, LuChevronLeft, LuSend } from "react-icons/lu";
+import { LuSend } from "react-icons/lu";
 import { z } from "zod";
 
 import Header from "@/components/main/Header";
 import MessageBubble from "@/components/main/MessageBubble";
 import UserAvatar from "@/components/main/UserAvatar";
-
 import { Textarea } from "@/components/ui/textarea";
 
 const schema = z.object({
