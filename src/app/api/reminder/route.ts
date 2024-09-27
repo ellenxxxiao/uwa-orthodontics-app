@@ -109,7 +109,7 @@ export async function POST(request: Request) {
         startDate: createReminderData.startDate,
         endDate: createReminderData.endDate,
         description: createReminderData.description,
-        remindertype: createReminderData.reminderType,
+        reminderType: createReminderData.reminderType,
         repeatType: createReminderData.repeatType,
         intervalInDays: createReminderData.intervalInDays,
         isReminderActive: true
@@ -117,14 +117,14 @@ export async function POST(request: Request) {
     });
 
     // Send email when a reminder is created
-    await sendEmail("New Reminder Created", "created", {
-      firstName: "Patient",
-      description,
-      startDate: startDate,
-      endDate: endDate,
-      type,
-      intervalInDays
-    });
+    // await sendEmail("New Reminder Created", "created", {
+    //   firstName: "Patient",
+    //   description,
+    //   startDate: startDate,
+    //   endDate: endDate,
+    //   type,
+    //   intervalInDays
+    // });
 
     return new Response(JSON.stringify(reminder), {
       status: HttpStatusCode.Created,
