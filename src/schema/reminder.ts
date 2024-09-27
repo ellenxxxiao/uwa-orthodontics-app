@@ -14,3 +14,16 @@ export const UpdateReminderSchema = z.object({
   intervalInDays: z.number().optional(),
   isReminderActive: z.boolean().optional()
 });
+
+// Create reminder schema
+export const CreateReminderSchema = z.object({
+  setById: z.string(),
+  setForId: z.string(),
+  scheduledAt: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  description: z.string(),
+  reminderType: z.nativeEnum(ReminderType),
+  repeatType: z.nativeEnum(RepeatType),
+  intervalInDays: z.number()
+});
