@@ -1,4 +1,4 @@
-import { clerkClient, createClerkClient } from "@clerk/clerk-sdk-node";
+import { createClerkClient } from "@clerk/clerk-sdk-node";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 

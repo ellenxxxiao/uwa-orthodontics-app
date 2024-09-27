@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { ReminderType, RepeatType } from "@prisma/client";
+import { z } from "zod";
 
 // Update reminder schema
 export const UpdateReminderSchema = z.object({

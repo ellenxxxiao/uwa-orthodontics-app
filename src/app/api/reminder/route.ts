@@ -1,11 +1,11 @@
+import { NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 import { Resend } from "resend";
-import { EmailTemplate } from "../../components/emailTemplate/email-template";
-import { RepeatType, ReminderType } from "@prisma/client";
-import { NextRequest } from "next/server";
 
 import { CreateReminderSchema } from "@/schema/reminder";
+
+import { EmailTemplate } from "../../components/emailTemplate/email-template";
 
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
