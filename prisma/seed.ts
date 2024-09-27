@@ -115,7 +115,7 @@ async function createReminders() {
     RepeatType.NEVER,
     RepeatType.DAILY,
     RepeatType.WEEKLY,
-    RepeatType.FORNIGHTLY,
+    RepeatType.FORTNIGHTLY,
     RepeatType.MONTHLY,
     RepeatType.YEARLY,
     RepeatType.CUSTOM
