@@ -162,7 +162,7 @@ async function createReminders() {
           startDate: faker.date.past(),
           endDate: faker.date.future(),
           description: faker.lorem.sentence(),
-          remindertype: reminderType,
+          reminderType: reminderType,
           repeatType: repeatType,
           intervalInDays: intervalInDays,
           isReminderActive: true
