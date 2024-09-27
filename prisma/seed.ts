@@ -1,4 +1,4 @@
-import { Role, PrismaClient } from "@prisma/client";
+import { Role, PrismaClient, ReminderType, RepeatType } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
@@ -96,17 +96,94 @@ async function createMessages() {
   }
 }
 
+async function createReminders() {
+  const patients = await prisma.user.findMany({
+    where: { role: Role.PATIENT }
+  });
+
+  const clinicians = await prisma.user.findMany({
+    where: { role: Role.CLINICIAN }
+  });
+
+  const reminderTypes = [
+    ReminderType.ALIGNER,
+    ReminderType.APPOINTMENT,
+    ReminderType.OTHER
+  ];
+
+  const repeatTypes = [
+    RepeatType.NEVER,
+    RepeatType.DAILY,
+    RepeatType.WEEKLY,
+    RepeatType.FORNIGHTLY,
+    RepeatType.MONTHLY,
+    RepeatType.YEARLY,
+    RepeatType.CUSTOM
+  ];
+
+  for (const patient of patients) {
+    const reminderCount = Math.floor(Math.random() * 3) + 1;
+
+    for (let i = 0; i < reminderCount; i++) {
+      // Random senById by picking a random clinician
+      const randomClinician =
+        clinicians[Math.floor(Math.random() * clinicians.length)];
+
+      // Random reminder type and repeat type
+      const reminderType =
+        reminderTypes[Math.floor(Math.random() * reminderTypes.length)];
+      const repeatType =
+        repeatTypes[Math.floor(Math.random() * repeatTypes.length)];
+
+      // Calculate interval in days.
+      let intervalInDays: number;
+
+      if (repeatType === RepeatType.NEVER) {
+        intervalInDays = 0;
+      } else if (repeatType === RepeatType.DAILY) {
+        intervalInDays = 1;
+      } else if (repeatType === RepeatType.WEEKLY) {
+        intervalInDays = 7;
+      } else if (repeatType === RepeatType.FORNIGHTLY) {
+        intervalInDays = 14;
+      } else if (repeatType === RepeatType.MONTHLY) {
+        intervalInDays = 30;
+      } else if (repeatType === RepeatType.YEARLY) {
+        intervalInDays = 365;
+      } else {
+        intervalInDays = Math.floor(Math.random() * 30) + 1;
+      }
+
+      await prisma.reminder.create({
+        data: {
+          setById: randomClinician.id,
+          setForId: patient.id,
+          scheduledAt: faker.date.future(),
+          startDate: faker.date.past(),
+          endDate: faker.date.future(),
+          description: faker.lorem.sentence(),
+          remindertype: reminderType,
+          repeatType: repeatType,
+          intervalInDays: intervalInDays,
+          isReminderActive: true
+        }
+      });
+    }
+  }
+}
+
 async function main() {
   const fakerSeed = 0;
   const clinicianCount = 3;
   const patientCount = 10;
 
   faker.seed(fakerSeed);
-  await deleteAllData();
-  await createRandomUser(Role.ADMIN);
-  await createUsers(clinicianCount, patientCount);
-  await createConnections();
-  await createMessages();
+  // await deleteAllData();
+  // await createRandomUser(Role.ADMIN);
+  // await createUsers(clinicianCount, patientCount);
+  // await createConnections();
+  // await createMessages();
+  await createReminders();
 }
 
 main()
