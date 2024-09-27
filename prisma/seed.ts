@@ -144,7 +144,7 @@ async function createReminders() {
         intervalInDays = 1;
       } else if (repeatType === RepeatType.WEEKLY) {
         intervalInDays = 7;
-      } else if (repeatType === RepeatType.FORNIGHTLY) {
+      } else if (repeatType === RepeatType.FORTNIGHTLY) {
         intervalInDays = 14;
       } else if (repeatType === RepeatType.MONTHLY) {
         intervalInDays = 30;
