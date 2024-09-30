@@ -36,7 +36,7 @@ export async function GET(
       }
     });
 
-    return new Response(JSON.stringify({ messages}), {
+    return new Response(JSON.stringify({ messages }), {
       status: HttpStatusCode.Ok,
       headers: { "Content-Type": "application/json" }
     });
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       }
     });
 
-    io.to(receiverId).emit('new_message', message);
+    io.to(receiverId).emit("new_message", message);
 
     return new Response(JSON.stringify(message), {
       status: HttpStatusCode.Created,

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { LuSend } from "react-icons/lu";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 import { z } from "zod";
 
 import Header from "@/components/main/Header";
@@ -43,11 +43,9 @@ export default function Chat() {
       console.log("Received message:", newMessage);
       setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
     });
-    
 
     return () => newSocket.close();
   }, []);
-
 
   const ScrollToBottom = () => {
     const elementRef = useRef<HTMLDivElement | null>(null);
@@ -82,7 +80,7 @@ export default function Chat() {
     });
     // Sending the message over Socket.IO if the socket is connected
     if (socket) {
-      socket.emit('new_message', newMessage); // Emitting a 'new_message' event with the message data
+      socket.emit("new_message", newMessage); // Emitting a 'new_message' event with the message data
       console.log("Message sent via Socket.IO:", newMessage);
       setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
     } else {
@@ -91,7 +89,6 @@ export default function Chat() {
 
     chatForm.reset(); // Resetting the form after submission
   }
-
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -138,7 +135,6 @@ export default function Chat() {
     isLoaded && fetchMessages();
     isLoaded && fetchOtherUser();
   }, [isLoaded, isSignedIn, otherUserId, router]); // Add dependencies
-
 
   // // Setup WebSocket connection
   // useEffect(() => {
@@ -210,12 +206,12 @@ export default function Chat() {
             {msgs.map((msg) => {
               // 确保msg及其关键属性不为空
               if (!msg || !msg.id || !msg.text || !msg.sentAt) {
-                console.log('Skipping message due to incomplete data:', msg);
+                console.log("Skipping message due to incomplete data:", msg);
                 return null; // 如果消息数据不完整，跳过渲染该消息
               }
               return (
                 <MessageBubble
-                  key={msg.id.toString()}  // 由于前面的检查，这里可以安全地调用toString
+                  key={msg.id.toString()} // 由于前面的检查，这里可以安全地调用toString
                   text={msg.text}
                   isSender={msg.senderId === user!.id}
                   time={msg.sentAt}

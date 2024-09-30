@@ -17,7 +17,7 @@
 //     });
 //   });
 
-//   ws.on('close', () => { 
+//   ws.on('close', () => {
 //     console.log('Client disconnected');
 //   });
 
@@ -27,13 +27,13 @@
 
 // });
 
-const express = require('express');
-const next = require('next');
-const { Server } = require('socket.io');
-const http = require('http');
+const express = require("express");
+const next = require("next");
+const { Server } = require("socket.io");
+const http = require("http");
 
 const port = parseInt(process.env.PORT, 10) || 3000;
-const dev = process.env.NODE_ENV !== 'production';
+const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
@@ -41,7 +41,7 @@ app.prepare().then(() => {
   const server = express();
 
   // Handle HTTP requests
-  server.all('*', (req, res) => {
+  server.all("*", (req, res) => {
     return handle(req, res);
   });
 
@@ -54,21 +54,21 @@ app.prepare().then(() => {
       credentials: true
     }
   });
-  
+
   // 将 io 实例设置为全局变量
   global.io = io;
 
-  io.on('connection', (socket) => {
-    console.log('A new client connected.');
+  io.on("connection", (socket) => {
+    console.log("A new client connected.");
 
-    socket.on('new_message', (newMessage) => {
-      console.log('received: %s', newMessage);
+    socket.on("new_message", (newMessage) => {
+      console.log("received: %s", newMessage);
       // Broadcasting the message to all connected clients
-      socket.broadcast.emit('new_message', newMessage);
+      socket.broadcast.emit("new_message", newMessage);
     });
 
-    socket.on('disconnect', () => {
-      console.log('Client disconnected');
+    socket.on("disconnect", () => {
+      console.log("Client disconnected");
     });
   });
 
@@ -76,5 +76,3 @@ app.prepare().then(() => {
     console.log(`> Ready on http://localhost:${port}`);
   });
 });
-
-
