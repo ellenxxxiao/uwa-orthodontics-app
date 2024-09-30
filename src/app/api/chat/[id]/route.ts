@@ -1,13 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
-// const wssClient = new WebSocket('ws://localhost:3000');
 
 const prisma = new PrismaClient();
 
-declare global {
-  let io: SocketIO.Server; // 告诉 TypeScript 有一个全局的 io 变量
-}
+// declare global {
+//   let io: SocketIO.Server; // 告诉 TypeScript 有一个全局的 io 变量
+// }
 
 // GET
 export async function GET(

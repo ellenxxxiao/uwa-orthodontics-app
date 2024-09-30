@@ -8,7 +8,9 @@ import { Message, User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { LuSend } from "react-icons/lu";
 import io from "socket.io-client";
-import { z } from "zod";
+import type { Socket } from 'socket.io-client';
+import { string, z } from "zod";
+import { HttpStatusCode } from "axios";
 
 import Header from "@/components/main/Header";
 import MessageBubble from "@/components/main/MessageBubble";
@@ -29,7 +31,7 @@ export default function Chat() {
   const [otherUser, setOtherUser] = useState<User | null>(null);
   // const socket = new WebSocket(`ws://localhost:3000`);
   // Socket.IO 客户端初始化
-  const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     const newSocket = io(`https://strong-cute-platypus.ngrok-free.app`);
@@ -39,12 +41,13 @@ export default function Chat() {
       console.log("Connected to Socket.IO server");
     });
 
-    newSocket.on("new_message", (newMessage) => {
+    newSocket.on("new_message", (newMessage: Message) => {
       console.log("Received message:", newMessage);
       setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
     });
 
-    return () => newSocket.close();
+    // return () => newSocket.close();
+    return () => { newSocket.disconnect(); };
   }, []);
 
   const ScrollToBottom = () => {
@@ -69,7 +72,9 @@ export default function Chat() {
       receiverId: otherUserId,
       text: data.message,
       id: new Date().getTime(), // 使用时间戳作为临时ID
-      sentAt: new Date() // 添加发送时间
+      sentAt: new Date(), // 添加发送时间
+      status: HttpStatusCode
+
     };
     fetch("/api/chat/${otherUserId}", {
       method: "POST",
@@ -135,50 +140,6 @@ export default function Chat() {
     isLoaded && fetchMessages();
     isLoaded && fetchOtherUser();
   }, [isLoaded, isSignedIn, otherUserId, router]); // Add dependencies
-
-  // // Setup WebSocket connection
-  // useEffect(() => {
-  //   const socket = new WebSocket(`ws://localhost:3000`);
-
-  //   socket.onopen = () => {
-  //     console.log("Connected to WebSocket server");
-  //   };
-
-  //   socket.onmessage = (event) => {
-  //     // Check if the incoming message is a Blob
-  //     if (event.data instanceof Blob) {
-  //       // Create a new FileReader to handle the Blob
-  //       const reader = new FileReader();
-
-  //       // Once the Blob has been read, parse it as JSON
-  //       reader.onload = () => {
-  //         console.log(reader.result);
-  //         const newMessage = JSON.parse(reader.result);
-  //         setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
-  //       };
-
-  //       // Read the Blob as text
-  //       reader.readAsText(event.data);
-  //     } else {
-  //       // Handle normal string JSON data
-  //       console.log(event.data);
-  //       const newMessage = JSON.parse(event.data);
-  //       setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
-  //     }
-  //   };
-
-  //   socket.onerror = (error) => {
-  //     console.error("WebSocket error:", error);
-  //   };
-
-  //   socket.onclose = () => {
-  //     console.log("WebSocket connection closed");
-  //   };
-
-  //   return () => {
-  //     socket.close();
-  //   };
-  // }, []);
 
   const handleBackClick = () => {
     router.push("/chat-list");
