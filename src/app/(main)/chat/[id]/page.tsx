@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { LuSend } from "react-icons/lu";
+import io from 'socket.io-client';
 import { z } from "zod";
 
 import Header from "@/components/main/Header";
@@ -26,7 +27,27 @@ export default function Chat() {
   const [msgs, setMsgs] = useState<Message[]>([]);
   const otherUserId = params.id; // Extract id from params
   const [otherUser, setOtherUser] = useState<User | null>(null);
-  const [wsPort, setWsPort] = useState(null);
+  // const socket = new WebSocket(`ws://localhost:3000`);
+  // Socket.IO 客户端初始化
+  const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);
+
+  useEffect(() => {
+    const newSocket = io(`https://strong-cute-platypus.ngrok-free.app`);
+    setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      console.log("Connected to Socket.IO server");
+    });
+
+    newSocket.on("new_message", (newMessage) => {
+      console.log("Received message:", newMessage);
+      setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
+    });
+    
+
+    return () => newSocket.close();
+  }, []);
+
 
   const ScrollToBottom = () => {
     const elementRef = useRef<HTMLDivElement | null>(null);
@@ -45,17 +66,32 @@ export default function Chat() {
   });
 
   function onSubmit(data: z.infer<typeof schema>) {
-    fetch(`/api/chat/${otherUserId}`, {
+    const newMessage = {
+      senderId: user!.id,
+      receiverId: otherUserId,
+      text: data.message,
+      id: new Date().getTime(), // 使用时间戳作为临时ID
+      sentAt: new Date() // 添加发送时间
+    };
+    fetch("/api/chat/${otherUserId}", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        text: data.message
-      })
+      body: JSON.stringify(newMessage)
     });
-    chatForm.reset();
+    // Sending the message over Socket.IO if the socket is connected
+    if (socket) {
+      socket.emit('new_message', newMessage); // Emitting a 'new_message' event with the message data
+      console.log("Message sent via Socket.IO:", newMessage);
+      setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
+    } else {
+      console.log("Socket.IO is not connected.");
+    }
+
+    chatForm.reset(); // Resetting the form after submission
   }
+
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -69,7 +105,6 @@ export default function Chat() {
         if (res.ok) {
           const data = await res.json();
           setMsgs(data.messages);
-          setWsPort(data.wsPort);
         } else {
           if (process.env.NODE_ENV !== "production") {
             throw new Error("Failed to fetch messages");
@@ -104,33 +139,50 @@ export default function Chat() {
     isLoaded && fetchOtherUser();
   }, [isLoaded, isSignedIn, otherUserId, router]); // Add dependencies
 
-  // Setup WebSocket connection
-  useEffect(() => {
-    if (wsPort) {
-      const socket = new WebSocket(`ws://localhost:${wsPort}`);
 
-      socket.onopen = () => {
-        console.log("Connected to WebSocket server");
-      };
+  // // Setup WebSocket connection
+  // useEffect(() => {
+  //   const socket = new WebSocket(`ws://localhost:3000`);
 
-      socket.onmessage = (event) => {
-        const newMessage = JSON.parse(event.data);
-        setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
-      };
+  //   socket.onopen = () => {
+  //     console.log("Connected to WebSocket server");
+  //   };
 
-      socket.onerror = (error) => {
-        console.error("WebSocket error:", error);
-      };
+  //   socket.onmessage = (event) => {
+  //     // Check if the incoming message is a Blob
+  //     if (event.data instanceof Blob) {
+  //       // Create a new FileReader to handle the Blob
+  //       const reader = new FileReader();
 
-      socket.onclose = () => {
-        console.log("WebSocket connection closed");
-      };
+  //       // Once the Blob has been read, parse it as JSON
+  //       reader.onload = () => {
+  //         console.log(reader.result);
+  //         const newMessage = JSON.parse(reader.result);
+  //         setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
+  //       };
 
-      return () => {
-        socket.close();
-      };
-    }
-  }, [wsPort]);
+  //       // Read the Blob as text
+  //       reader.readAsText(event.data);
+  //     } else {
+  //       // Handle normal string JSON data
+  //       console.log(event.data);
+  //       const newMessage = JSON.parse(event.data);
+  //       setMsgs((prevMsgs) => [...prevMsgs, newMessage]);
+  //     }
+  //   };
+
+  //   socket.onerror = (error) => {
+  //     console.error("WebSocket error:", error);
+  //   };
+
+  //   socket.onclose = () => {
+  //     console.log("WebSocket connection closed");
+  //   };
+
+  //   return () => {
+  //     socket.close();
+  //   };
+  // }, []);
 
   const handleBackClick = () => {
     router.push("/chat-list");
@@ -155,15 +207,22 @@ export default function Chat() {
         {/* Messages */}
         <div className="w-full flex-1 overflow-y-auto bg-white">
           <div className="mx-4 my-6 flex flex-col gap-6 text-app-black">
-            {msgs.map((msg) => (
-              <MessageBubble
-                key={msg.id.toString()}
-                text={msg.text}
-                isSender={msg.senderId === user!.id}
-                time={msg.sentAt}
-                showTime={true}
-              />
-            ))}
+            {msgs.map((msg) => {
+              // 确保msg及其关键属性不为空
+              if (!msg || !msg.id || !msg.text || !msg.sentAt) {
+                console.log('Skipping message due to incomplete data:', msg);
+                return null; // 如果消息数据不完整，跳过渲染该消息
+              }
+              return (
+                <MessageBubble
+                  key={msg.id.toString()}  // 由于前面的检查，这里可以安全地调用toString
+                  text={msg.text}
+                  isSender={msg.senderId === user!.id}
+                  time={msg.sentAt}
+                  showTime={true}
+                />
+              );
+            })}
           </div>
           <ScrollToBottom />
         </div>
