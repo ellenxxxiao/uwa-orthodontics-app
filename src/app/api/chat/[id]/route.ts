@@ -6,7 +6,7 @@ import { HttpStatusCode } from "axios";
 const prisma = new PrismaClient();
 
 // declare global {
-//   let io: SocketIO.Server; 
+//   let io: SocketIO.Server;
 // }
 
 // GET

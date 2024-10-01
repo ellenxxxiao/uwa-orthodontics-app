@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Message, User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { LuSend } from "react-icons/lu";
-import io , { Socket } from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import { z } from "zod";
 
 import Header from "@/components/main/Header";
