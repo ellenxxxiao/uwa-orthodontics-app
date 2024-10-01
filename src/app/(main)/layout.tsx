@@ -1,4 +1,4 @@
-import { ClerkLoaded,ClerkLoading } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading } from "@clerk/nextjs";
 
 import NavBar from "@/components/main/NavBar";
 
