@@ -1,9 +1,8 @@
 import { RepeatType } from "@prisma/client";
 import { TbCalendarRepeat } from "react-icons/tb";
 
-import type { ReminderItem } from "@/types/reminder";
-
 import UserAvatar from "@/components/main/UserAvatar";
+import type { ReminderItem } from "@/types/reminder";
 
 type Props = {
   reminder: ReminderItem;

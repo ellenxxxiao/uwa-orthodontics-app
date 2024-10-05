@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
-import { checkRole } from "@/lib/roles";
-import { SearchUsers } from "./_search-users";
-
 import { PrismaClient } from "@prisma/client";
-import Header from "@/components/main/Header";
 import { LuPlusCircle } from "react-icons/lu";
+
+import Header from "@/components/main/Header";
+import { checkRole } from "@/lib/roles";
+
+import { SearchUsers } from "./_search-users";
 import UserTable from "./_table";
 
 const prisma = new PrismaClient();

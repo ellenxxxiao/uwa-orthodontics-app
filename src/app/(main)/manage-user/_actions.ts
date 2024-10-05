@@ -1,10 +1,11 @@
 "use server";
 
-import { checkRole } from "@/lib/roles";
 import { clerkClient } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { Role } from "@prisma/client";
 import { HttpStatusCode } from "axios";
+
+import { checkRole } from "@/lib/roles";
 
 const prisma = new PrismaClient();
 
@@ -37,7 +38,7 @@ export async function setRole(formData: FormData) {
   }
 
   try {
-    const res = await clerkClient().users.updateUser(userId, {
+    await clerkClient().users.updateUser(userId, {
       publicMetadata: { role: newRole }
     });
     return { message: "Clerk success", status: HttpStatusCode.Ok };

@@ -1,10 +1,11 @@
 "use client";
 
 import { User } from "@prisma/client";
-import { setRole } from "./_actions";
 import { HttpStatusCode } from "axios";
-import { useState } from "react";
+
 import { useToast } from "@/hooks/use-toast";
+
+import { setRole } from "./_actions";
 
 type props = {
   users: User[];
@@ -12,14 +13,9 @@ type props = {
 
 export default function UserTable({ users }: props) {
   const { toast } = useToast();
-  const [response, setResponse] = useState<{
-    message: string;
-    status: HttpStatusCode;
-  }>();
 
   const handleSetRole = async (formData: FormData) => {
     const res = await setRole(formData);
-    setResponse(res);
     if (res.status === HttpStatusCode.Ok) {
       toast({
         title: "Success",
