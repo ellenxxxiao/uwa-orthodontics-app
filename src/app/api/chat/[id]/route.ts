@@ -1,11 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
-
-import { getWSPort, getWSServer } from "@/lib/ws-server";
-import { initializeWSServer } from "@/lib/ws-server";
+// const wssClient = new WebSocket('ws://localhost:3000');
 
 const prisma = new PrismaClient();
+
+// declare global {
+//   let io: SocketIO.Server;
+// }
 
 // GET
 export async function GET(
@@ -23,7 +25,6 @@ export async function GET(
   }
 
   const otherUserId = params.id;
-  initializeWSServer();
 
   try {
     const messages = await prisma.message.findMany({
@@ -35,9 +36,7 @@ export async function GET(
       }
     });
 
-    const wsPort = getWSPort();
-
-    return new Response(JSON.stringify({ messages, wsPort }), {
+    return new Response(JSON.stringify({ messages }), {
       status: HttpStatusCode.Ok,
       headers: { "Content-Type": "application/json" }
     });
@@ -50,22 +49,9 @@ export async function GET(
 }
 
 // POST
-export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const { userId } = auth();
-
-  if (!userId) {
-    return new Response(JSON.stringify({ error: "Not Authorized" }), {
-      status: HttpStatusCode.Unauthorized
-    });
-  }
-
-  const senderId = userId;
-  const receiverId = params.id;
+export async function POST(request: Request) {
   try {
-    const { text } = await request.json();
+    const { senderId, receiverId, text } = await request.json();
     const message = await prisma.message.create({
       data: {
         senderId,
@@ -74,16 +60,7 @@ export async function POST(
       }
     });
 
-    const wss = getWSServer();
-
-    // Broadcast new messages to all connected clients
-    if (wss) {
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(message));
-        }
-      });
-    }
+    io.to(receiverId).emit("new_message", message);
 
     return new Response(JSON.stringify(message), {
       status: HttpStatusCode.Created,
