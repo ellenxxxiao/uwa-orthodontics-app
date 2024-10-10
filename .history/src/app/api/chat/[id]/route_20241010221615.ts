@@ -56,7 +56,7 @@ export async function POST(request: Request) {
   try {
     const { senderId, receiverId, text } = await request.json();
 
-    // Creating a Message
+    // 创建消息
     const message = await prisma.message.create({
       data: {
         senderId,
@@ -65,16 +65,16 @@ export async function POST(request: Request) {
       }
     });
 
-    // After the message is saved successfully, send the message via WebSocket
+    // 消息保存成功后，通过 WebSocket 发送消息
     io.to(receiverId).emit("new_message", message);
 
-    // Returns a message of successful creation
+    // 返回创建成功的消息
     return new Response(JSON.stringify(message), {
       status: HttpStatusCode.Created,
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
-    // Print detailed error information to the server log
+    // 打印详细的错误信息到服务器日志
     console.error("Error creating message:", {
       error: (error as Error).message,
       stack: (error as Error).stack,
@@ -85,13 +85,13 @@ export async function POST(request: Request) {
       }
     });
 
-    // Return error information to the client in JSON format
+    // 将错误信息以 JSON 形式返回给客户端
     return new Response(
       JSON.stringify({
         error: "Internal server error",
-        message: (error as Error).message, 
+        message: (error as Error).message, // 可选：根据安全考虑决定是否返回给客户端
         details:
-          process.env.NODE_ENV === "development" ? (error as Error).stack : undefined // Return error stack in development environment
+          process.env.NODE_ENV === "development" ? (error as Error).stack : undefined // 开发环境中返回错误堆栈
       }),
       {
         status: HttpStatusCode.InternalServerError,

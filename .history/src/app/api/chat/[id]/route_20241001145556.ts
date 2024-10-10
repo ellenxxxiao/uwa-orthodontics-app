@@ -50,13 +50,8 @@ export async function GET(
 
 // POST
 export async function POST(request: Request) {
-  let senderId: string | undefined;
-  let receiverId: string | undefined;
-  let text: string | undefined;
   try {
     const { senderId, receiverId, text } = await request.json();
-
-    // Creating a Message
     const message = await prisma.message.create({
       data: {
         senderId,
@@ -65,38 +60,16 @@ export async function POST(request: Request) {
       }
     });
 
-    // After the message is saved successfully, send the message via WebSocket
     io.to(receiverId).emit("new_message", message);
 
-    // Returns a message of successful creation
     return new Response(JSON.stringify(message), {
       status: HttpStatusCode.Created,
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
-    // Print detailed error information to the server log
-    console.error("Error creating message:", {
-      error: (error as Error).message,
-      stack: (error as Error).stack,
-      data: {
-        senderId,
-        receiverId,
-        text
-      }
+    return new Response(JSON.stringify({ error }), {
+      status: HttpStatusCode.InternalServerError,
+      headers: { "Content-Type": "application/json" }
     });
-
-    // Return error information to the client in JSON format
-    return new Response(
-      JSON.stringify({
-        error: "Internal server error",
-        message: (error as Error).message, 
-        details:
-          process.env.NODE_ENV === "development" ? (error as Error).stack : undefined // Return error stack in development environment
-      }),
-      {
-        status: HttpStatusCode.InternalServerError,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
   }
 }
