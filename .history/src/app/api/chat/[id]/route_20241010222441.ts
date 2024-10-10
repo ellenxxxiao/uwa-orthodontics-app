@@ -89,9 +89,11 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         error: "Internal server error",
-        message: (error as Error).message, 
+        message: (error as Error).message,
         details:
-          process.env.NODE_ENV === "development" ? (error as Error).stack : undefined // Return error stack in development environment
+          process.env.NODE_ENV === "development"
+            ? (error as Error).stack
+            : undefined // Return error stack in development environment
       }),
       {
         status: HttpStatusCode.InternalServerError,

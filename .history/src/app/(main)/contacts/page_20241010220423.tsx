@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,47 +17,47 @@ interface Contact {
 }
 
 const contactItemStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  backgroundColor: '#FFFFFF',
-  borderRadius: '8px',
-  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-  padding: '10px 20px',
-  marginBottom: '2px',
-  cursor: 'pointer',
+  display: "flex",
+  alignItems: "center",
+  backgroundColor: "#FFFFFF",
+  borderRadius: "8px",
+  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+  padding: "10px 20px",
+  marginBottom: "2px",
+  cursor: "pointer"
 };
 
 const contactNameStyle = {
-  fontSize: '16px',
-  fontWeight: 'bold',
-  color: '#333',
-  marginLeft: '10px',
+  fontSize: "16px",
+  fontWeight: "bold",
+  color: "#333",
+  marginLeft: "10px"
 };
 
 const contactEmailStyle = {
-  fontSize: '14px',
-  color: '#666',
-  marginLeft: '10px',
+  fontSize: "14px",
+  color: "#666",
+  marginLeft: "10px"
 };
 
 const sectionHeaderStyle = {
-  fontWeight: 'bold',
-  fontSize: '18px',
-  color: '#444',
-  padding: '10px 20px',
-  backgroundColor: '#f5f5f5'
+  fontWeight: "bold",
+  fontSize: "18px",
+  color: "#444",
+  padding: "10px 20px",
+  backgroundColor: "#f5f5f5"
 };
 
 const alphabetStyle: React.CSSProperties = {
-  position: 'absolute',
-  right: '10px',
-  top: '50%',
-  transform: 'translateY(-50%)',
-  padding: '5px',
-  fontSize: '12px',
-  lineHeight: '20px',
-  color: '#666',
-  cursor: 'pointer',
+  position: "absolute",
+  right: "10px",
+  top: "50%",
+  transform: "translateY(-50%)",
+  padding: "5px",
+  fontSize: "12px",
+  lineHeight: "20px",
+  color: "#666",
+  cursor: "pointer"
 };
 
 export default function ContactsPage() {
@@ -76,12 +76,12 @@ export default function ContactsPage() {
 
   async function fetchContacts() {
     if (!user) {
-      console.error('User is not defined');
+      console.error("User is not defined");
       return;
-  }
+    }
     const response = await fetch(`/api/contacts/${user.id}`);
     if (!response.ok) {
-      console.error('Failed to fetch contacts:', response.statusText);
+      console.error("Failed to fetch contacts:", response.statusText);
       return;
     }
     const contactsData = await response.json();
@@ -101,14 +101,17 @@ export default function ContactsPage() {
     setShowDialog(false);
   };
 
-  const groupedContacts = contacts.reduce<Record<string, Contact[]>>((acc, contact) => {
-    const firstLetter = contact.firstName.charAt(0).toUpperCase();
-    if (!acc[firstLetter]) {
-      acc[firstLetter] = [];
-    }
-    acc[firstLetter].push(contact);
-    return acc;
-  }, {});
+  const groupedContacts = contacts.reduce<Record<string, Contact[]>>(
+    (acc, contact) => {
+      const firstLetter = contact.firstName.charAt(0).toUpperCase();
+      if (!acc[firstLetter]) {
+        acc[firstLetter] = [];
+      }
+      acc[firstLetter].push(contact);
+      return acc;
+    },
+    {}
+  );
 
   const handleContactClick = (contactId: string) => {
     router.push(`/chat/${contactId}`);
@@ -116,10 +119,15 @@ export default function ContactsPage() {
 
   return (
     <>
-      <div className="flex h-full flex-col relative">
+      <div className="relative flex h-full flex-col">
         <Header
           nodeRight={
-            <MdAdd size={30} strokeWidth={1.3} className="text-primary" onClick={handleOpenDialog}/>
+            <MdAdd
+              size={30}
+              strokeWidth={1.3}
+              className="text-primary"
+              onClick={handleOpenDialog}
+            />
           }
           nodeTitle={<span>Contacts</span>}
         />
@@ -133,7 +141,9 @@ export default function ContactsPage() {
           <div className="flex-1 overflow-y-auto p-4">
             {Object.entries(groupedContacts).map(([letter, contacts]) => (
               <>
-                <div key={letter} style={sectionHeaderStyle}>{letter}</div>
+                <div key={letter} style={sectionHeaderStyle}>
+                  {letter}
+                </div>
                 {contacts.map((contact) => (
                   <div
                     role="button"
@@ -168,7 +178,7 @@ export default function ContactsPage() {
             ))}
           </div>
           <div style={alphabetStyle}>
-            {'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((letter) => (
+            {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((letter) => (
               <div key={letter}>{letter}</div>
             ))}
           </div>

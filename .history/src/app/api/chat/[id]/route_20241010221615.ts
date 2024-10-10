@@ -91,7 +91,9 @@ export async function POST(request: Request) {
         error: "Internal server error",
         message: (error as Error).message, // 可选：根据安全考虑决定是否返回给客户端
         details:
-          process.env.NODE_ENV === "development" ? (error as Error).stack : undefined // 开发环境中返回错误堆栈
+          process.env.NODE_ENV === "development"
+            ? (error as Error).stack
+            : undefined // 开发环境中返回错误堆栈
       }),
       {
         status: HttpStatusCode.InternalServerError,

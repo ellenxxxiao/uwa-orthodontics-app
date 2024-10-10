@@ -13,11 +13,11 @@ function InvitationDialog({ isOpen, onClose, onSend }: InvitationDialogProps) {
   if (!isOpen) return null;
 
   const handleSend = (email: string) => {
-    onSend(email); 
+    onSend(email);
     setShowToast(true);
     setTimeout(() => {
-      setShowToast(false); 
-      onClose(); 
+      setShowToast(false);
+      onClose();
     }, 2000);
   };
 
