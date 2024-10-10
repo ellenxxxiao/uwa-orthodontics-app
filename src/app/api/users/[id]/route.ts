@@ -1,12 +1,12 @@
-import { clerkClient, createClerkClient } from "@clerk/clerk-sdk-node";
+import { clerkClient } from "@clerk/clerk-sdk-node";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 
 import { UpdateUserSchema } from "@/schema/user";
 
-const clerk = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY
-});
+// const clerk = createClerkClient({
+//   secretKey: process.env.CLERK_SECRET_KEY
+// });
 
 const prisma = new PrismaClient();
 

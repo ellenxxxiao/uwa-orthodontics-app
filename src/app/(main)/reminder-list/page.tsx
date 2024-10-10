@@ -66,7 +66,7 @@ export default function ReminderList() {
         }
         nodeTitle={<span>Reminders</span>}
       />
-      <div className="flex flex-1 flex-col bg-app-white">
+      <div className="flex flex-1 flex-col overflow-y-auto bg-app-white">
         {/* main */}
         <div className="flex flex-col gap-4 p-4">
           {reminders.map((reminder) => (

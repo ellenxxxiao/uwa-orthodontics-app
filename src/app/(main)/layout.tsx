@@ -1,4 +1,4 @@
-import { ClerkLoaded, ClerkLoading } from "@clerk/nextjs";
+import { ClerkLoaded,ClerkLoading } from "@clerk/nextjs";
 
 import NavBar from "@/components/main/NavBar";
 
@@ -8,8 +8,8 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="flex h-screen bg-base-100">
+    <div>
+      <div className="flex h-screen bg-base-100">
         <ClerkLoading>
           <div className="flex h-full w-full items-center justify-center">
             <p className="text-xl">Loading...</p>
@@ -17,11 +17,11 @@ export default function MainLayout({
         </ClerkLoading>
         <ClerkLoaded>
           <NavBar />
-          <main className="my-4 mr-4 flex-1 overflow-auto rounded-xl shadow-standard md:max-2xl:m-8 md:max-2xl:ml-0">
+          <div className="my-4 mr-4 flex-1 overflow-auto rounded-xl shadow-standard md:max-2xl:m-8 md:max-2xl:ml-0">
             {children}
-          </main>
+          </div>
         </ClerkLoaded>
-      </body>
-    </html>
+      </div>
+    </div>
   );
 }
