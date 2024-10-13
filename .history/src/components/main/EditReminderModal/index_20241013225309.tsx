@@ -48,7 +48,7 @@ const repeatTypes = [
   { value: RepeatType.NEVER, label: "Never" },
   { value: RepeatType.DAILY, label: "Every Day" },
   { value: RepeatType.WEEKLY, label: "Every Week" },
-  { value: RepeatType.FORNIGHTLY, label: "Every Fortnight" },
+  { value: RepeatType.FORTNIGHTLY, label: "Every Fortnight" },
   { value: RepeatType.MONTHLY, label: "Every Month" },
   { value: RepeatType.YEARLY, label: "Every Year" },
   { value: RepeatType.CUSTOM, label: "Custom" }
