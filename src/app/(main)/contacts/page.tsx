@@ -112,7 +112,7 @@ export default function ContactsPage() {
             <LuPlusCircle
               size={30}
               strokeWidth={1.3}
-              className="text-primary cursor-pointer"
+              className="cursor-pointer text-primary"
               onClick={handleOpenDialog}
             />
           }
