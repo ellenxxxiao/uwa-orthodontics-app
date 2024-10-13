@@ -1,9 +1,8 @@
 import { RepeatType } from "@prisma/client";
 import { TbCalendarRepeat } from "react-icons/tb";
 
+import UserAvatar from "@/components/main/UserAvatar";
 import type { ReminderItem } from "@/types/reminder";
-
-import UserAvatar from "../UserAvatar";
 
 type Props = {
   reminder: ReminderItem;
@@ -25,8 +24,6 @@ const abbreviationMap = {
 export default function ReminderCard({ reminder, onClick }: Props) {
   // Use fallback color classes if the reminder type is not recognized
   const classes = colorMap[reminder.reminderType];
-
-  // Determine whether to use the abbreviation or full type
 
   return (
     <div
