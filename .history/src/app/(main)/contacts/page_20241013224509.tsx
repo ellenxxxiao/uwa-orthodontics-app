@@ -8,6 +8,7 @@ import { LuPlusCircle } from "react-icons/lu";
 import Header from "@/components/main/Header";
 import UserAvatar from "@/components/main/UserAvatar";
 import InvitationDialog from "@/components/main/InvitationDialog";
+import { string } from "zod";
 
 interface Contact {
   id: string;
@@ -45,6 +46,18 @@ const sectionHeaderStyle = {
   color: "#444",
   padding: "10px 20px",
   backgroundColor: "#f5f5f5"
+};
+
+const alphabetStyle: React.CSSProperties = {
+  position: "absolute",
+  right: "10px",
+  top: "50%",
+  transform: "translateY(-50%)",
+  padding: "5px",
+  fontSize: "12px",
+  lineHeight: "20px",
+  color: "#666",
+  cursor: "pointer"
 };
 
 export default function ContactsPage() {
@@ -162,6 +175,11 @@ export default function ContactsPage() {
                   </div>
                 ))}
               </>
+            ))}
+          </div>
+          <div style={alphabetStyle}>
+            {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((letter) => (
+              <div key={letter}>{letter}</div>
             ))}
           </div>
         </div>

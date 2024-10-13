@@ -8,6 +8,7 @@ import { LuPlusCircle } from "react-icons/lu";
 import Header from "@/components/main/Header";
 import UserAvatar from "@/components/main/UserAvatar";
 import InvitationDialog from "@/components/main/InvitationDialog";
+import { string } from "zod";
 
 interface Contact {
   id: string;
