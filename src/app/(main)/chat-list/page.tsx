@@ -88,7 +88,7 @@ export default function ChatList() {
             <LuPenSquare
               size={30}
               strokeWidth={1.3}
-              className="text-primary"
+              className="cursor-pointer text-primary"
               onClick={() => router.push("/contacts")}
             />
           }
