@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 
 import { UpdateReminderSchema } from "@/schema/reminder";
+import { NextResponse } from "next/server";
+import { auth } from '@clerk/nextjs/server';  // Use Clerk's auth helper
 
 const clerk = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY
@@ -10,42 +12,25 @@ const clerk = createClerkClient({
 
 const prisma = new PrismaClient();
 
-// GET. Example: http://localhost:3000/api/reminder/26
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const id = parseInt(params.id);
-
+// GET: Fetch reminders for the logged-in user
+export async function GET() {
   try {
-    if (!id) {
-      return new Response(
-        JSON.stringify({ error: "Reminder ID is required" }),
-        {
-          status: HttpStatusCode.BadRequest
-        }
-      );
+    // Get the logged-in user's ID
+    const { userId } = auth();
+
+    if (!userId) {
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     }
 
-    const reminder = await prisma.reminder.findUnique({
-      where: { id }
+    // Fetch reminders where setForId matches the logged-in userId
+    const reminders = await prisma.reminder.findMany({
+      where: { setForId: userId },
     });
 
-    if (!reminder) {
-      return new Response(JSON.stringify({ error: "Reminder not found" }), {
-        status: HttpStatusCode.NotFound
-      });
-    }
-    return new Response(JSON.stringify(reminder), {
-      status: HttpStatusCode.Ok,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
+    // Return the reminders
+    return new NextResponse(JSON.stringify(reminders), { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error }), {
-      status: HttpStatusCode.InternalServerError
-    });
+    return new NextResponse(JSON.stringify({ error: "Failed to fetch reminders" }), { status: 500 });
   }
 }
 
