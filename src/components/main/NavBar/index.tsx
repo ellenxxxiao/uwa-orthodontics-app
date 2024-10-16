@@ -69,12 +69,6 @@ export default function NavBar() {
               isActive={isActive("/reminder-list")}
             />
             <NavItem
-              icon={LuSettings}
-              label="Settings"
-              href="/settings"
-              isActive={isActive("/settings")}
-            />
-            <NavItem
               icon={LuUser2}
               label="Admin"
               href="/manage-user"
