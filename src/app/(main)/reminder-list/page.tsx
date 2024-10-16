@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { ReminderType, RepeatType } from "@prisma/client";
 import { LuPlusCircle } from "react-icons/lu";
 
 import EditReminderModal from "@/components/main/EditReminderModal";
