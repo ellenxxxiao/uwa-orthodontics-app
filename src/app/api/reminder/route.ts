@@ -92,13 +92,14 @@ export async function GET(request: NextRequest) {
 
     const formattedReminders = reminders.map((reminder) => ({
       reminderId: reminder.id,
+      patientId: reminder.setForId,
       patientName: `${reminder.SetFor.firstName} ${reminder.SetFor.lastName}`, // Concatenating first and last names
       startDate: reminder.startDate,
       endDate: reminder.endDate || undefined, // Handling optional endDate
       intervalInDays: reminder.intervalInDays,
       reminderType: reminder.reminderType,
       description: reminder.description,
-      repeat: reminder.repeatType
+      repeatType: reminder.repeatType
     }));
 
     return new Response(JSON.stringify(formattedReminders), {

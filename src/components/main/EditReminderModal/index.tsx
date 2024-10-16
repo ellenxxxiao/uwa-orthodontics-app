@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReminderType, RepeatType } from "@prisma/client";
+import { ReminderType, RepeatType, Role, User } from "@prisma/client";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -29,20 +29,13 @@ import type { ReminderItem } from "@/types/reminder";
 
 const reminderFormSchema = z.object({
   patient: z.string(),
-  repeat: z.nativeEnum(RepeatType),
+  repeatType: z.nativeEnum(RepeatType),
   reminderType: z.nativeEnum(ReminderType),
   startDate: z.date(),
   time: z.date(),
   description: z.string().optional(),
   endDate: z.date().optional()
 });
-
-// FIXME: Mock data
-const patients = [
-  { value: "1", label: "Runtian Liang" },
-  { value: "2", label: "Zimu Zhang" },
-  { value: "3", label: "Alian Haidar" }
-];
 
 const repeatTypes = [
   { value: RepeatType.NEVER, label: "Never" },
@@ -70,10 +63,14 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
   const minuteRef = useRef<HTMLInputElement>(null);
   const hourRef = useRef<HTMLInputElement>(null);
 
+  const [patients, setPatients] = useState<{ value: string; label: string }[]>(
+    []
+  );
+
   const reminderForm = useForm<z.infer<typeof reminderFormSchema>>({
     resolver: zodResolver(reminderFormSchema),
     defaultValues: {
-      repeat: RepeatType.NEVER
+      repeatType: RepeatType.NEVER
     }
   });
 
@@ -83,8 +80,8 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
     if (reminder) {
       // Reset the form values with the provided reminder data
       reset({
-        patient: reminder.patientName,
-        repeat: reminder.repeat || RepeatType.NEVER,
+        patient: reminder.patientId,
+        repeatType: reminder.repeatType || RepeatType.NEVER,
         reminderType: reminder.reminderType,
         startDate: new Date(reminder.startDate),
         time: new Date(reminder.startDate), // Assuming time is embedded in startDate
@@ -94,7 +91,7 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
     } else {
       // Reset to default values if no reminder is provided (e.g., adding a new reminder)
       reset({
-        repeat: RepeatType.NEVER
+        repeatType: RepeatType.NEVER
       });
     }
   }, [reminder, reset]);
@@ -103,6 +100,30 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
     control: reminderForm.control,
     name: "time"
   });
+
+  // Fetch user data from the API endpoint
+  useEffect(() => {
+    async function fetchPatients() {
+      try {
+        const response = await fetch("/api/users"); // Adjust the endpoint as needed
+        const data: User[] = await response.json();
+
+        // Map the user data to fit the CustomField options format
+        const patientOptions = data
+          .filter((user) => user.role === Role.PATIENT) // Filter for patients only
+          .map((user) => ({
+            value: user.id,
+            label: `${user.firstName} ${user.lastName}`
+          }));
+
+        setPatients(patientOptions);
+      } catch (error) {
+        console.error("Failed to fetch patients:", error);
+      }
+    }
+
+    fetchPatients();
+  }, []);
 
   useEffect(() => {
     if (selectedTime) {
@@ -129,15 +150,40 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
 
   const selectedRepeat = useWatch({
     control: reminderForm.control,
-    name: "repeat"
+    name: "repeatType"
   });
 
-  function onSubmit(values: z.infer<typeof reminderFormSchema>) {
+  async function onSubmit(values: z.infer<typeof reminderFormSchema>) {
     const { time, ...formValuesWithoutTime } = values;
     // FIXME: PATCH request to update the reminder
-    console.log(formValuesWithoutTime);
-    reminderForm.reset();
-    onClose();
+    try {
+      // Make the PATCH request to update the reminder
+      const response = await fetch(`/api/reminder/${reminder?.reminderId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formValuesWithoutTime)
+      });
+
+      if (response.ok) {
+        // Handle success, you might want to show a success message or update the UI
+        console.log("Reminder updated successfully");
+      } else {
+        // Handle errors, e.g., show an error message to the user
+        const errorData = await response.json();
+        console.error("Error updating reminder:", errorData.error);
+      }
+    } catch (error) {
+      // Handle any other unexpected errors
+      console.error("Error:", error);
+    } finally {
+      reminderForm.reset(); // Reset form after submission
+      onClose(); // Close the modal
+    }
+    // console.log(formValuesWithoutTime);
+    // reminderForm.reset();
+    // onClose();
   }
 
   return (
@@ -170,8 +216,8 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
             {/* Repeat type*/}
             <CustomField
               control={reminderForm.control}
-              name="repeat"
-              label="Repeat"
+              name="repeatType"
+              label="repeatType"
               placeholder="Never"
               options={repeatTypes}
             />

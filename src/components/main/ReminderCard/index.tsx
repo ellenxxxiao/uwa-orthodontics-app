@@ -47,7 +47,7 @@ export default function ReminderCard({ reminder, onClick }: Props) {
             {reminder.patientName}
           </h3>
           <div className="flex items-center justify-center gap-2">
-            {reminder.repeat !== RepeatType.NEVER && (
+            {reminder.repeatType !== RepeatType.NEVER && (
               <TbCalendarRepeat className="text-2xl text-accent-focus" />
             )}
             <span
