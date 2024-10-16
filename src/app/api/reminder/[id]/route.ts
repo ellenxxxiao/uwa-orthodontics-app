@@ -125,7 +125,7 @@ export async function PATCH(
 
     return new Response(
       JSON.stringify({
-        message: `Reminder with ID ${id} updated successfully.`
+        reminder
       }),
       {
         status: HttpStatusCode.Ok,

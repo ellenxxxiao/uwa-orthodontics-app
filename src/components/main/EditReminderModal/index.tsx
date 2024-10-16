@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ReminderType, RepeatType, Role, User } from "@prisma/client";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
 
 import CustomField from "@/components/main/CustomField";
 import { Button } from "@/components/ui/button";
@@ -62,7 +63,8 @@ interface Props {
 export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
   const minuteRef = useRef<HTMLInputElement>(null);
   const hourRef = useRef<HTMLInputElement>(null);
-
+  const { toast } = useToast();
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [patients, setPatients] = useState<{ value: string; label: string }[]>(
     []
   );
@@ -155,7 +157,6 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
 
   async function onSubmit(values: z.infer<typeof reminderFormSchema>) {
     const { time, ...formValuesWithoutTime } = values;
-    // FIXME: PATCH request to update the reminder
     try {
       // Make the PATCH request to update the reminder
       const response = await fetch(`/api/reminder/${reminder?.reminderId}`, {
@@ -167,24 +168,65 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
       });
 
       if (response.ok) {
-        // Handle success, you might want to show a success message or update the UI
-        console.log("Reminder updated successfully");
+        toast({
+          title: "Success",
+          description: "Reminder updated successfully"
+        });
       } else {
-        // Handle errors, e.g., show an error message to the user
-        const errorData = await response.json();
-        console.error("Error updating reminder:", errorData.error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to update reminder"
+        });
       }
     } catch (error) {
-      // Handle any other unexpected errors
-      console.error("Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update reminder"
+      });
     } finally {
       reminderForm.reset(); // Reset form after submission
       onClose(); // Close the modal
     }
-    // console.log(formValuesWithoutTime);
-    // reminderForm.reset();
-    // onClose();
   }
+
+  // Function to handle delete confirmation
+  const handleDeleteReminder = async () => {
+    try {
+      const response = await fetch(`/api/reminder/${reminder?.reminderId}`, {
+        method: "DELETE"
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Reminder deleted successfully"
+        });
+        // onDeleteReminder(reminder?.reminderId); // Call the prop function to update state in parent component
+        onClose(); // Close the modal after deletion
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to delete reminder"
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete reminder"
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Reset confirmation dialog state when the modal is opened
+    if (isOpen) {
+      setIsConfirmDeleteOpen(false);
+    }
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -313,7 +355,7 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
               )}
             />
 
-            <DialogFooter className="py-1" />
+            <DialogFooter />
 
             <div className="absolute -top-1 right-6">
               <Button
@@ -326,6 +368,49 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
             </div>
           </form>
         </Form>
+
+        {/* Confirmation Dialog */}
+        {isConfirmDeleteOpen && (
+          <Dialog
+            open={isConfirmDeleteOpen}
+            onOpenChange={() => setIsConfirmDeleteOpen(false)}
+          >
+            <DialogContent className="h-72 w-96 rounded-xl p-12">
+              <DialogHeader>
+                <DialogTitle className="text-xl">Confirm Deletion</DialogTitle>
+                <p className="text-lg">
+                  Are you sure you want to delete this reminder?
+                </p>
+              </DialogHeader>
+              <DialogFooter className="mx-auto">
+                <Button
+                  className="mt-2 w-32 text-lg"
+                  variant="outline"
+                  onClick={() => setIsConfirmDeleteOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="w-32 text-lg"
+                  variant="destructive"
+                  onClick={handleDeleteReminder}
+                >
+                  Delete
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        <div className="mx-auto ">
+          <Button
+            className="h-10 w-20 px-2 text-xl font-bold"
+            variant="destructive"
+            onClick={() => setIsConfirmDeleteOpen(true)}
+          >
+            Delete
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -41,30 +41,7 @@ export default function ReminderList() {
     }
 
     isLoaded && fetchReminders();
-  }, [isLoaded, isSignedIn, router]);
-
-  // mock list of reminders
-  // const reminders: ReminderItem[] = [
-  //   {
-  //     reminderId: 1,
-  //     patientName: "John Doe",
-  //     startDate: "2022-10-01 11:11:00",
-  //     endDate: "2022-10-31",
-  //     intervalInDays: 7,
-  //     reminderType: ReminderType.ALIGNER,
-  //     description: "ReminderType.ALIGNER",
-  //     repeat: RepeatType.WEEKLY
-  //   },
-  //   {
-  //     reminderId: 2,
-  //     patientName: "Ellen Xiao",
-  //     startDate: "2022-10-01",
-  //     intervalInDays: 7,
-  //     reminderType: ReminderType.APPOINTMENT,
-  //     description: "RemindesdfsfsdfsdfsdfsdfrTsdofMENT",
-  //     repeat: RepeatType.NEVER
-  //   }
-  // ];
+  }, [isLoaded, isSignedIn, router, isOpen]);
 
   const handleCardClick = (reminder: ReminderItem) => {
     setSelectedReminder(reminder);

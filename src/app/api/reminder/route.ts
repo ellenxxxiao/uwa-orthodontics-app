@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 import { auth } from "@clerk/nextjs/server";
 
-import { Resend } from "resend";
+// import { Resend } from "resend";
 
 import { CreateReminderSchema } from "@/schema/reminder";
 
