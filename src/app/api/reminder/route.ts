@@ -84,10 +84,24 @@ export async function GET(request: NextRequest) {
 
     // Fetch reminders from the database based on filters
     const reminders = await prisma.reminder.findMany({
-      where: filters
+      where: filters,
+      include: {
+        SetFor: true
+      }
     });
 
-    return new Response(JSON.stringify(reminders), {
+    const formattedReminders = reminders.map((reminder) => ({
+      reminderId: reminder.id,
+      patientName: `${reminder.SetFor.firstName} ${reminder.SetFor.lastName}`, // Concatenating first and last names
+      startDate: reminder.startDate,
+      endDate: reminder.endDate || undefined, // Handling optional endDate
+      intervalInDays: reminder.intervalInDays,
+      reminderType: reminder.reminderType,
+      description: reminder.description,
+      repeat: reminder.repeatType
+    }));
+
+    return new Response(JSON.stringify(formattedReminders), {
       status: HttpStatusCode.Ok,
       headers: { "Content-Type": "application/json" }
     });
