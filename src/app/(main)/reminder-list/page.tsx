@@ -10,7 +10,9 @@ import type { ReminderItem } from "@/types/reminder";
 
 export default function ReminderList() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedReminder, setSelectedReminder] = useState<ReminderItem | null>(null);
+  const [selectedReminder, setSelectedReminder] = useState<ReminderItem | null>(
+    null
+  );
   const [reminders, setReminders] = useState<ReminderItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,7 @@ export default function ReminderList() {
       if (!user) return; // Wait until the user is loaded
 
       try {
-        const response = await fetch(`/api/reminder/1`); // Fetch reminders based on setForId being the user's ID
+        const response = await fetch(`/api/reminder/1`); // Fetch reminders, 1 is just set, as API already has the user ID
         if (!response.ok) {
           throw new Error("Failed to fetch reminders");
         }

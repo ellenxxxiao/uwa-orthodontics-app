@@ -3,10 +3,9 @@ import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 import { UpdateReminderSchema } from "@/schema/reminder";
 import { NextResponse } from "next/server";
-import { auth } from '@clerk/nextjs/server';  // Use Clerk's auth helper
+import { auth } from "@clerk/nextjs/server"; // Use Clerk's auth helper
 import { Resend } from "resend";
 import { EmailTemplate } from "@/app/components/emailTemplate/email-template";
-
 
 const clerk = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY
@@ -46,22 +45,26 @@ async function sendEmail(
   }
 }
 
-
 // GET: Fetch reminders for the logged-in user and send an email notification
 export async function GET() {
   try {
     const { userId } = auth();
 
     if (!userId) {
-      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401
+      });
     }
 
     const reminders = await prisma.reminder.findMany({
-      where: { setForId: userId },
+      where: { setForId: userId }
     });
 
     if (reminders.length === 0) {
-      return new NextResponse(JSON.stringify({ message: "No reminders found" }), { status: 404 });
+      return new NextResponse(
+        JSON.stringify({ message: "No reminders found" }),
+        { status: 404 }
+      );
     }
 
     // Send email notification for fetching reminders (THIS IS CODED OUT TO TEST EMAIL FUNCTIONALITY)
@@ -71,28 +74,41 @@ export async function GET() {
 
     return new NextResponse(JSON.stringify(reminders), { status: 200 });
   } catch (error) {
-    return new NextResponse(JSON.stringify({ error: "Failed to fetch reminders" }), { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ error: "Failed to fetch reminders" }),
+      { status: 500 }
+    );
   }
 }
 
 // PATCH: Update a reminder and send an email notification
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   const id = parseInt(params.id);
 
   try {
     const { userId } = auth();
     if (!userId) {
-      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401
+      });
     }
 
     if (!id) {
-      return new NextResponse(JSON.stringify({ error: "Reminder ID is required" }), { status: 400 });
+      return new NextResponse(
+        JSON.stringify({ error: "Reminder ID is required" }),
+        { status: 400 }
+      );
     }
 
     const body = await request.json();
     const parseResult = UpdateReminderSchema.safeParse(body);
     if (!parseResult.success) {
-      return new NextResponse(JSON.stringify({ error: parseResult.error }), { status: 400 });
+      return new NextResponse(JSON.stringify({ error: parseResult.error }), {
+        status: 400
+      });
     }
 
     const updateUserData = parseResult.data;
@@ -104,45 +120,77 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
     const user = await clerk.users.getUser(userId);
     const email = user.emailAddresses[0].emailAddress;
-    await sendEmail("Reminder Updated", "updated", email, user.firstName || "User");
+    await sendEmail(
+      "Reminder Updated",
+      "updated",
+      email,
+      user.firstName || "User"
+    );
 
-    return new NextResponse(JSON.stringify({
-      message: `Reminder with ID ${id} updated successfully.`
-    }), { status: 200 });
+    return new NextResponse(
+      JSON.stringify({
+        message: `Reminder with ID ${id} updated successfully.`
+      }),
+      { status: 200 }
+    );
   } catch (error) {
-    return new NextResponse(JSON.stringify({ error: "Failed to update reminder" }), { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ error: "Failed to update reminder" }),
+      { status: 500 }
+    );
   }
 }
 
 // DELETE: Delete a reminder and send an email notification
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   const id = parseInt(params.id);
 
   try {
     const { userId } = auth();
     if (!userId) {
-      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401
+      });
     }
 
     if (!id) {
-      return new NextResponse(JSON.stringify({ error: "Reminder ID is required" }), { status: 400 });
+      return new NextResponse(
+        JSON.stringify({ error: "Reminder ID is required" }),
+        { status: 400 }
+      );
     }
 
     const reminder = await prisma.reminder.findUnique({ where: { id } });
     if (!reminder) {
-      return new NextResponse(JSON.stringify({ error: "Reminder not found" }), { status: 404 });
+      return new NextResponse(JSON.stringify({ error: "Reminder not found" }), {
+        status: 404
+      });
     }
 
     await prisma.reminder.delete({ where: { id } });
 
     const user = await clerk.users.getUser(userId);
     const email = user.emailAddresses[0].emailAddress;
-    await sendEmail("Reminder Deleted", "deleted", email, user.firstName || "User");
+    await sendEmail(
+      "Reminder Deleted",
+      "deleted",
+      email,
+      user.firstName || "User"
+    );
 
-    return new NextResponse(JSON.stringify({
-      message: `Reminder with ID ${id} deleted successfully.`
-    }), { status: 200 });
+    return new NextResponse(
+      JSON.stringify({
+        message: `Reminder with ID ${id} deleted successfully.`
+      }),
+      { status: 200 }
+    );
   } catch (error) {
-    return new NextResponse(JSON.stringify({ error: "Failed to delete reminder" }), { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ error: "Failed to delete reminder" }),
+      { status: 500 }
+    );
   }
 }

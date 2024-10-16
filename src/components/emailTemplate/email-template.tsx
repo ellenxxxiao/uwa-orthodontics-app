@@ -23,7 +23,7 @@ export const EmailTemplate: React.FC<EmailTemplateProps> = ({
   const actionMessages = {
     created: "New Reminder Created",
     updated: "Reminder Updated",
-    deleted: "Reminder Deleted",
+    deleted: "Reminder Deleted"
   };
 
   const formatDate = (dateStr: string) => {
@@ -42,7 +42,7 @@ export const EmailTemplate: React.FC<EmailTemplateProps> = ({
         maxWidth: "600px",
         margin: "0 auto",
         borderRadius: "8px",
-        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)"
       }}
     >
       <div
@@ -52,7 +52,7 @@ export const EmailTemplate: React.FC<EmailTemplateProps> = ({
           borderTopLeftRadius: "8px",
           borderTopRightRadius: "8px",
           textAlign: "center",
-          color: "#ffffff",
+          color: "#ffffff"
         }}
       >
         <h1>{actionMessages[actionType]}</h1>
@@ -63,22 +63,26 @@ export const EmailTemplate: React.FC<EmailTemplateProps> = ({
           padding: "20px",
           backgroundColor: "#ffffff",
           borderBottomLeftRadius: "8px",
-          borderBottomRightRadius: "8px",
+          borderBottomRightRadius: "8px"
         }}
       >
-        <p style={{ fontSize: "16px" }}>
-          Hi {firstName},
-        </p>
+        <p style={{ fontSize: "16px" }}>Hi {firstName},</p>
 
-        <p style={{ fontSize: "16px" }}>
-          {description}
-        </p>
+        <p style={{ fontSize: "16px" }}>{description}</p>
 
         <ul style={{ fontSize: "16px", listStyleType: "none", padding: 0 }}>
-          <li><strong>Type:</strong> {type}</li>
-          <li><strong>Start Date:</strong> {formatDate(startDate)}</li>
-          <li><strong>End Date:</strong> {formatDate(endDate)}</li>
-          <li><strong>Repeat Interval:</strong> Every {intervalInDays} days</li>
+          <li>
+            <strong>Type:</strong> {type}
+          </li>
+          <li>
+            <strong>Start Date:</strong> {formatDate(startDate)}
+          </li>
+          <li>
+            <strong>End Date:</strong> {formatDate(endDate)}
+          </li>
+          <li>
+            <strong>Repeat Interval:</strong> Every {intervalInDays} days
+          </li>
         </ul>
 
         <p style={{ fontSize: "16px", marginTop: "20px" }}>
