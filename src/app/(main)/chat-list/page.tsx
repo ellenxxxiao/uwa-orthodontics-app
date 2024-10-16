@@ -85,7 +85,12 @@ export default function ChatList() {
       <div className="flex h-full flex-col">
         <Header
           nodeRight={
-            <LuPenSquare size={30} strokeWidth={1.3} className="text-primary" />
+            <LuPenSquare
+              size={30}
+              strokeWidth={1.3}
+              className="cursor-pointer text-primary"
+              onClick={() => router.push("/contacts")}
+            />
           }
           nodeTitle={<span>Chats</span>}
         />

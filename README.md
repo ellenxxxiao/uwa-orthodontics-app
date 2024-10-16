@@ -45,3 +45,11 @@ To view the data and play around with it, run:
 ```
 npm run prisma:studio
 ```
+
+## Websocket
+
+To start on ngrok, run:
+
+```
+ngrok http --url=strong-cute-platypus.ngrok-free.app 3000
+```
