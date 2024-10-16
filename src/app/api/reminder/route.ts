@@ -19,29 +19,29 @@ function getErrorMessage(error: unknown): string {
 }
 
 // Helper function to send an email via Resend
-async function sendEmail(
-  subject: string,
-  actionType: "created" | "updated" | "deleted",
-  templateData: any
-) {
-  try {
-    const { data, error } = await resend.emails.send({
-      from: "OrthoChat <onboarding@resend.dev>",
-      to: ["alian.haidar01@gmail.com"], // Hardcoded email recipient
-      subject: subject,
-      react: EmailTemplate({ ...templateData, actionType })
-    });
+// async function sendEmail(
+//   subject: string,
+//   actionType: "created" | "updated" | "deleted",
+//   templateData: any
+// ) {
+//   try {
+//     const { data, error } = await resend.emails.send({
+//       from: "OrthoChat <onboarding@resend.dev>",
+//       to: ["alian.haidar01@gmail.com"], // Hardcoded email recipient
+//       subject: subject,
+//       react: EmailTemplate({ ...templateData, actionType })
+//     });
 
-    if (error) {
-      console.error("Failed to send email:", error);
-      throw new Error("Failed to send email");
-    }
+//     if (error) {
+//       console.error("Failed to send email:", error);
+//       throw new Error("Failed to send email");
+//     }
 
-    return data;
-  } catch (err) {
-    console.error("Error sending email:", err);
-  }
-}
+//     return data;
+//   } catch (err) {
+//     console.error("Error sending email:", err);
+//   }
+// }
 
 // GET: Fetch reminders
 export async function GET(request: NextRequest) {
