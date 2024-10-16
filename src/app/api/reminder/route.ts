@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
+import { auth } from "@clerk/nextjs/server";
+
 import { Resend } from "resend";
 
 import { CreateReminderSchema } from "@/schema/reminder";
@@ -45,6 +47,16 @@ function getErrorMessage(error: unknown): string {
 
 // GET: Fetch reminders
 export async function GET(request: NextRequest) {
+  "use server";
+
+  const { userId } = auth();
+
+  if (!userId) {
+    return new Response(JSON.stringify({ error: "Not Authorized" }), {
+      status: HttpStatusCode.Unauthorized
+    });
+  }
+
   try {
     // Get search params from the URL
     const searchParams = request.nextUrl.searchParams;
@@ -56,6 +68,9 @@ export async function GET(request: NextRequest) {
 
     // Construct filter object for Prisma
     const filters: any = {};
+
+    // filter all reminders set by the user
+    filters.setById = userId;
 
     if (setForId) {
       filters.setForId = parseInt(setForId);
