@@ -13,6 +13,7 @@ import type { ReminderItem } from "@/types/reminder";
 
 export default function ReminderList() {
   const { isSignedIn, isLoaded } = useUser();
+  const [action, setAction] = useState<"create" | "update">("create");
   const [isOpen, setIsOpen] = useState(false);
   const [reminders, setReminders] = useState<ReminderItem[]>([]);
   const [selectedReminder, setSelectedReminder] = useState<ReminderItem | null>(
@@ -46,6 +47,7 @@ export default function ReminderList() {
   const handleCardClick = (reminder: ReminderItem) => {
     setSelectedReminder(reminder);
     setIsOpen(true);
+    setAction("update");
   };
 
   return (
@@ -54,12 +56,14 @@ export default function ReminderList() {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         reminder={selectedReminder}
+        action={action}
       />
       <Header
         nodeRight={
           <button
             onClick={() => {
               setIsOpen(true);
+              setAction("create");
             }}
           >
             <LuPlusCircle

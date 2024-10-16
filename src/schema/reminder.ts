@@ -21,9 +21,8 @@ export const CreateReminderSchema = z.object({
   setForId: z.string(),
   scheduledAt: z.string(),
   startDate: z.string(),
-  endDate: z.string(),
+  endDate: z.string().optional(),
   description: z.string(),
   reminderType: z.nativeEnum(ReminderType),
-  repeatType: z.nativeEnum(RepeatType),
-  intervalInDays: z.number()
+  repeatType: z.nativeEnum(RepeatType)
 });

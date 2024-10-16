@@ -6,7 +6,7 @@ import { ReminderType, RepeatType, Role, User } from "@prisma/client";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-
+import { useUser } from "@clerk/clerk-react";
 import CustomField from "@/components/main/CustomField";
 import { Button } from "@/components/ui/button";
 import {
@@ -58,9 +58,16 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   reminder: ReminderItem | null;
+  action: "create" | "update";
 }
 
-export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
+export default function EditProfileModal({
+  isOpen,
+  onClose,
+  reminder,
+  action
+}: Props) {
+  const { isSignedIn, user, isLoaded } = useUser();
   const minuteRef = useRef<HTMLInputElement>(null);
   const hourRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -79,8 +86,8 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
   const { reset, setValue, getValues } = reminderForm;
 
   useEffect(() => {
-    if (reminder) {
-      // Reset the form values with the provided reminder data
+    if (action === "update" && reminder) {
+      // Reset the form values with the provided reminder data for update action
       reset({
         patient: reminder.patientId,
         repeatType: reminder.repeatType || RepeatType.NEVER,
@@ -90,13 +97,19 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
         description: reminder.description || "",
         endDate: reminder.endDate ? new Date(reminder.endDate) : undefined
       });
-    } else {
-      // Reset to default values if no reminder is provided (e.g., adding a new reminder)
+    } else if (action === "create") {
+      // Clear all fields for create action
       reset({
-        repeatType: RepeatType.NEVER
+        patient: "",
+        repeatType: RepeatType.NEVER,
+        reminderType: ReminderType.ALIGNER, // Default type
+        startDate: undefined,
+        time: undefined,
+        description: "",
+        endDate: undefined
       });
     }
-  }, [reminder, reset]);
+  }, [reminder, reset, action]);
 
   const selectedTime = useWatch({
     control: reminderForm.control,
@@ -155,41 +168,55 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
     name: "repeatType"
   });
 
-  async function onSubmit(values: z.infer<typeof reminderFormSchema>) {
+  const onSubmit = async (values: z.infer<typeof reminderFormSchema>) => {
     const { time, ...formValuesWithoutTime } = values;
+    const url =
+      action === "create"
+        ? `/api/reminder`
+        : `/api/reminder/${reminder?.reminderId}`;
+    const method = action === "create" ? "POST" : "PATCH";
+
     try {
-      // Make the PATCH request to update the reminder
-      const response = await fetch(`/api/reminder/${reminder?.reminderId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formValuesWithoutTime)
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formValuesWithoutTime,
+          ...(action === "create"
+            ? {
+                setById: user!.id,
+                setForId: formValuesWithoutTime.patient,
+                scheduledAt: formValuesWithoutTime.startDate
+              }
+            : {})
+        })
       });
 
       if (response.ok) {
         toast({
           title: "Success",
-          description: "Reminder updated successfully"
+          description:
+            action === "create"
+              ? "Reminder created successfully"
+              : "Reminder updated successfully"
         });
       } else {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to update reminder"
-        });
+        throw new Error("Failed to process the request.");
       }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to update reminder"
+        description:
+          action === "create"
+            ? "Failed to create reminder"
+            : "Failed to update reminder"
       });
     } finally {
-      reminderForm.reset(); // Reset form after submission
-      onClose(); // Close the modal
+      reminderForm.reset();
+      onClose();
     }
-  }
+  };
 
   // Function to handle delete confirmation
   const handleDeleteReminder = async () => {
@@ -363,7 +390,7 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
                 variant="ghost"
                 type="submit"
               >
-                Add
+                {action === "create" ? "Add" : "Done"}
               </Button>
             </div>
           </form>
@@ -402,15 +429,17 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
           </Dialog>
         )}
 
-        <div className="mx-auto ">
-          <Button
-            className="h-10 w-20 px-2 text-xl font-bold"
-            variant="destructive"
-            onClick={() => setIsConfirmDeleteOpen(true)}
-          >
-            Delete
-          </Button>
-        </div>
+        {action === "update" && (
+          <div className="mx-auto ">
+            <Button
+              className="h-10 w-20 px-2 text-xl font-bold"
+              variant="destructive"
+              onClick={() => setIsConfirmDeleteOpen(true)}
+            >
+              Delete
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

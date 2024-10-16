@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
 import { auth } from "@clerk/nextjs/server";
+import { RepeatType } from "@prisma/client";
 
 // import { Resend } from "resend";
 
@@ -130,6 +131,34 @@ export async function POST(request: Request) {
 
     const createReminderData = parseResult.data;
 
+    const getIntervalInDays = (
+      repeatType: string,
+      startDate?: Date,
+      endDate?: Date
+    ) => {
+      if (!startDate || !endDate) return 0; // Default if dates are not provided
+      const diffInTime = endDate.getTime() - startDate.getTime();
+      const diffInDays = Math.ceil(diffInTime / (1000 * 3600 * 24));
+
+      switch (repeatType) {
+        case RepeatType.DAILY:
+          return 1;
+        case RepeatType.WEEKLY:
+          return 7;
+        case RepeatType.FORTNIGHTLY:
+          return 14;
+        case RepeatType.MONTHLY:
+          return 30; // Approximate
+        case RepeatType.YEARLY:
+          return 365; // Approximate
+        case RepeatType.CUSTOM:
+          return diffInDays; // Return calculated difference for custom
+        case RepeatType.NEVER:
+        default:
+          return -1; // Assuming never doesn't require an interval
+      }
+    };
+
     // create reminder in the database
     const reminder = await prisma.reminder.create({
       data: {
@@ -137,11 +166,15 @@ export async function POST(request: Request) {
         setForId: createReminderData.setForId,
         scheduledAt: createReminderData.scheduledAt,
         startDate: createReminderData.startDate,
-        endDate: createReminderData.endDate,
+        endDate: createReminderData.endDate ?? createReminderData.startDate,
         description: createReminderData.description,
         reminderType: createReminderData.reminderType,
         repeatType: createReminderData.repeatType,
-        intervalInDays: createReminderData.intervalInDays,
+        intervalInDays: getIntervalInDays(
+          createReminderData.repeatType,
+          new Date(createReminderData.startDate),
+          new Date(createReminderData.endDate ?? createReminderData.startDate)
+        ),
         isReminderActive: true
       }
     });
