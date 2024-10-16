@@ -6,8 +6,8 @@ import { useUser } from "@clerk/nextjs";
 import { LuPlusCircle } from "react-icons/lu";
 
 import Header from "@/components/main/Header";
-import UserAvatar from "@/components/main/UserAvatar";
 import InvitationDialog from "@/components/main/InvitationDialog";
+import UserAvatar from "@/components/main/UserAvatar";
 
 interface Contact {
   id: string;

@@ -127,7 +127,7 @@ export default function ChatList() {
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <h3
-                      className="w-32 truncate text-lg font-bold text-black" // Limit name length
+                      className="w-36 truncate text-lg font-bold text-black" // Limit name length
                       style={{
                         whiteSpace: "nowrap",
                         overflow: "hidden",

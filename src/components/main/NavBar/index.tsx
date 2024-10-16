@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { IconType } from "react-icons";
-import { LuBell, LuMessageCircle, LuSettings, LuUser2 } from "react-icons/lu";
+import { LuBell, LuMessageCircle, LuUser2 } from "react-icons/lu";
 
 interface NavItemProps {
   icon: IconType;
@@ -67,12 +67,6 @@ export default function NavBar() {
               label="Reminder"
               href="/reminder-list"
               isActive={isActive("/reminder-list")}
-            />
-            <NavItem
-              icon={LuSettings}
-              label="Settings"
-              href="/settings"
-              isActive={isActive("/settings")}
             />
             <NavItem
               icon={LuUser2}

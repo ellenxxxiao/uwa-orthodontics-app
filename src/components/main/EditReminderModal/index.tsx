@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReminderType, RepeatType } from "@prisma/client";
+import { ReminderType, RepeatType, Role, User } from "@prisma/client";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -25,11 +26,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TimePickerInput } from "@/components/ui/time-picker-input";
+import { useToast } from "@/hooks/use-toast";
 import type { ReminderItem } from "@/types/reminder";
 
 const reminderFormSchema = z.object({
   patient: z.string(),
-  repeat: z.nativeEnum(RepeatType),
+  repeatType: z.nativeEnum(RepeatType),
   reminderType: z.nativeEnum(ReminderType),
   startDate: z.date(),
   time: z.date(),
@@ -37,18 +39,11 @@ const reminderFormSchema = z.object({
   endDate: z.date().optional()
 });
 
-// FIXME: Mock data
-const patients = [
-  { value: "1", label: "Runtian Liang" },
-  { value: "2", label: "Zimu Zhang" },
-  { value: "3", label: "Alian Haidar" }
-];
-
 const repeatTypes = [
   { value: RepeatType.NEVER, label: "Never" },
   { value: RepeatType.DAILY, label: "Every Day" },
   { value: RepeatType.WEEKLY, label: "Every Week" },
-  { value: RepeatType.FORNIGHTLY, label: "Every Fortnight" },
+  { value: RepeatType.FORTNIGHTLY, label: "Every Fortnight" },
   { value: RepeatType.MONTHLY, label: "Every Month" },
   { value: RepeatType.YEARLY, label: "Every Year" },
   { value: RepeatType.CUSTOM, label: "Custom" }
@@ -64,45 +59,87 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   reminder: ReminderItem | null;
+  action: "create" | "update";
 }
 
-export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
+export default function EditProfileModal({
+  isOpen,
+  onClose,
+  reminder,
+  action
+}: Props) {
+  const { isSignedIn, user, isLoaded } = useUser();
   const minuteRef = useRef<HTMLInputElement>(null);
   const hourRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [patients, setPatients] = useState<{ value: string; label: string }[]>(
+    []
+  );
 
   const reminderForm = useForm<z.infer<typeof reminderFormSchema>>({
     resolver: zodResolver(reminderFormSchema),
     defaultValues: {
-      repeat: RepeatType.NEVER
+      repeatType: RepeatType.NEVER
     }
   });
 
   const { reset, setValue, getValues } = reminderForm;
 
   useEffect(() => {
-    if (reminder) {
-      // Reset the form values with the provided reminder data
+    if (action === "update" && reminder) {
+      // Reset the form values with the provided reminder data for update action
       reset({
-        patient: reminder.patientName,
-        repeat: reminder.repeat || RepeatType.NEVER,
+        patient: reminder.patientId,
+        repeatType: reminder.repeatType || RepeatType.NEVER,
         reminderType: reminder.reminderType,
         startDate: new Date(reminder.startDate),
         time: new Date(reminder.startDate), // Assuming time is embedded in startDate
         description: reminder.description || "",
         endDate: reminder.endDate ? new Date(reminder.endDate) : undefined
       });
-    } else {
-      // Reset to default values if no reminder is provided (e.g., adding a new reminder)
+    } else if (action === "create") {
+      // Clear all fields for create action
       reset({
-        repeat: RepeatType.NEVER
+        patient: "",
+        repeatType: RepeatType.NEVER,
+        reminderType: ReminderType.ALIGNER, // Default type
+        startDate: undefined,
+        time: undefined,
+        description: "",
+        endDate: undefined
       });
     }
-  }, [reminder, reset]);
+  }, [reminder, reset, action]);
 
   const selectedTime = useWatch({
     control: reminderForm.control,
     name: "time"
   });
+
+  // Fetch user data from the API endpoint
+  useEffect(() => {
+    async function fetchPatients() {
+      try {
+        const response = await fetch("/api/users"); // Adjust the endpoint as needed
+        const data: User[] = await response.json();
+
+        // Map the user data to fit the CustomField options format
+        const patientOptions = data
+          .filter((user) => user.role === Role.PATIENT) // Filter for patients only
+          .map((user) => ({
+            value: user.id,
+            label: `${user.firstName} ${user.lastName}`
+          }));
+
+        setPatients(patientOptions);
+      } catch (error) {
+        console.error("Failed to fetch patients:", error);
+      }
+    }
+
+    fetchPatients();
+  }, []);
 
   useEffect(() => {
     if (selectedTime) {
@@ -129,16 +166,95 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
 
   const selectedRepeat = useWatch({
     control: reminderForm.control,
-    name: "repeat"
+    name: "repeatType"
   });
 
-  function onSubmit(values: z.infer<typeof reminderFormSchema>) {
+  const onSubmit = async (values: z.infer<typeof reminderFormSchema>) => {
     const { time, ...formValuesWithoutTime } = values;
-    // FIXME: PATCH request to update the reminder
-    console.log(formValuesWithoutTime);
-    reminderForm.reset();
-    onClose();
-  }
+    const url =
+      action === "create"
+        ? `/api/reminder`
+        : `/api/reminder/${reminder?.reminderId}`;
+    const method = action === "create" ? "POST" : "PATCH";
+
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formValuesWithoutTime,
+          ...(action === "create"
+            ? {
+                setById: user!.id,
+                setForId: formValuesWithoutTime.patient,
+                scheduledAt: formValuesWithoutTime.startDate
+              }
+            : {})
+        })
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description:
+            action === "create"
+              ? "Reminder created successfully"
+              : "Reminder updated successfully"
+        });
+      } else {
+        throw new Error("Failed to process the request.");
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          action === "create"
+            ? "Failed to create reminder"
+            : "Failed to update reminder"
+      });
+    } finally {
+      reminderForm.reset();
+      onClose();
+    }
+  };
+
+  // Function to handle delete confirmation
+  const handleDeleteReminder = async () => {
+    try {
+      const response = await fetch(`/api/reminder/${reminder?.reminderId}`, {
+        method: "DELETE"
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Reminder deleted successfully"
+        });
+        // onDeleteReminder(reminder?.reminderId); // Call the prop function to update state in parent component
+        onClose(); // Close the modal after deletion
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to delete reminder"
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete reminder"
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Reset confirmation dialog state when the modal is opened
+    if (isOpen) {
+      setIsConfirmDeleteOpen(false);
+    }
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -170,8 +286,8 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
             {/* Repeat type*/}
             <CustomField
               control={reminderForm.control}
-              name="repeat"
-              label="Repeat"
+              name="repeatType"
+              label="repeatType"
               placeholder="Never"
               options={repeatTypes}
             />
@@ -267,7 +383,7 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
               )}
             />
 
-            <DialogFooter className="py-1" />
+            <DialogFooter />
 
             <div className="absolute -top-1 right-6">
               <Button
@@ -275,11 +391,56 @@ export default function EditProfileModal({ isOpen, onClose, reminder }: Props) {
                 variant="ghost"
                 type="submit"
               >
-                Add
+                {action === "create" ? "Add" : "Done"}
               </Button>
             </div>
           </form>
         </Form>
+
+        {/* Confirmation Dialog */}
+        {isConfirmDeleteOpen && (
+          <Dialog
+            open={isConfirmDeleteOpen}
+            onOpenChange={() => setIsConfirmDeleteOpen(false)}
+          >
+            <DialogContent className="h-72 w-96 rounded-xl p-12">
+              <DialogHeader>
+                <DialogTitle className="text-xl">Confirm Deletion</DialogTitle>
+                <p className="text-lg">
+                  Are you sure you want to delete this reminder?
+                </p>
+              </DialogHeader>
+              <DialogFooter className="mx-auto">
+                <Button
+                  className="mt-2 w-32 text-lg"
+                  variant="outline"
+                  onClick={() => setIsConfirmDeleteOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="w-32 text-lg"
+                  variant="destructive"
+                  onClick={handleDeleteReminder}
+                >
+                  Delete
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {action === "update" && (
+          <div className="mx-auto ">
+            <Button
+              className="h-10 w-20 px-2 text-xl font-bold"
+              variant="destructive"
+              onClick={() => setIsConfirmDeleteOpen(true)}
+            >
+              Delete
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

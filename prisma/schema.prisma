@@ -56,7 +56,7 @@ enum RepeatType {
   NEVER 
   DAILY 
   WEEKLY
-  FORNIGHTLY
+  FORTNIGHTLY
   MONTHLY
   YEARLY
   CUSTOM
@@ -75,7 +75,7 @@ model Reminder {
   intervalInDays   Int // interval in days
   SetBy            User         @relation("SetBy", fields: [setById], references: [id])
   SetFor           User         @relation("SetFor", fields: [setForId], references: [id])
-  remindertype     ReminderType @default(OTHER)
+  reminderType     ReminderType @default(OTHER)
   repeatType       RepeatType   @default(NEVER)
   description      String?
 }
