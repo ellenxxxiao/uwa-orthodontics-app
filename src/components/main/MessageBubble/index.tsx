@@ -22,8 +22,8 @@ export default function MessageBubble({
       <div className="flex flex-col">
         <div
           className={`${
-            isSender ? "rounded-br" : "rounded-bl"
-          } max-w-xs rounded-2xl bg-[#F0F0F0] p-4 text-sm text-app-black md:max-w-md md:text-base`}
+            isSender ? "rounded-br bg-[#cdcdcd] " : "rounded-bl bg-primary/15"
+          } max-w-xs rounded-2xl  p-4 text-sm text-app-black md:max-w-md md:text-base`}
           style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
         >
           {text}
