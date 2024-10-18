@@ -32,7 +32,7 @@ export default function Chat() {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const newSocket = io(`https://strong-cute-platypus.ngrok-free.app`);
+    const newSocket = io(`http://localhost:3000`);
     setSocket(newSocket);
 
     newSocket.on("connect", () => {

@@ -1,14 +1,31 @@
 import { createClerkClient } from "@clerk/clerk-sdk-node";
 import { PrismaClient } from "@prisma/client";
 import { HttpStatusCode } from "axios";
-
+import { Resend } from 'resend';
 import { UpdateReminderSchema } from "@/schema/reminder";
+import { EmailTemplate } from "@/components/emailTemplate/email-template";
 
 const clerk = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY
 });
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 const prisma = new PrismaClient();
+
+// Helper function to send emails via Resend
+async function sendEmail(subject: string, body: JSX.Element, recipientEmail: string) {
+  try {
+    await resend.emails.send({
+      from: "OrthoChat <onboarding@resend.dev>",
+      to: [recipientEmail],
+      subject,
+      react: body,  // JSX element from EmailTemplate
+    });
+  } catch (error) {
+    console.error("Failed to send email:", error);
+  }
+}
 
 // GET. Example: http://localhost:3000/api/reminder/26
 export async function GET(
@@ -36,6 +53,27 @@ export async function GET(
         status: HttpStatusCode.NotFound
       });
     }
+
+    // Example of sending an email notification using a pre-defined template
+    const recipientEmail = 'alian.haidar01@gmail.com'; // Hardcode or dynamically get the user's email
+    const emailBody = EmailTemplate({
+      firstName: "User", // Replace with actual user's first name
+      actionType: "created",  // or "updated", based on context
+      description: reminder.description ?? '',
+      startDate: reminder.startDate?.toString(),
+      endDate: reminder.endDate?.toString(),
+      type: reminder.reminderType,
+      intervalInDays: reminder.intervalInDays
+    });
+
+    // Send the email
+    await sendEmail(
+      "Reminder Notification",
+      emailBody,
+      recipientEmail
+    );
+
+    // Return the reminder after sending the email
     return new Response(JSON.stringify(reminder), {
       status: HttpStatusCode.Ok,
       headers: {
